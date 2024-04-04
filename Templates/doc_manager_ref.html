@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Select Multiple Photos</title>
+<style>
+  #imageWindow {
+    text-align: center;
+  }
+  img {
+    max-width: 80%;
+    max-height: 80%;
+  }
+  .navigation {
+    margin-top: 10px;
+  }
+</style>
+</head>
+<body>
+
+<!-- Input element to select multiple photos -->
+<input type="file" accept="image/*" multiple id="fileInput">
+<div id="imageWindow">
+  <img id="displayedImage" src="#" alt="Selected Image">
+  <div class="navigation">
+    <button onclick="previousImage()">Previous</button>
+    <button onclick="nextImage()">Next</button>
+  </div>
+</div>
+
+<script>
+  let currentImageIndex = 0;
+  const selectedImages = [];
+
+  document.getElementById('fileInput').addEventListener('change', function() {
+    const files = this.files;
+    for (let i = 0; i < files.length; i++) {
+      selectedImages.push(URL.createObjectURL(files[i]));
+    }
+    displayImage(0);
+  });
+
+  function displayImage(index) {
+    currentImageIndex = index;
+    document.getElementById('displayedImage').src = selectedImages[index];
+  }
+
+  function previousImage() {
+    if (currentImageIndex > 0) {
+      displayImage(currentImageIndex - 1);
+    }
+  }
+
+  function nextImage() {
+    if (currentImageIndex < selectedImages.length - 1) {
+      displayImage(currentImageIndex + 1);
+    }
+  }
+</script>
+
+</body>
+</html>

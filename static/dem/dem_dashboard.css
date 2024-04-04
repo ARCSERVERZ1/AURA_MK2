@@ -1,0 +1,15 @@
+
+
+.title_card {
+    background-color: red;
+    padding: 20px; /* Optional: Add padding for better visual appearance */
+    text-align: center; /* Optional: Center text within the container */
+    color: white; /* Optional: Set text color to white for better contrast */
+}
+
+.dem_bar {
+    background-color: red;
+    padding: 20px; /* Optional: Add padding for better visual appearance */
+    text-align: center; /* Optional: Center text within the container */
+    color: white; /* Optional: Set text color to white for better contrast */
+}

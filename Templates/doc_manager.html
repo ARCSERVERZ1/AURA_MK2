@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Select Multiple Photos</title>
+  <link rel = 'stylesheet' href = "{% static 'dem/doc_manager.css' %}">
+</head>
+
+
+<body>
+
+<div class = 'bar'>
+  <label>Hello</label>
+</div>
+<div class = 'main-box'>
+  <div class = 'form-box'>
+    <div class = 'form-'>
+      <label>Document Holder name</label>
+      <input type="text">
+    </div>
+
+    <input type="file" accept="image/*" multiple id="fileInput">
+  </div>
+  <div class = 'photo-box'>
+    <img id="displayedImage" src="#" alt="Selected Image">
+    <div class="navigation">
+    <button onclick="previousImage()">Previous</button>
+    <button onclick="nextImage()">Next</button>
+  </div>
+  </div>
+</div>
+
+</body>
+</html>
+
+
+<script>
+  let currentImageIndex = 0;
+  const selectedImages = [];
+
+  document.getElementById('fileInput').addEventListener('change', function() {
+    const files = this.files;
+    for (let i = 0; i < files.length; i++) {
+      selectedImages.push(URL.createObjectURL(files[i]));
+    }
+    displayImage(0);
+  });
+
+  function displayImage(index) {
+    currentImageIndex = index;
+    document.getElementById('displayedImage').src = selectedImages[index];
+  }
+
+  function previousImage() {
+    if (currentImageIndex > 0) {
+      displayImage(currentImageIndex - 1);
+    }
+  }
+
+  function nextImage() {
+    if (currentImageIndex < selectedImages.length - 1) {
+      displayImage(currentImageIndex + 1);
+    }
+  }
+</script>
+

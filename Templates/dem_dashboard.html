@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>DEM Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cabin:wght@500&display=swap" rel="stylesheet">
+    <link rel = 'stylesheet' href = "{% static 'dem/dem_dashboard.css' %}">
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+
+</head>
+<body>
+<main class = 'big-box'>
+
+    <div class = "mainbar">
+        <label>TotalSpent</label>
+        <div class = "day-group">
+            <button onclick="runDataLog()">Run Data Log</button>
+            <div class = 'run-datalog' id = 'run-datalog'>
+                <div class = 'popup-small'>
+                     <div class="popup-small-head">
+                        <label>Run Data Log</label>
+                        <button onclick = "close_dt()">X</button>
+                    </div>
+                    <div>
+                    <label>Data log start date</label>
+                    <input type="date"  id="dl_sdate">
+                    <label>Data log end date</label>
+                    <input type="date"  id="dl_edate">
+                    <button type = Button onclick="run_datalog()">Run Data Log</button>
+                    </div>
+                </div>
+            </div>
+<!--        ss-->
+        <div class = "toolbar">
+             <div id = 'add_transaction_popup' class = 'add_transaction_popup'>
+                <div class = 'add_transaction'>
+                    <div class = 'add_transaction_head'>
+                         <label>Add Transaction</label>
+                         <input type = number id = edit_id>
+                         <button onclick="close_add_transaction()">X</button>
+                    </div>
+                    <div class = 'add_transaction-bigbox'>
+                        <div class = 'add_transaction-box' >
+                            <div class = 'add_transaction-row'>
+                             <label >Date</label>
+                             <input type = date id = edit_date>
+                             </div>
+                            <div class = 'add_transaction-row'>
+                             <label >Amount</label>
+                             <input type = number id = edit_amount>
+                             </div>
+                            <div class = 'add_transaction-row'>
+                             <label >From Bank</label>
+                             <input type = text id = edit_from_bank>
+                             </div>
+                            <div class = 'add_transaction-row'>
+                             <label >To Bank</label>
+                             <input type = text id = edit_to_bank>
+                             </div>
+                            <div class = 'add_transaction-row'>
+                             <label >Message</label>
+                             <input type = text id = edit_message>
+                             </div>
+
+                        </div>
+                        <div class = 'add_transaction-box'>
+                            <div class = 'add_transaction-row'>
+                             <label >Sub Category</label>
+                             <input type = text id = edit_sub >
+                             </div>
+                            <div class = 'add_transaction-row'>
+                             <label >Category</label>
+                             <input type = text id = edit_category >
+                             </div>
+                            <div class = 'add_transaction-row'>
+                             <label >Group</label>
+                             <input type = text id = edit_group>
+                             </div>
+                            <button onclick="save_new_transaction()">Save</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <button type = Button onclick="add_transaction()" >Add new transaction</button>
+            <button onclick="showPopup()" >start/end group</button>
+        </div>
+        </div>
+    </div>
+    <div class = "insights-box">
+        <div class = "data-box"><canvas id="donut" height = "10" width=  "10"></canvas></div>
+        <div class = "graph-config">
+            <button   id="day-view">Day view</button>
+            <button id="cate-view">Cat virw</button>
+        </div>
+        <div class = "graph-box">
+            <canvas id="barChart"></canvas>
+        </div>
+    </div>
+     <div class = mainbar>
+
+            <a href="/dem/non_cat/"  >Get Non Categorsied transaction</a>
+            <button onclick="groupUpdate('arg')">Group Edit</button>
+            <div id = 'multiple-edit' class = 'multiple-edit'>
+                <div class = 'popup-small'>
+                    <div class = 'popup-small-head'>
+                        <label>Multiple Edit</label>
+                        <button onclick="close_multiple_edit()">X</button>
+                    </div>
+                    <div>
+                         <select id="Category">
+                            <option value="Kitchen&Groceries">Kitchen&Groceries</option>
+                            <option value="Food&Drinks">Food&Drinks</option>
+                            <option value="Home">Home</option>
+                            <option value="Body_care">Body_care</option>
+                            <option value="Travel">Travel</option>
+                            <option value="Entertainment">Entertainment</option>
+                            <option value="Bills&Payments">Bills&Payments</option>
+                            <option value="Medical">Medical</option>
+                            <option value="Clothing&shopping">Clothing&shopping</option>
+                            <option value="Investment&Savings">Investment&Savings</option>
+                             <option value="Bike">Bike</option>
+                             <option value="Wedding">Wedding</option>
+                            <option value="Others">Others</option>
+                        </select>
+<!--                        <input type = 'text' id = 'grp-cat'>-->
+                        <button onclick= "groupUpdate('save')" >Apply Changes</button>
+                    </div>
+                </div>
+            </div>
+     </div>
+    <div class = "table-box">
+        <table>
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Date</th>
+                        <th>Amount</th>
+                        <th>Sender Bank</th>
+                        <th>Receiver Bank</th>
+                        <th>Message</th>
+                        <th>Category</th>
+                        <th>Sub-Category</th>
+                        <th>Group</th>
+                        <th>i</th>
+                        <th class="actions">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for i in monthly_table %}
+                    <tr>
+                        <td>  <input type="checkbox" id = "ME-{{i.id}}"></td>
+                        <td>{{i.date}}</td>
+                        <td>{{i.amount}}</td>
+                        <td>{{i.sender_bank}}</td>
+                        <td>{{i.receiver_bank}}</td>
+                        <td>{{i.message}}</td>
+                        <td>{{i.category}}</td>
+                        <td>{{i.sub_category}}</td>
+                        <td>{{i.group}}</td>
+                        <td>{{i.payment_method}}</td>
+
+                        <td class="actions">
+                            <button onclick="editRow({{i.id}})">Edit</button>
+                            <button onclick="deleteRow({{i.id}})">Delete</button>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+
+    </div>
+<!--    -->
+
+<!-- Button to trigger the popup -->
+<button onclick="showPopup()">Show Popup</button>
+
+<!-- The overlay and popup content -->
+<div class="overlay" id="overlay">
+
+    <div class="popup">
+         <div class = "popup-header">
+         <button onclick="hidePopup()">Close</button>
+         </div>
+        <div class = "popup-addgrp">
+            <h4>On Going/New Group =></h4>
+            <form method="POST" action="/dem/submit_groupdata/">
+                {% csrf_token %}
+         <label>Group Name</label>
+          <input type="text" id="grp_name" name="group_name">
+        <label>Group start date</label>
+          <input type="date" id="grp_sdate" name="group_sdate">
+        <label>Group end date</label>
+          <input type="date" id="grp_edate" name="group_edate">
+        <button type="submit">Save</button>
+            </form>
+        </div>
+
+        <div class = "popup-grptbl">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Start</th>
+                        <th>End</th>
+                        <th class="actions">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for i in group_data %}
+                    <tr>
+                        <td>{{i.grp_name}}</td>
+                        <td>{{i.grp_start}}</td>
+                        <td>{{i.grp_end}}</td>
+                        <td class="actions">
+                            <button onclick="editRow({{i.id}})">Edit</button>
+<!--                            <button onclick="deleteRow({{i.id}})">Delete</button>-->
+                            <a href = '/delete/{{i.id}}/' ></a>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+</div>
+
+<div class = 'popup-edit' id = 'popup-edit'>
+    <label>I am the best</label>
+</div>
+
+
+<script>
+
+    var save_type = 'new'
+
+    function getCookie(name) {
+  let cookieValue = null;
+  if (document.cookie && document.cookie !== '') {
+    const cookies = document.cookie.split(';');
+    for (let i = 0; i < cookies.length; i++) {
+      const cookie = cookies[i].trim();
+      // Check if the cookie name matches the specified name
+      if (cookie.substring(0, name.length + 1) === (name + '=')) {
+        // Extract and decode the cookie value
+        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+        break;
+      }
+    }
+  }
+  return cookieValue;
+}
+
+    function save_new_transaction(){
+
+        console.log(save_type)
+        const csrftoken = getCookie('csrftoken');
+
+        var edit_date = document.getElementById('edit_date').value;
+        var edit_amount = document.getElementById('edit_amount').value;
+        var edit_from_bank = document.getElementById('edit_from_bank').value;
+        var edit_to_bank = document.getElementById('edit_to_bank').value;
+        var edit_message = document.getElementById('edit_message').value;
+        var edit_sub = document.getElementById('edit_sub').value;
+        var edit_category = document.getElementById('edit_category').value;
+        var edit_group = document.getElementById('edit_group').value;
+        var edit_id = document.getElementById('edit_id').value;
+
+        const new_transaction_json = {
+
+        "action": save_type ,
+        "id":edit_id ,
+        "date":edit_date ,
+        "amount" : edit_amount,
+        "from_bank":edit_from_bank,
+        "to_bank":edit_to_bank,
+        "message":edit_message,
+        "sub":edit_sub,
+        "category":edit_category,
+        "group":edit_group }
+
+        console.log(new_transaction_json)
+
+        if (edit_date === '' || edit_amount === '' || edit_from_bank === '' || edit_to_bank === '' || edit_category === '' ) {
+            alert('Info Insufficient'); }
+       else{
+            fetch('http://127.0.0.1:8000/dem/add_new_transaction/', {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                 'X-CSRFToken': csrftoken
+              },
+              body: JSON.stringify(new_transaction_json)
+            })
+
+
+        }
+        document.getElementById('add_transaction_popup').style.display = 'None';
+        location.reload(true);
+    }
+
+
+    function add_transaction(){
+        save_type = 'new'
+        document.getElementById('add_transaction_popup').style.display = 'flex';
+    }
+
+    function close_add_transaction(){
+        document.getElementById('add_transaction_popup').style.display = 'None';
+    }
+
+
+
+    function groupUpdate(arg){
+        var checkboxes = document.querySelectorAll('input[type="checkbox"]');
+        var checkedIds = [];
+
+        checkboxes.forEach(function(checkbox) {
+            if (checkbox.checked && checkbox.id.includes('ME')) {
+                var checkboxId = checkbox.id.replace('checkbox_', '');
+                checkedIds.push(checkboxId);
+            }
+        });
+
+        if (checkedIds.length > 0) {
+            if (arg == 'arg') {
+                document.getElementById('multiple-edit').style.display = 'flex';
+                }
+            else {
+                const select = document.getElementById('Category');
+                const selectedOption = select.options[select.selectedIndex];
+                const selectedValue = selectedOption.value;
+                console.log(selectedValue);
+
+                fetch('http://127.0.0.1:8000/dem/multiple_edit/'+selectedValue+'/'+checkedIds+'/')
+                .then(response => response.json())
+                .then(data => {
+                   alert('Data updated for given dates');
+                   console.log(data.hello);
+                   location.reload(true);
+                });
+
+
+
+            }
+        } else {
+        alert(checkedIds.length);
+    }
+
+
+    }
+    function close_multiple_edit(){
+        document.getElementById('multiple-edit').style.display = 'none';
+
+    }
+
+    function update_multiple_edit() {
+        console.log("Here");
+        console.log(checkedIds);
+
+    }
+
+    // Function to show the popup
+    function showPopup() {
+        document.getElementById('overlay').style.display = 'flex';
+    }
+
+    // Function to hide the popup
+    function hidePopup() {
+        document.getElementById('overlay').style.display = 'none';
+    }
+     function editRow(a) {
+        console.log("edit roe")
+        save_type = 'edit'
+        document.getElementById('add_transaction_popup').style.display = 'flex';
+        console.log(a)
+                fetch('http://127.0.0.1:8000/dem/get_data_by_id/'+a+'/')
+                                .then(response => response.json())
+                                .then(data => {
+                                console.log(data.amount);
+
+                                document.getElementById("edit_id").value  = data.id;
+                                document.getElementById("edit_date").value  = data.date;
+                                document.getElementById("edit_amount").value  = data.amount;
+                                document.getElementById("edit_from_bank").value  = data.sender_bank;
+                                document.getElementById("edit_to_bank").value  = data.receiver_bank;
+                                document.getElementById("edit_message").value  = data.message;
+                                document.getElementById("edit_category").value  = data.category;
+                                document.getElementById("edit_sub").value  = data.sub_category;
+                                document.getElementById("edit_group").value  = data.group;
+                                });
+
+    }
+
+    function runDataLog(){
+        console.log("run-datalog");
+        document.getElementById('run-datalog').style.display = 'flex';
+
+    }
+
+    function close_dt(){
+        document.getElementById('run-datalog').style.display = 'none';
+    }
+
+    function run_datalog(){
+        var sdate = document.getElementById("dl_sdate");
+        var edate = document.getElementById("dl_edate");
+
+        console.log(edate.value);
+
+        fetch('http://127.0.0.1:8000/dem/run_datalog/'+sdate.value+'/'+edate.value)
+                .then(response => response.json())
+                .then(data => {
+                   alert('Data updated for given dates');
+                   console.log(data.hello);
+                   location.reload(true);
+                });
+    }
+
+
+</script>
+<!---->
+</main>
+
+</body>
+</html>
+
+<script>
+    var urlDomain = "http://127.0.0.1:8000/"
+<!--    var urlDomain = "http://192.168.10.7:8000/"-->
+    var initialApiUrl = urlDomain+"dem/graph/cate-view";
+
+    function deleteRow(id){
+        console.log(id);
+        fetch(urlDomain+'/dem/delete/'+id+'/').then(response => response.json())
+        .then(data => {
+                   if(data.response == 'success'){
+                    location.reload(true);
+                   }else{
+                    alert('unable to delete row');}
+                });
+    }
+
+
+    $(document).ready(function(){
+        var myChart = null; // Variable to store the chart instance
+
+        document.getElementById("day-view").addEventListener("click", buttonClickHandler);
+        document.getElementById("cate-view").addEventListener("click", buttonClickHandler);
+
+
+
+
+         function buttonClickHandler(event) {
+            var buttonId = event.target.id;
+            var apiUrl = urlDomain+'dem/graph/'+buttonId;
+            console.log(apiUrl);
+             if (myChart) {
+                myChart.destroy();
+            }
+
+            console.log("Button with id '" + buttonId + "' was clicked!");
+            fetchAndRenderChart(apiUrl);
+        }
+
+        function fetchAndRenderChart(apiUrl) {
+            // Make an AJAX GET request to fetch JSON data with the specified API URL
+            fetch(apiUrl)
+                .then(response => response.json())
+                .then(data => {
+                    // Render the chart on button click
+                    renderChart(data.labels, data.values);
+                });
+        }
+
+        function renderChart(labels, values) {
+            // Get the canvas element
+            var ctx = document.getElementById('barChart').getContext('2d');
+
+            // Create a bar chart
+            myChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Data Values',
+                        data: values,
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        }
+          // Replace with your initial API URL
+        fetchAndRenderChart(initialApiUrl);
+    });
+</script>

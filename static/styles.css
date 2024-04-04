@@ -1,0 +1,130 @@
+@import url('https://fonts.googleapis.com/css2?family=Josef+Sans:ital,wght@1,200&family=Pacifico&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Pacifico&display=swap');
+
+
+html{
+
+height:100%
+}
+
+
+body{
+    margin:0;
+    padding:0;
+    font-family: 'Pacifico', cursive;
+    background: linear-gradient(#141e30 , #243b55);
+
+}
+
+
+.loginbox{
+position: absolute;
+font-size : 20px;
+top : 20%;
+left : 58%;
+width:400px;
+padding:80px;
+transform : translate(-50% , - 50%);
+background:rgba(0,0,0,0.5);
+box-sizing:border-box;
+box-shadow:0 15px 25px rgba(0,0,0,0.6);
+border-radius: 15px;
+}
+
+
+.loginbox h2{
+	margin:0 0 10px;
+	padding: 10;
+	color: #fff;
+	text-align: center;
+}
+
+.userbox {
+
+position:relative;
+
+}
+
+.userbox input{
+	width:100%;
+	padding 10px 0;
+	font-size: 16px;
+	color: #fff;
+	margin-bottom:30px;
+	border:none;
+	border-bottom: 1px solid #fff;
+	outline:none;
+	background:transparent;
+
+
+}
+.userbox input:focus{
+	border-bottom-colour : #03e9f4;
+
+
+}
+
+
+.userbox label{
+position:absolute;
+top:0;
+left:0;
+padding:0 0;
+font-size: 16px;
+
+transition: all 0.25s;
+pointer-events: none;
+color: #fff;
+}
+
+
+
+.userbox input:focus ~ label  ,
+.userbox input:valid ~ label{
+
+
+	top: -20px;
+	left:0;
+	color:#03e9f4;
+	font-size : 13px
+
+}
+
+
+.loginbox form a {
+	postion:relative;
+	font-family: 'Josefin Sans', sans-serif;
+	display inline-block;
+	padding: 10px 20px;
+	color: #03e9f4;
+	font-size: 10px;
+	text-decoration:none;
+	text-transform: uppercase;
+	overflow : hidden;
+	transition : all 0.25s;
+	margin-right: 40px;
+	letter-spacing: 4px;
+}
+
+.loginbox a:hover {
+
+	background:#03e9f4;
+	color: #fff;
+	border-radius: 5px;
+	box-shadow:0 0 5px #03e9f4 , 0 0 25px #03e9f4 ,0 0 50px #03e9f4 , 0 0 100px #03e9f4 ;
+
+}
+
+
+.loginbox a span {
+position:  absolute;
+display: block;
+
+}
+
+.message{
+font-family: 'Josefin Sans', sans-serif;
+margin-top:30px;
+color: #B33A3A;
+
+}

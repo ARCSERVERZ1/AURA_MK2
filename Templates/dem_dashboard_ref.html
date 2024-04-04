@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkbox Counter</title>
+    <style>
+        /* Add a CSS style for the highlighted rows */
+        .highlighted-row {
+            background-color: red;
+        }
+    </style>
+</head>
+<body>
+
+<h2>Checkbox Counter</h2>
+
+<table border="1">
+    <thead>
+        <tr>
+            <th>Checkbox</th>
+            <th>Row Number</th>
+        </tr>
+    </thead>
+    <tbody id="tableBody">
+        <!-- Rows will be dynamically added here -->
+    </tbody>
+</table>
+
+<script>
+    // Function to update the count of checked checkboxes
+    function updateCheckboxCount() {
+        var checkboxes = document.querySelectorAll('input[type="checkbox"]');
+        var checkedCount = 0;
+
+        checkboxes.forEach(function(checkbox) {
+            if (checkbox.checked) {
+                checkedCount++;
+                highlightRow(checkbox);
+            } else {
+                unhighlightRow(checkbox);
+            }
+        });
+
+        document.getElementById('checkboxCount').value = checkedCount;
+    }
+
+    // Function to highlight the row when a checkbox is checked
+    function highlightRow(checkbox) {
+        var row = checkbox.closest('tr');
+        row.classList.add('highlighted-row');
+    }
+
+    // Function to unhighlight the row when a checkbox is unchecked
+    function unhighlightRow(checkbox) {
+        var row = checkbox.closest('tr');
+        row.classList.remove('highlighted-row');
+    }
+
+    // Function to dynamically generate the table rows
+    function generateTableRows() {
+        var tableBody = document.getElementById('tableBody');
+
+        for (var i = 1; i <= 10; i++) {
+            var row = document.createElement('tr');
+
+            var checkboxCell = document.createElement('td');
+            var checkbox = document.createElement('input');
+            checkbox.type = 'checkbox';
+            checkbox.addEventListener('change', updateCheckboxCount);
+            checkboxCell.appendChild(checkbox);
+
+            var rowNumberCell = document.createElement('td');
+            rowNumberCell.textContent = i;
+
+            row.appendChild(checkboxCell);
+            row.appendChild(rowNumberCell);
+
+            tableBody.appendChild(row);
+        }
+    }
+
+    // Call the function to generate table rows
+    generateTableRows();
+</script>
+
+<p>Number of

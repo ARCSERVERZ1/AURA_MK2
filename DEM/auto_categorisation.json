@@ -1,0 +1,16 @@
+{
+  
+  "auto_category": {
+    "Kitchen&Groceries": ["dmart" , "rent" , "STORES","market"  ],
+    "Food&Drinks": ["lunch","dinner","snack","breakfast" , "drinks" , "FOOD" , "zomato"],
+    "Home": ["HomeAppliances" ,"pooja" ],
+    "Body_care": ["haircut","massage"],
+    "Travel": ["travel" ,"cab" , "auto" , "SUMATHIS" ],
+    "Entertainment": ["cinema","infotainment"],
+    "Bills&Payments": ["rent" ],
+    "Medical": ["medical","medicine","hospital","clinic"],
+    "Clothing&shopping": ["myntra","flipkart"],
+    "Investment&Savings": [ "chit","Upstox" ],
+    "Others": []
+  }
+}
