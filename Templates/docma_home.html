@@ -12,18 +12,19 @@
 <div class="nav-bar">
 
 <div class = "home">
-    <a href = '/Jarvis/'>Home /</a>
-    <a href = '/doccat/'>Document Category</a>
-
+    <a href = '/home/'>Home /</a>
+    <a href = '/doc_manager/'>Document Category</a>
 </div>
-    <div class = "filter-bar">
+    <div class = "home">
     <a>Add</a>
     </div>
 </div>
+
 <div class="cards-holder">
 {% for i in doc_type %}
-<div class="card">
-    <a href="doc_viewer/{{i}}/">{{i}}</a>
+<div class="doc-card">
+   <img class = 'di' src="  {% static 'fcon2.png' %}">
+    <a  href="doc_viewer/{{i}}/"> <h4 class="typetext"> {{i}} </h4> </a>
 </div>
 {% endfor %}
     </div>

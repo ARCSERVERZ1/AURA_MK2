@@ -6,6 +6,7 @@ background-color : #383839;
 background-size: 1200px 800px;
 }
 .cards-holder{
+margin:25px;
 display:grid;
  grid-template-columns: repeat(3, 1fr);
 }
@@ -134,3 +135,27 @@ background-color:blue;
 .doc-details{
 
 background-color:red;}
+
+
+.doc-card{
+margin-top:30px;
+width : 110px;
+height : 130px;
+
+
+
+}
+
+.di{
+width:200px;
+opacity:90%;
+}
+.doc-card a{
+
+color:white;
+}
+.typetext{
+position:relative;
+top:-95px;
+left:15px;
+}

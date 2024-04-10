@@ -12,8 +12,8 @@
 <div class="nav-bar">
 
 <div class = "home">
-    <a href = '/Jarvis/'>Home /</a>
-    <a href = '/doccat/'>Document Category</a>
+ <a href = '/home/'>Home/</a>
+ <a href = '/doc_manager/'>Document Category</a>
 
 </div>
     <div class = "filter-bar">
@@ -28,10 +28,10 @@
        <label>{{ details.refnum }}</label>
        <label>{{ details.valid }}</label>
     </div>
-    <div class="doc-pics">
+    <div class="doc-card">
         {% for path in details.file_path %}
         <label>{{ path }}</label>
-        <img id="displayedImage" class="di" src="{% static path %}"  alt="Selected Image" >
+        <img id="displayedImage" src="{% static path %}"  alt="Selected Image" >
         {% endfor %}
     </div>
 {% endfor %}
