@@ -1,0 +1,51 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta  charset="UTF-8" name="viewport" content=" initial-scale= 0.6">
+    <title>Welcome Home!</title>
+    <link rel="stylesheet" href="{% static 'dem/docma_viewer_styles.css' %}">
+<!--    <link rel="stylesheet" href="{% static 'docma_static/doc_viewer_style.css' %}">-->
+
+</head>
+<body class="page">
+<div class="nav-bar">
+
+<div class = "home">
+    <a href = '/Jarvis/'>Home /</a>
+    <a href = '/doccat/'>Document Category</a>
+
+</div>
+    <div class = "filter-bar">
+    <a href="/doc_manager/add_doc/">Add</a>
+    </div>
+</div>
+
+<div class="view-block">
+    {% for name, details in data.items %}
+    <div class="doc-details">
+       <label>{{ name }}</label>
+       <label>{{ details.refnum }}</label>
+       <label>{{ details.valid }}</label>
+    </div>
+    <div class="doc-pics">
+        {% for path in details.file_path %}
+        <label>{{ path }}</label>
+        <img id="displayedImage" class="di" src="{% static path %}"  alt="Selected Image" >
+        {% endfor %}
+    </div>
+{% endfor %}
+
+<!--{% for name, details in data.items %}-->
+<!--        <h2>{{ details }}</h2>-->
+<!--        <ul>-->
+<!--            {% for path in details.file_path %}-->
+<!--                <li>{{ path }}</li>-->
+<!--            {% endfor %}-->
+<!--        </ul>-->
+<!--    {% endfor %}-->
+
+</div>
+
+</body>
+</html>

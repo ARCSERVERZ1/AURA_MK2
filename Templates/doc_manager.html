@@ -15,21 +15,74 @@
   <label>Hello</label>
 </div>
 <div class = 'main-box'>
-  <div class = 'form-box'>
-    <div class = 'form-'>
-      <label>Document Holder name</label>
-      <input type="text">
-    </div>
 
-    <input type="file" accept="image/*" multiple id="fileInput">
-  </div>
+
   <div class = 'photo-box'>
-    <img id="displayedImage" src="#" alt="Selected Image">
+    <iframe id="displayedPdf" src="#" height = "300px"  alt="Selected Image"></iframe>
+     <img id="displayedImage" class="di" src="#"  alt="Selected Image" >
     <div class="navigation">
     <button onclick="previousImage()">Previous</button>
     <button onclick="nextImage()">Next</button>
+
+       <form id="uploadForm" action="/doc_manager/save/" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+<!--       <div class="choose"><input type="file" accept="image/*,.pdf"  multiple id="fileInput" name = "zile"></div>-->
+        <div class="choose">
+        <input type="file" accept="image/*,.pdf" multiple name="file" id="fileInput">
+    </div>
+
+
   </div>
   </div>
+
+  <div class = 'form-box'>
+
+    <div class = 'form-inputs'>
+      <label >Holder name</label>
+      <select name = docName id = 'docName'>
+        {% for i in document_holders %}
+        <option value = "{{i}}" > {{i}}</option>
+        {% endfor %}
+      </select>
+<!--      <input type="text" id = 'docName' name = 'docName'>-->
+    </div>
+    <div class = 'form-inputs'>
+      <label >Doc type</label>
+      <select name = docType id = 'docType'>
+        {% for i in document_type %}
+        <option value = "{{i}}" > {{i}}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class = 'form-inputs'>
+      <label >Ref number</label>
+      <input type="text" id = 'refNum' name = 'refNum'>
+    </div>
+    <div class = 'form-inputs'>
+      <label >Value / Price</label>
+      <input type="text" id = 'value' name = 'value'>
+    </div>
+    <div class = 'form-inputs'>
+      <label >Start date</label>
+      <input type="date" id = 'sDate' name = 'sDate'>
+    </div>
+
+    <div class = 'form-inputs'>
+      <label >valid upto</label>
+      <input type="date" id = 'eDate' name = 'eDate'>
+    </div>
+    <div class = 'form-inputs'>
+      <label >remarks</label>
+      <input type="text"  id = 'remarks' name = 'remarks'>
+    </div>
+    <div class = 'form-inputs'>
+      <button type = button   onclick="submit_data()">submit</button>
+    </div>
+  </form>
+  </div>
+
+
+
 </div>
 
 </body>
@@ -37,20 +90,61 @@
 
 
 <script>
+
+
+
   let currentImageIndex = 0;
   const selectedImages = [];
+  const selectedImagestype = [];
+
+
+
+  function submit_data() {
+         var remarks = document.getElementById('remarks').value;
+         var value = document.getElementById('value').value;
+         var sDate = document.getElementById('sDate').value;
+         var eDate = document.getElementById('eDate').value;
+         var docType = document.getElementById('docType').value;
+         var docName = document.getElementById('docName').value;
+         var refNum = document.getElementById('refNum').value;
+
+         if (docName === '' || docType === '' || refNum === ''  || remarks === '' ) {
+             alert('Info Insufficient'); }
+         else{
+            document.getElementById('uploadForm').submit();
+
+
+
+          alert('save data ');}
+    }
 
   document.getElementById('fileInput').addEventListener('change', function() {
     const files = this.files;
     for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        const fileType = file.type;
       selectedImages.push(URL.createObjectURL(files[i]));
+      selectedImagestype.push(fileType);
     }
     displayImage(0);
+
   });
 
   function displayImage(index) {
     currentImageIndex = index;
+    console.log(index);
+    console.log(selectedImagestype[index]);
+    if (selectedImagestype[index] == 'image/jpeg') {
+     document.getElementById('displayedPdf').style.display = 'none';
+      document.getElementById('displayedImage').style.display = '';
     document.getElementById('displayedImage').src = selectedImages[index];
+    } else if (selectedImagestype[index] == 'application/pdf')  {
+    console.log("i am");
+    document.getElementById('displayedImage').style.display = 'none';
+     document.getElementById('displayedPdf').style.display = '';
+    document.getElementById('displayedPdf').src = selectedImages[index];
+    }
+
   }
 
   function previousImage() {

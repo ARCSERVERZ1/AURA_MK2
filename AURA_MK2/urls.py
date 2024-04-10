@@ -20,7 +20,8 @@ from AURA_MK2 import views as v
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('dem/' , include('DEM.urls')),
+    path('doc_manager/' , include('DOCMA.urls')),
     path('' , v.login ),
     path('home/' , v.home_page ),
-    path('doc_manager/' , v.doc_manager ),
+
 ]

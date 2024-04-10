@@ -3,8 +3,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.models import User, auth
 from django.contrib import messages
 from DEM import views as dem_views
-
-
+import os
 
 
 def login(request):
@@ -36,6 +35,3 @@ def login(request):
 
 def home_page(request):
     return render(request, "home.html")
-
-def doc_manager(request):
-    return render(request, "doc_manager.html")

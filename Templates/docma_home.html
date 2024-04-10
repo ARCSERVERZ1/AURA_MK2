@@ -1,0 +1,31 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta  charset="UTF-8" name="viewport" content=" initial-scale= 0.6">
+    <title>Welcome Home!</title>
+    <link rel="stylesheet" href="{% static 'dem/docma_viewer_styles.css' %}">
+<!--    <link rel="stylesheet" href="{% static 'docma_static/doc_viewer_style.css' %}">-->
+
+</head>
+<body class="page">
+<div class="nav-bar">
+
+<div class = "home">
+    <a href = '/Jarvis/'>Home /</a>
+    <a href = '/doccat/'>Document Category</a>
+
+</div>
+    <div class = "filter-bar">
+    <a>Add</a>
+    </div>
+</div>
+<div class="cards-holder">
+{% for i in doc_type %}
+<div class="card">
+    <a href="doc_viewer/{{i}}/">{{i}}</a>
+</div>
+{% endfor %}
+    </div>
+</body>
+</html>
