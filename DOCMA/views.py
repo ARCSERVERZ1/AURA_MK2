@@ -15,15 +15,21 @@ def doc_viewer(request, type):
     viewer = {}
     for i in q1:
         path = []
+        ext = []
         print(i.holder, i.refnumber, i.end_date)
         reg_pattern = i.holder + '_' + i.refnumber
+        print("id" , i.id)
         for file in files:
             if file.find(reg_pattern) != -1:
-                path.append(type+'/'+file)
+                path.append([ type+'/'+file , file.split('.')[-1]] )
+
+
         viewer[i.holder] = {
+            'doc_id':i.id,
             'refnum': i.refnumber,
             'valid': i.end_date,
-            'file_path': path
+            'file_path': path,
+
         }
 
     print(viewer)

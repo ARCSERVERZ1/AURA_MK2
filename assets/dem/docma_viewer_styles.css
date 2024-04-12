@@ -2,18 +2,14 @@
 background-color : #383839;
 
 
-
-background-size: 1200px 800px;
 }
 .cards-holder{
 margin:25px;
 display:grid;
- grid-template-columns: repeat(3, 1fr);
+grid-template-columns: repeat(3, 1fr);
 }
 .page1{
 background-color : black;
-
-background-size: 1200px 800px;
 }
 .logo{
 padding :0px;
@@ -21,7 +17,6 @@ margin : 0px;
 }
 
 .info{
-
 height:30px;
 background-color:grey;
 margin:0px;
@@ -31,8 +26,6 @@ justify-content :left;
 align-items:center;
 border-radius:30px;
 #border:1px solid gold;
-
-
 }
 .imageholder{
 
@@ -95,7 +88,6 @@ padding:5px;
 .home{
 display:flex;
 background-color : #36454F;
-padding-top : 8px;
 border-radius: 10px;
 justify-content :left;
 padding-left : 8px;
@@ -109,7 +101,6 @@ color : white;
 .filter-bar input , select , a {
 border-radius: 6px;
 padding:5px;
-margin-left: 10px;
 font-weight: bold ;
 }
 .filter-bar a{
@@ -119,31 +110,54 @@ color:white;
 
 .nav-bar{
 display:flex;
+align-items:center;
 background-color: #36454F;
-margin:10px;
-padding: 10px;
+height:50px;
 border-radius: 10px;
 justify-content: space-between;
 padding-right:180px;
 }
-.view-block{
-background-color:grey;
+
+.home-button {
+display:flex;
+align-items:center;
+justify-content:center;
+height : 10px;
+padding:10px;
+border-radius: 7px;
 }
+
+.view-block{
+margin-top:12px;
+}
+
 .doc-pics{
 background-color:blue;
 }
-.doc-details{
 
-background-color:red;}
+.doc-details{
+display:flex;
+justify-content:space-around;
+align-items:center;
+height:25px;
+background-color : #36454F;
+border-radius: 10px;
+color:white;
+font-weight: bold ;
+}
+
 
 
 .doc-card{
-margin-top:30px;
-width : 110px;
-height : 130px;
+display:flex;
+margin:10px;
+max-width:fit-content;
+
+}
 
 
-
+.doc-card img , iframe {
+margin:10px;
 }
 
 .di{
@@ -158,4 +172,11 @@ color:white;
 position:relative;
 top:-95px;
 left:15px;
+}
+
+
+.home-button a {
+margin-right:10px;
+background-color : #383839;
+color:white;
 }

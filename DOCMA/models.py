@@ -30,7 +30,7 @@ class docma(models.Model):
     updated_by = models.CharField(max_length=200)
 
     def __str__(self):
-        return self.type
+        return str(self.id)+'-'+str(self.type)+'-'+str(self.holder)
 
 
 class doc_type(models.Model):

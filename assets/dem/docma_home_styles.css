@@ -5,6 +5,11 @@ background-color : #383839;
 
 background-size: 1200px 800px;
 }
+.cards-holder{
+margin:25px;
+display:grid;
+ grid-template-columns: repeat(3, 1fr);
+}
 .page1{
 background-color : black;
 
@@ -34,11 +39,11 @@ border-radius:30px;
 }
 
 .card{
-
 width : 110px;
 height : 130px;
 margin-top:30px;
 margin-left:30px;
+
 padding : 15px;
 background-color:#484848;
 border-radius: 20px;
@@ -78,7 +83,6 @@ border-radius : 25px;
 box-shadow : 0 0 50px 	#181818;
 }
 
-
 .filter-bar  {
 background-color : #7393B3 ;
 border-radius: 10px;
@@ -90,7 +94,6 @@ padding:5px;
 .home{
 display:flex;
 background-color : #36454F;
-padding-top : 8px;
 border-radius: 10px;
 justify-content :left;
 padding-left : 8px;
@@ -100,7 +103,6 @@ padding-left : 8px;
 .home a {
 color : white;
 }
-
 .filter-bar input , select , a {
 border-radius: 6px;
 padding:5px;
@@ -120,4 +122,47 @@ padding: 10px;
 border-radius: 10px;
 justify-content: space-between;
 padding-right:180px;
+}
+.view-block{
+background-color:grey;
+}
+.doc-pics{
+background-color:blue;
+}
+.doc-details{
+
+background-color:red;}
+
+
+.doc-card{
+margin-top:30px;
+width : 110px;
+height : 130px;
+
+
+
+}
+
+.di{
+width:200px;
+opacity:90%;
+}
+.doc-card a{
+
+color:white;
+}
+.typetext{
+position:relative;
+top:-95px;
+left:15px;
+}
+
+.home-button {
+display:flex;
+align-items:center;
+justify-content:center;
+height : 10px;
+padding:10px;
+background-color : blue;
+border-radius: 7px;
 }
