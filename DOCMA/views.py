@@ -7,21 +7,23 @@ from django.contrib.auth.models import User, auth
 
 # Create your views here.
 
+
 def doc_viewer(request, type):
     q1 = docma.objects.filter(type=type)
-    path = 'assets/' + type
+    static_folder = 'assets/'
+    doc_path = 'Documents/'+type
+    path =  static_folder+doc_path
     files = os.listdir(path)
     files = [file for file in files if os.path.isfile(os.path.join(path, file))]
     viewer = {}
     for i in q1:
         path = []
-        ext = []
         print(i.holder, i.refnumber, i.end_date)
         reg_pattern = i.holder + '_' + i.refnumber
         print("id" , i.id)
         for file in files:
             if file.find(reg_pattern) != -1:
-                path.append([ type+'/'+file , file.split('.')[-1]] )
+                path.append([ doc_path+'/'+file , file.split('.')[-1]] )
 
 
         viewer[i.holder] = {
@@ -99,7 +101,9 @@ def doc_manager_save(request):
 
         remarks = request.POST['remarks']
         value = request.POST['value']
-        upload_dir = 'assets/' + docType
+        static_folder = 'assets/'
+        doc_path = 'Documents/' + docType
+        upload_dir = static_folder + doc_path
         print(docName, docType, refNum, sDate, sDate, eDate, remarks, value)
         counter = 0
         for file in request.FILES.getlist('file'):
