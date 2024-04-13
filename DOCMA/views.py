@@ -57,7 +57,8 @@ def doc_viewer(request, type):
 
 
 def doc_manger_home(request):
-    document_type = doc_type.objects.values_list('type', flat=True)
+    # document_type = doc_type.objects.values_list('type', flat=True)
+    document_type = docma.objects.values_list('type', flat=True).distinct()
     context = {
         'doc_type': document_type
     }
