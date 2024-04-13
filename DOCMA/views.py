@@ -108,12 +108,12 @@ def doc_manager_save(request):
         print(docName, docType, refNum, sDate, sDate, eDate, remarks, value)
         counter = 0
 
-        if os.path.exists('AURA_MK2'):
-            print("cloud")
-            upload_dir = 'AURA_MK2/'+upload_dir
-        else:
-            print("local")
-            pass
+        # if os.path.exists('AURA_MK2'):
+        #     print("cloud")
+        #     upload_dir = 'AURA_MK2/'+upload_dir
+        # else:
+        #     print("local")
+        #     pass
 
         for file in request.FILES.getlist('file'):
             counter = counter + 1
