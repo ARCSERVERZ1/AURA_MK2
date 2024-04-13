@@ -10,24 +10,31 @@ from django.contrib.auth.models import User, auth
 
 def doc_viewer(request, type):
     q1 = docma.objects.filter(type=type)
+
     static_folder = 'assets/'
-    doc_path = 'Documents/'+type
-    path =  static_folder+doc_path
-    files = os.listdir(path)
-    files = [file for file in files if os.path.isfile(os.path.join(path, file))]
+    doc_path = 'Documents/' + type
+    upload_dir = static_folder + doc_path
+    if os.path.exists('AURA_MK2'):
+        print("cloud")
+        upload_dir = 'AURA_MK2/' + upload_dir
+    else:
+        print("local")
+        pass
+    files = os.listdir(upload_dir)
+    files = [file for file in files if os.path.isfile(os.path.join(upload_dir, file))]
+
     viewer = {}
     for i in q1:
         path = []
         print(i.holder, i.refnumber, i.end_date)
         reg_pattern = i.holder + '_' + i.refnumber
-        print("id" , i.id)
+        print("id", i.id)
         for file in files:
             if file.find(reg_pattern) != -1:
-                path.append([ doc_path+'/'+file , file.split('.')[-1]] )
-
+                path.append([doc_path + '/' + file, file.split('.')[-1]])
 
         viewer[i.holder] = {
-            'doc_id':i.id,
+            'doc_id': i.id,
             'refnum': i.refnumber,
             'valid': i.end_date,
             'file_path': path,
@@ -108,12 +115,12 @@ def doc_manager_save(request):
         print(docName, docType, refNum, sDate, sDate, eDate, remarks, value)
         counter = 0
 
-        # if os.path.exists('AURA_MK2'):
-        #     print("cloud")
-        #     upload_dir = 'AURA_MK2/'+upload_dir
-        # else:
-        #     print("local")
-        #     pass
+        if os.path.exists('AURA_MK2'):
+            print("cloud")
+            upload_dir = 'AURA_MK2/' + upload_dir
+        else:
+            print("local")
+            pass
 
         for file in request.FILES.getlist('file'):
             counter = counter + 1
