@@ -107,9 +107,9 @@ def doc_manager_save(request):
         print(docName, docType, refNum, sDate, sDate, eDate, remarks, value)
         counter = 0
 
-        if os.path.exists('ServerAura'):
+        if os.path.exists('AURA_MK2'):
             print("cloud")
-            upload_dir = 'ServerAura/'+upload_dir
+            upload_dir = 'AURA_MK2/'+upload_dir
         else:
             print("local")
             pass
