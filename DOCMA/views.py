@@ -106,6 +106,14 @@ def doc_manager_save(request):
         upload_dir = static_folder + doc_path
         print(docName, docType, refNum, sDate, sDate, eDate, remarks, value)
         counter = 0
+
+        if os.path.exists('ServerAura'):
+            print("cloud")
+            upload_dir = 'ServerAura/'+upload_dir
+        else:
+            print("local")
+            pass
+
         for file in request.FILES.getlist('file'):
             counter = counter + 1
             if not os.path.exists(upload_dir): os.makedirs(upload_dir)
