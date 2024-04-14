@@ -6,8 +6,6 @@ from django.contrib.auth.models import User, auth
 
 
 # Create your views here.
-
-
 def doc_viewer(request, type):
     q1 = docma.objects.filter(type=type)
 
@@ -159,3 +157,7 @@ def save_uploaded_file(file):
     with open(os.path.join(upload_dir, file.name), 'wb+') as destination:
         for chunk in file.chunks():
             destination.write(chunk)
+
+
+def test(request):
+    return render(request, "test.html")

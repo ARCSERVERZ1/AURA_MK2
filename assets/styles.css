@@ -21,9 +21,12 @@ body{
 position: absolute;
 font-size : 20px;
 top : 20%;
-left : 58%;
-width:400px;
-padding:80px;
+left : 10%;
+width:380px;
+padding-top:80px;
+padding-bottom:80px;
+padding-left:50px;
+padding-right:50px;
 transform : translate(-50% , - 50%);
 background:rgba(0,0,0,0.5);
 box-sizing:border-box;

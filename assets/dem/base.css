@@ -1,0 +1,63 @@
+:root {
+    --background:#191D26;
+    --button:darkred;
+    --tiles-background: #2c3c54;
+    --tiles-outline:yellow;
+    --tiles-shadow:white;
+    --button:darkred;
+    --border_effect:#531516;
+    --text_colour:#1B222C;
+    --font_cabin:font-family: 'Cabin', sans-serif;
+}
+
+body{
+background-color:var(--background);
+}
+
+
+
+
+.nav-bar{
+display:flex;
+background-color: var(--tiles-background);
+margin:10px;
+padding: 10px;
+border-radius: 10px;
+justify-content: space-between;
+padding-right:180px;
+}
+
+.home-button {
+display:flex;
+align-items:center;
+justify-content:center;
+height : 10px;
+padding:10px;
+background-color : var(--tiles-background);
+border-radius: 7px;
+}
+
+.home-button a {
+background-color : #466086;
+border-radius:10px;
+color : white;
+padding:5px;
+margin:10px;
+font-weight: bold;
+}
+
+
+
+.home{
+display:flex;
+align-items:center;
+background-color : var(--tiles-background);
+border-radius: 10px;
+justify-content :left;
+padding-left : 8px;
+}
+
+.home a {
+color : white;
+font-weight: bold;
+}
