@@ -1,13 +1,146 @@
+<!--&lt;!&ndash;<!DOCTYPE html>&ndash;&gt;-->
+<!--&lt;!&ndash;<html>&ndash;&gt;-->
+<!--&lt;!&ndash;<head>&ndash;&gt;-->
+<!--&lt;!&ndash;  <title>Test AR #3</title>&ndash;&gt;-->
+<!--&lt;!&ndash;  <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>&ndash;&gt;-->
+<!--&lt;!&ndash;  <script src="https://cdn.rawgit.com/jeromeetienne/AR.js/2.1.7/aframe/build/aframe-ar.js"></script>&ndash;&gt;-->
+<!--&lt;!&ndash;</head>&ndash;&gt;-->
+<!--&lt;!&ndash;<body style="margin: 0; overflow: hidden;">&ndash;&gt;-->
+<!--&lt;!&ndash;  <a-scene embedded arjs="sourceType: webcam; debugUIEnabled: false;">&ndash;&gt;-->
+<!--&lt;!&ndash;    &lt;!&ndash; Marker for tracking &ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;    <a-marker type="pattern" url="assets/pattern-b.patt"  id="marker">&ndash;&gt;-->
+
+<!--&lt;!&ndash;      &lt;!&ndash; Plane to display the image &ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;      <a-plane id="imagePlane"  width="4" height="2.25"&ndash;&gt;-->
+<!--&lt;!&ndash;              ></a-plane>&ndash;&gt;-->
+<!--&lt;!&ndash;    </a-marker>&ndash;&gt;-->
+<!--&lt;!&ndash;    &lt;!&ndash; Camera to view the scene &ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;&lt;!&ndash;    <a-entity camera></a-entity>&ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;  </a-scene>&ndash;&gt;-->
+<!--&lt;!&ndash;  &lt;!&ndash; Script to refresh every 5 seconds &ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;  <script>&ndash;&gt;-->
+<!--&lt;!&ndash;&lt;!&ndash;    const imagePlane = document.getElementById("imagePlane");&ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;&lt;!&ndash;    const marker = document.getElementById("marker");&ndash;&gt;&ndash;&gt;-->
+
+<!--&lt;!&ndash;&lt;!&ndash;    const imageUrl = "capture.jpg";&ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;&lt;!&ndash;    let isAnimationRunning = false; // To prevent multiple animations&ndash;&gt;&ndash;&gt;-->
+
+<!--&lt;!&ndash;&lt;!&ndash;    marker.addEventListener("markerFound", () => {&ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;&lt;!&ndash;      if (!isAnimationRunning) {&ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;&lt;!&ndash;        animatePosition(4, 0, 0, 1000); // Animates from (0, 0, 0) to (4, 0, 0) in 1 second&ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;&lt;!&ndash;      }&ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;&lt;!&ndash;    });&ndash;&gt;&ndash;&gt;-->
+
+<!--&lt;!&ndash;&lt;!&ndash;    marker.addEventListener("markerLost", () => {&ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;&lt;!&ndash;      if (!isAnimationRunning) {&ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;&lt;!&ndash;        animatePosition(4, 0, 0, 1000); // Animates from (4, 0, 0) to (0, 0, 0) in 1 second&ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;&lt;!&ndash;      }&ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;&lt;!&ndash;    });&ndash;&gt;&ndash;&gt;-->
+
+<!--&lt;!&ndash;&lt;!&ndash;    function animatePosition(startX, endX, endY, duration) {&ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;&lt;!&ndash;      isAnimationRunning = true;&ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;&lt;!&ndash;      const startTime = performance.now();&ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;&lt;!&ndash;      const startY = 0;&ndash;&gt;&ndash;&gt;-->
+
+<!--&lt;!&ndash;&lt;!&ndash;      function updatePosition(currentTime) {&ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;&lt;!&ndash;        const elapsedTime = currentTime - startTime;&ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;&lt;!&ndash;        if (elapsedTime < duration) {&ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;&lt;!&ndash;          const newX = startX + (endX - startX) * (elapsedTime / duration);&ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;&lt;!&ndash;          const newY = startY + (endY - startY) * (elapsedTime / duration);&ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;&lt;!&ndash;          imagePlane.setAttribute("position", `${newX} ${newY} 0`);&ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;&lt;!&ndash;          requestAnimationFrame(updatePosition);&ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;&lt;!&ndash;        } else {&ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;&lt;!&ndash;          imagePlane.setAttribute("position", `${endX} ${endY} 0`);&ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;&lt;!&ndash;          isAnimationRunning = false;&ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;&lt;!&ndash;        }&ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;&lt;!&ndash;      }&ndash;&gt;&ndash;&gt;-->
+
+<!--&lt;!&ndash;&lt;!&ndash;      requestAnimationFrame(updatePosition);&ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;&lt;!&ndash;    }&ndash;&gt;&ndash;&gt;-->
+
+<!--&lt;!&ndash;&lt;!&ndash;    // Function to update the image source&ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;&lt;!&ndash;    function updateImageSource() {&ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;&lt;!&ndash;      const uniqueParam = Date.now(); // Generate a unique parameter&ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;&lt;!&ndash;      const newImageUrl = `${imageUrl}?v=${uniqueParam}`;&ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;&lt;!&ndash;      imagePlane.setAttribute("material", "src", newImageUrl);&ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;&lt;!&ndash;    }&ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;&lt;!&ndash;    // Initial image update&ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;&lt;!&ndash;    updateImageSource();&ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;&lt;!&ndash;    // Check for image update every 5 seconds&ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;&lt;!&ndash;    setInterval(updateImageSource, 5000);&ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;  </script>&ndash;&gt;-->
+<!--&lt;!&ndash;</body>&ndash;&gt;-->
+<!--&lt;!&ndash;</html>&ndash;&gt;-->
+<!--<!DOCTYPE html>-->
+<!--<html>-->
+<!--<head>-->
+<!--  <title>Test AR #1</title>-->
+<!--   <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>-->
+<!--    <script src="https://cdn.rawgit.com/jeromeetienne/AR.js/2.2.2/aframe/build/aframe-ar.js"></script>-->
+<!--</head>-->
+<!--<body style="margin: 0; overflow: hidden;">-->
+<!--  <a-scene embedded arjs="sourceType: webcam; debugUIEnabled: false;">-->
+<!--    &lt;!&ndash; Marker for tracking &ndash;&gt;-->
+<!--  &lt;!&ndash;  <a-marker type="pattern" url="pattern-marker.patt"> &ndash;&gt;-->
+<!--<a-marker preset="hiro">-->
+<!--      &lt;!&ndash; Plane to display the image &ndash;&gt;-->
+<!--&lt;!&ndash;      <a-plane id="imagePlane" position="0 0 0"  scale="1 1 1&ndash;&gt;-->
+<!--&lt;!&ndash;" rotation="0 0 0" width="4" height="2.25" src="exp/1.png">&ndash;&gt;-->
+<!--&lt;!&ndash;      </a-plane>&ndash;&gt;-->
+
+<!--&lt;!&ndash;    <a-plane id="imagePlan" position="0 0 0"  scale="1 1 1&ndash;&gt;-->
+<!--&lt;!&ndash;" rotation="-90 0 0" width="4" height="2.25" src="exp/webpng.png">&ndash;&gt;-->
+<!--&lt;!&ndash;      </a-plane>&ndash;&gt;-->
+<!--<a-box></a-box>-->
+<!--    </a-marker>-->
+<!--    &lt;!&ndash; Camera to view the scene &ndash;&gt;-->
+<!--      <a-box color="red"-->
+<!--      width="3"-->
+<!--      height="3"-->
+<!--      depth="5">-->
+<!--      </a-box>-->
+
+<!--          <a-entity camera></a-entity>-->
+<!--  </a-scene>-->
+<!--</body>-->
+<!--</html>-->
+<!--//////////////////new-->
 <!DOCTYPE html>
-
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>hello world</title>
+  <title>Test AR #1</title>
+   <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+    <script src="https://cdn.rawgit.com/jeromeetienne/AR.js/2.2.2/aframe/build/aframe-ar.js"></script>
 </head>
-<body>
-{% extends 'base.html' %}
-<h1>I am the best</h1>
+<body style="margin: 0; overflow: hidden;">
+  <a-scene embedded arjs="sourceType: webcam; debugUIEnabled: false;">
+    <!-- Marker for tracking -->
+    <a-marker type="pattern"  preset="custom" url="assets/pattern-b.patt">
+<!--<a-marker preset="hiro">-->
+      <!-- Plane to display the image -->
+<!--  <a-box color="red"-->
+<!--      width="1"-->
 
+
+<!--      height="1"-->
+<!--      depth="1">-->
+<!--      </a-box>-->
+      <a-plane id="imagePlane" scale=".5 .5 .5" position="0 0 0" rotation="0 0 0"
+               width="7" height="8.25" material="shader: flat; scale: 4 4 4"
+               src="assets/set.png">
+      </a-plane>
+
+   <a-plane id="imagePlae" scale=".5 .5 .5" position="0 0 0" rotation="0 0 0"
+               width="5" transparent="true" alpha-test="0.2" height="8.25" material="shader: flat; scale: 4 4 4"
+               src="assets/weeding.png">
+      </a-plane>
+
+    </a-marker>
+    <!-- Camera to view the scene -->
+
+
+
+          <a-entity camera></a-entity>
+  </a-scene>
 </body>
 </html>
