@@ -3,7 +3,7 @@
   "auto_category": {
     "Kitchen&Groceries": ["dmart" , "rent" , "STORES","market","Chicken","SRI SUPREME FRESH CH" ],
     "Food&Drinks": ["lunch","dinner","snack","breakfast" , "drinks" , "FOOD" , "zomato","biriyani","HOTEL"],
-    "Home": ["HomeAppliances" ,"pooja" ],
+    "Home": ["HomeAppliances" ,"pooja"],
     "Body_care": ["haircut","massage"],
     "Travel": ["travel" ,"cab" , "auto" , "SUMATHIS" ],
     "Entertainment": ["cinema","infotainment"],
@@ -12,6 +12,7 @@
     "Clothing&shopping": ["myntra","flipkart","shopping"],
     "Investment&Savings": [ "chit","Upstox" ],
     "Bike": ["filling station" , "petrol" , "fuel"],
+    "Internet": ["wifi","recharge"],
     "Others": []
   }
 }

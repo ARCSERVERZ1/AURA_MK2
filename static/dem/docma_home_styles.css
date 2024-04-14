@@ -97,8 +97,8 @@ padding-left : 8px;
 
 }
 
-.home a {
-color : white;
+.home a h4 {
+color : yellow;
 }
 
 .filter-bar input , select , a {
@@ -120,4 +120,7 @@ padding: 10px;
 border-radius: 10px;
 justify-content: space-between;
 padding-right:180px;
+}
+.typetext{
+color:green;
 }
