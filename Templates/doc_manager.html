@@ -54,6 +54,7 @@
         <option value = "{{i}}" > {{i}}</option>
         {% endfor %}
       </select>
+
 <!--      <input type="text" id = 'docName' name = 'docName'>-->
     </div>
     <div class = 'form-inputs'>
@@ -62,7 +63,22 @@
         {% for i in document_type %}
         <option value = "{{i}}" > {{i}}</option>
         {% endfor %}
+        <option value = "addnew">Add New + </option>
       </select>
+       <div class = 'create-new-type' id = 'create-new-type'>
+            <div class = 'add_doc_type'>
+                <div class = 'popup-head'>
+                <label>Add Document type</label>
+                <button>X</button>
+
+                </div>
+             <div class = 'main-pop'>
+             <label >Doc Type</label>
+             <input type = text id = doc_type >
+            <button type = button onclick="add_doc_type()">add doc type</button>
+                 </div>
+             </div>
+       </div>
     </div>
     <div class = 'form-inputs'>
       <label >Ref number</label>
@@ -103,10 +119,39 @@
 
 
 
+
   let currentImageIndex = 0;
   const selectedImages = [];
   const selectedImagestype = [];
 
+
+ function add_doc_type() {
+    console.log("hii ");
+     var doc_type = document.getElementById('doc_type').value;
+
+     fetch('http://127.0.0.1:8000/doc_manager/add_new_type/'+doc_type)
+                .then(response => response.json())
+                .then(data => {
+                   alert(data.hello);
+                   console.log(data.hello);
+                   location.reload(true);
+                });
+
+
+ }
+
+
+
+
+ console.log(document.getElementById('docType').value);
+
+ document.getElementById("docType").addEventListener("change", function() {
+  var selectedOption = this.value;
+   if (selectedOption == 'addnew') {
+   console.log(selectedOption);
+   document.getElementById('create-new-type').style.display = 'flex';
+   }
+});
 document.getElementById('displayedPdf').style.display = 'none';
 document.getElementById('displayedImage').style.display = 'none';
 

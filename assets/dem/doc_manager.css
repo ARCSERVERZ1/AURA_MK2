@@ -123,3 +123,52 @@ padding-left : 8px;
 color : white;
 font-weight: bold;
 }
+
+.create-new-type {
+display:none;
+position:fixed;
+flex-direction:column;
+top:0%;
+left:0%;
+height:100%;
+width:100%;
+align-items: center;
+justify-content:center;
+background: rgba(0, 0, 0, 0.7);
+border-radius:5px;
+}
+
+.add_doc_type{
+display:flex;
+flex-direction:column;
+justify-content: space-between;
+align-items:center;
+background: var(--tiles-background);
+height:50px;
+width:350px;
+padding:20px;
+border-radius: 10px;
+}
+
+.add_doc_type input{
+margin:5px;
+}
+
+.popup-head{
+display:flex;
+align-items:center;
+justify-content:space-around;
+margin-bottom:10px;
+}
+
+.popup-head button{
+margin-left:10px;
+}
+
+
+.main-pop{
+display:flex;
+justify-content: space-between;
+align-items:center;
+background: var(--tiles-background);
+}

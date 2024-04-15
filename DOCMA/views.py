@@ -2,6 +2,7 @@ from django.shortcuts import render
 import os
 from datetime import datetime
 from .models import *
+from django.http import JsonResponse
 from django.contrib.auth.models import User, auth
 
 
@@ -161,3 +162,27 @@ def save_uploaded_file(file):
 
 def test(request):
     return render(request, "test.html")
+
+
+def add_doc_type(request , new_doc_type):
+
+    print(doc_type)
+    document_type = doc_type.objects.values_list('type', flat=True)
+    print("--------------", document_type)
+    if new_doc_type not in document_type:
+        print("-----insode---------", document_type)
+        new = doc_type(
+            type = new_doc_type
+        )
+        new.save()
+        context = {
+            'data added': new_doc_type
+        }
+    else:
+        context = {
+            'duplicate data': new_doc_type
+        }
+
+
+    print("addd doc")
+    return JsonResponse(context, safe=False)
