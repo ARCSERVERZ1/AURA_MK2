@@ -14,13 +14,20 @@
     var protocol = window.location.protocol;
     var hostname = window.location.hostname;
     var port = window.location.port;
-    var domain = protocol + '//' + hostname+'//'+port;
+
+    if (port == ''){
+    var domain = protocol + '//' + hostname+'/'
+    }
+    else{
+    var domain = protocol + '//' + hostname+'/'+port+'/';
+    }
 
     console.log(domain);
     console.log(protocol);
-    console.log(hostname);
     console.log(port);
-    
+    console.log(hostname);
+
+
 
 
 </script>
