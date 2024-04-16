@@ -234,6 +234,18 @@
 
 <script>
 
+    var protocol = window.location.protocol;
+    var hostname = window.location.hostname;
+    var port = window.location.port;
+
+    if (port == ''){
+    var domain = protocol + '//' + hostname+'/'
+    }
+    else{
+    var domain = protocol + '//' + hostname+':'+port+'/';
+    }
+
+
     var save_type = 'new'
 
     function getCookie(name) {
@@ -286,7 +298,7 @@
         if (edit_date === '' || edit_amount === '' || edit_from_bank === '' || edit_to_bank === '' || edit_category === '' ) {
             alert('Info Insufficient'); }
        else{
-            fetch('http://127.0.0.1:8000/dem/add_new_transaction/', {
+            fetch(domain+'dem/add_new_transaction/', {
               method: "POST",
               headers: {
                 "Content-Type": "application/json",
@@ -334,7 +346,7 @@
                 const selectedValue = selectedOption.value;
                 console.log(selectedValue);
 
-                fetch('http://127.0.0.1:8000/dem/multiple_edit/'+selectedValue+'/'+checkedIds+'/')
+                fetch(domain+'dem/multiple_edit/'+selectedValue+'/'+checkedIds+'/')
                 .then(response => response.json())
                 .then(data => {
                    alert('Data updated for given dates');
@@ -376,7 +388,7 @@
         save_type = 'edit'
         document.getElementById('add_transaction_popup').style.display = 'flex';
         console.log(a)
-                fetch('http://127.0.0.1:8000/dem/get_data_by_id/'+a+'/')
+                fetch(domain+'dem/get_data_by_id/'+a+'/')
                                 .then(response => response.json())
                                 .then(data => {
                                 console.log(data.amount);
@@ -408,14 +420,14 @@
         var sdate = document.getElementById("dl_sdate");
         var edate = document.getElementById("dl_edate");
 
-        console.log(edate.value);
+        console.log(domain+'dem/run_datalog/');
 
-        fetch('http://127.0.0.1:8000/dem/run_datalog/'+sdate.value+'/'+edate.value)
+        fetch(domain+'dem/run_datalog/'+sdate.value+'/'+edate.value)
                 .then(response => response.json())
                 .then(data => {
                    alert('Data updated for given dates');
                    console.log(data.hello);
-                   location.reload(true);
+<!--                   location.reload(true);-->
                 });
     }
 
@@ -428,13 +440,22 @@
 </html>
 
 <script>
-    var urlDomain = "http://127.0.0.1:8000/"
-<!--    var urlDomain = "http://192.168.10.7:8000/"-->
-    var initialApiUrl = urlDomain+"dem/graph/cate-view";
+    var protocol = window.location.protocol;
+    var hostname = window.location.hostname;
+    var port = window.location.port;
+
+    if (port == ''){
+    var domain = protocol + '//' + hostname+'/'
+    }
+    else{
+    var domain = protocol + '//' + hostname+':'+port+'/';
+    }
+
+    var initialApiUrl = domain+"dem/graph/cate-view";
 
     function deleteRow(id){
         console.log(id);
-        fetch(urlDomain+'/dem/delete/'+id+'/').then(response => response.json())
+        fetch(domain+'/dem/delete/'+id+'/').then(response => response.json())
         .then(data => {
                    if(data.response == 'success'){
                     location.reload(true);
@@ -455,7 +476,7 @@
 
          function buttonClickHandler(event) {
             var buttonId = event.target.id;
-            var apiUrl = urlDomain+'dem/graph/'+buttonId;
+            var apiUrl = domain+'dem/graph/'+buttonId;
             console.log(apiUrl);
              if (myChart) {
                 myChart.destroy();

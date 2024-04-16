@@ -20,7 +20,7 @@ def datalog_transaction_table(request, count, user, date):
         print(table_data)
         if table_data.is_valid():
             if count == 1:
-                transactions_data.objects.filter(user=user, date=date).delete()
+                transactions_data.objects.filter(user=user, date=date).exclude(payment_method='Manual_Entry').delete()
             table_data.save()
             return Response(table_data.data, status=201)
         return Response(table_data.errors, status=400)
