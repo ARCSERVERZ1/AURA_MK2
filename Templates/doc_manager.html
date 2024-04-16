@@ -124,16 +124,27 @@
   const selectedImages = [];
   const selectedImagestype = [];
 
+    var protocol = window.location.protocol;
+    var hostname = window.location.hostname;
+    var port = window.location.port;
+
+    if (port == ''){
+    var domain = protocol + '//' + hostname+'/'
+    }
+    else{
+    var domain = protocol + '//' + hostname+':'+port+'/';
+    }
+
 
  function add_doc_type() {
     console.log("hii ");
      var doc_type = document.getElementById('doc_type').value;
 
-     fetch('https://serveraura.pythonanywhere.com/doc_manager/add_new_type/'+doc_type)
+     fetch(domain+'doc_manager/add_new_type/'+doc_type)
                 .then(response => response.json())
                 .then(data => {
-                   alert(data.hello);
-                   console.log(data.hello);
+                   alert(data.result);
+                   console.log(data.result);
                    location.reload(true);
                 });
 

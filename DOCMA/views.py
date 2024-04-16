@@ -176,11 +176,11 @@ def add_doc_type(request , new_doc_type):
         )
         new.save()
         context = {
-            'data added': new_doc_type
+          'result'  : 'data added:  '+str(new_doc_type)
         }
     else:
         context = {
-            'duplicate data': new_doc_type
+            'result': 'duplicate data:  '+str(new_doc_type)
         }
 
 
