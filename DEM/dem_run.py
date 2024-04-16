@@ -274,7 +274,8 @@ class GetSpendings:
                 "data_ts": i[11]
                 # "xtra"
             }
-            url = f'http://127.0.0.1:8000/dem/datalogdem/{count}/{i[0]}/{i[1]}'
+            url = f'https://serveraura.pythonanywhere.com/dem/datalogdem/{count}/{i[0]}/{i[1]}'
+            # url = f'http://127.0.0.1:8000/dem/datalogdem/{count}/{i[0]}/{i[1]}'
             status = requests.post(url, json=data_template)
             print(status.json())
         return True
