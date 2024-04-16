@@ -129,7 +129,7 @@
     console.log("hii ");
      var doc_type = document.getElementById('doc_type').value;
 
-     fetch('http://127.0.0.1:8000/doc_manager/add_new_type/'+doc_type)
+     fetch('http://serveraura.pythonanywhere.com/doc_manager/add_new_type/'+doc_type)
                 .then(response => response.json())
                 .then(data => {
                    alert(data.hello);
