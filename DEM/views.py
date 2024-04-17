@@ -8,6 +8,7 @@ from django.db.models import Sum
 import pytz , json
 from datetime import datetime, timedelta
 from DEM.dem_run import *
+import os
 
 
 # Create your views here.
@@ -142,6 +143,8 @@ def run_datalog(request, sdate, edate):
         step = timedelta(days=1)
         while startdate <= enddate:
             print('inside ddatalog')
+            current_directory = os.getcwd()
+            print("Current directory:", current_directory)
             GetSpendings(request.user.username, ['Phone_pe', 'Axis_credit'],
                          str(startdate.strftime("%Y-%m-%d")), ).get_all_transaction()
             startdate = startdate + step
