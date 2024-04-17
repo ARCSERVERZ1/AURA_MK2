@@ -417,6 +417,7 @@
     }
 
     function run_datalog(){
+        console.log("data log run started");
         var sdate = document.getElementById("dl_sdate");
         var edate = document.getElementById("dl_edate");
 
@@ -425,7 +426,11 @@
         fetch(domain+'dem/run_datalog/'+sdate.value+'/'+edate.value)
                 .then(response => response.json())
                 .then(data => {
+                    if (data.hello == 'Completed'){
                    alert('Data updated for given dates');
+                   }else{
+                    alert(data.hello);
+                   }
                    console.log(data.hello);
 <!--                   location.reload(true);-->
                 });

@@ -134,20 +134,22 @@ def run_datalog(request, sdate, edate):
     data = {
         "hello": "jarvis"
     }
-    print("-----------------", edate)
+    print("-----rundata log------------", edate)
 
     try:
         startdate = datetime.strptime(sdate, "%Y-%m-%d")
         enddate = datetime.strptime(edate, "%Y-%m-%d")
         step = timedelta(days=1)
         while startdate <= enddate:
+            print('inside ddatalog')
             GetSpendings(request.user.username, ['Phone_pe', 'Axis_credit'],
                          str(startdate.strftime("%Y-%m-%d")), ).get_all_transaction()
             startdate = startdate + step
         return JsonResponse({"hello": "Completed"}, safe=False)
 
     except Exception as e:
-        return JsonResponse({"hello": "Exception"}, safe=False)
+        print(e)
+        return JsonResponse({"hello": e}, safe=False)
 
 
 def delete_log(requests , id):
