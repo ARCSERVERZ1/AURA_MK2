@@ -172,7 +172,7 @@ def phone_pe_plain_mail_details(string, type):
 
 
 class GetSpendings:
-    def __init__(self, user, platforms=(), date="", url='http://127.0.0.1:8000/dem/datalogdem/'):
+    def __init__(self, user, platforms=(), date="", url='https://serveraura.pythonanywhere.com/dem/datalogdem/'):
         self.user = user
         self.pass_date = date
         self.platforms = platforms
