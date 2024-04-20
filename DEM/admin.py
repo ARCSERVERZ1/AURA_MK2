@@ -5,4 +5,5 @@ from DEM.models import *
 
 admin.register(transactions_data)(admin.ModelAdmin)
 admin.register(groupdata)(admin.ModelAdmin)
+admin.register(category)(admin.ModelAdmin)
 

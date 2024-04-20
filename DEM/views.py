@@ -9,6 +9,7 @@ import pytz , json
 from datetime import datetime, timedelta
 from DEM.dem_run import *
 import os
+from django.db.models import Sum
 
 
 # Create your views here.
@@ -41,18 +42,34 @@ def dem_dashboard(request):
     current_user = request.user.username
     # get group data
     month_start_date, today = get_month_dates()
+    monthly_table_selecion = 'all-records'
+    monthly_table = transactions_data.objects.filter(user=current_user, date__range=[month_start_date, today])
+    group_data = groupdata.objects.filter(user=current_user)
+    result = transactions_data.objects.filter(
+        user=current_user , date__range=(month_start_date, today),  # Define the date range between 'a' and 'b'
+    ).exclude(
+        category__in=['Investment&Savings', 'DEBT-OUT']# Exclude rows where category is 'investment'
+    ).aggregate(
+        total_spent =Sum('amount')  # Aggregate the sum of amounts
+    )
+    category_data = category.objects.values_list('category',flat = True)
+
     if request.method == 'POST':
-        print("i am post")
-        group_data = groupdata.objects.filter(user=current_user)
-        monthly_table = transactions_data.objects.filter(user=current_user, date__range=[month_start_date, today],category = 'Others')
-    else:
-        print("i am get")
-        group_data = groupdata.objects.filter(user=current_user)
-        monthly_table = transactions_data.objects.filter(user=current_user, date__range=[month_start_date , today])
-        # total_spent =
+        get_cat_trans = request.POST['get_cat_trans']
+        if get_cat_trans != 'all-records':
+            monthly_table = transactions_data.objects.filter(user=current_user, date__range=[month_start_date, today],
+                                                             category=get_cat_trans)
+            monthly_table_selecion = get_cat_trans
+
+    total_spent = result.get('total_spent', 0)
+    print("-------------------------",total_spent)
+
     context = {
         'group_data': group_data,
-        'monthly_table': monthly_table
+        'monthly_table': monthly_table,
+        'monthly_table_selecion': monthly_table_selecion ,
+        'total_spent':total_spent,
+        'category_data':category_data
     }
 
     return render(request, 'dem_dashboard.html', context)
@@ -64,7 +81,7 @@ def non_cat_trans(request):
 
     group_data = groupdata.objects.filter(user=current_user)
     monthly_table = transactions_data.objects.filter(user=current_user, date__range=[month_start_date, today],
-                                                     category='Clothing&shopping')
+                                                     category='Others')
     context = {
         'group_data': group_data,
         'monthly_table': monthly_table

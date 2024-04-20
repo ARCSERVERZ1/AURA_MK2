@@ -37,3 +37,10 @@ class groupdata(models.Model):
     def __str__(self):
         return f"{self.user}-{self.grp_name} - {self.grp_end} - {self.remarks}"
 
+
+class category(models.Model):
+    category = models.CharField(max_length=200, default='NA')
+    sub_category = models.CharField(max_length=200, default='NA')
+
+    def __str__(self):
+        return self.category
