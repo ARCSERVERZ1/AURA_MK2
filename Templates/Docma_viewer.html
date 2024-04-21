@@ -17,7 +17,7 @@
              <a href = '/doc_manager/'>Document Category</a>
         </div>
         <div class = "home-button">
-            <a href = 'add_doc/'>Add Document</a>
+            <a href = '/doc_manager/add_doc/'>Add Document</a>
              <a href = '/admin/DOCMA/docma/'>Manage Docs</a>
         </div>
     </div>
@@ -125,15 +125,25 @@
 
     function delete_doc(name , id) {
     console.log(name , id);
-    displayPrompts(prompts, 0);
+    var delConf = confirm("Are you sure to Delete record with name "+name);
+
+    if (delConf) {
+         fetch(domain+'doc_manager/delete_data_by_id/'+id+'/')
+        .then(response => response.json())
+        .then(data => {
+            if (data.result == 'True'){
+            alert('Data deleted successfully');
+            location.reload(true);
+             }
+            else{ alert('Something Wrong'); }
+        });
+
     }
+}
 
-    function close_popup(){
-    console.log("close popup");
-    document.getElementById('popup-overlay').style.display = 'None';
+    function close_popup() {
+    document.getElementById('popup-overlay').style.display = 'none';
     }
-
-
     function edit_doc(id){
     document.getElementById('popup-overlay').style.display = 'flex';
 

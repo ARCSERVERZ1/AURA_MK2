@@ -75,6 +75,7 @@
              <div class = 'main-pop'>
              <label >Doc Type</label>
              <input type = text id = doc_type >
+
             <button type = button onclick="add_doc_type()">add doc type</button>
                  </div>
              </div>
@@ -82,11 +83,11 @@
     </div>
     <div class = 'form-inputs'>
       <label >Ref number</label>
-      <input type="text" id = 'refNum' name = 'refNum'>
+      <input type="text" id = 'refNum' name = 'refNum' required>
     </div>
     <div class = 'form-inputs'>
       <label >Value / Price</label>
-      <input type="number" id = 'value' name = 'value'>
+      <input type="number" id = 'value' name = 'value' value = 1>
     </div>
     <div class = 'form-inputs'>
       <label >Start date</label>
@@ -137,8 +138,11 @@
 
 
  function add_doc_type() {
-    console.log("hii ");
      var doc_type = document.getElementById('doc_type').value;
+
+      if (doc_type.includes(' ')) {
+        alert("Plz enter without spaces");
+        }else{
 
      fetch(domain+'doc_manager/add_new_type/'+doc_type)
                 .then(response => response.json())
@@ -147,7 +151,7 @@
                    console.log(data.result);
                    location.reload(true);
                 });
-
+}
 
  }
 
@@ -167,7 +171,9 @@ document.getElementById('displayedPdf').style.display = 'none';
 document.getElementById('displayedImage').style.display = 'none';
 
   function submit_data() {
+
          var remarks = document.getElementById('remarks').value;
+         var docs = document.getElementById('fileInput').value;
          var value = document.getElementById('value').value;
          var sDate = document.getElementById('sDate').value;
          var eDate = document.getElementById('eDate').value;
@@ -175,14 +181,16 @@ document.getElementById('displayedImage').style.display = 'none';
          var docName = document.getElementById('docName').value;
          var refNum = document.getElementById('refNum').value;
 
-         if (docName === '' || docType === '' || refNum === ''  || remarks === '' ) {
+         if (docName === '' || docType === '' || refNum === ''  || remarks === '' || docs === '' ) {
              alert('Info Insufficient'); }
          else{
-            document.getElementById('uploadForm').submit();
+            var result = confirm("Confirm Data: Name: "+docName+" and Type: "+docType);
+             if (result) {
+                document.getElementById('uploadForm').submit();
+             }
 
 
-
-          alert('save data ');}
+        }
     }
 
   document.getElementById('fileInput').addEventListener('change', function() {

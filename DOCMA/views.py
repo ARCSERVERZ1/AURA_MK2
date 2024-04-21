@@ -183,15 +183,48 @@ def add_doc_type(request, new_doc_type):
     return JsonResponse(context, safe=False)
 
 
-def delete_doc(requests, id):
-    docma.objects.filter(id=id).delete()
+def delete_data_by_id(requests, id):
+    try:
+        q1 = docma.objects.filter(id=id)
+        old_data = {}
+        for i in q1:
+            old_data = {
+                'doc_id': i.id,
+                'holder': i.holder,
+                'refnum': i.refnumber,
+                'valid': i.end_date,
+                'file_path': i.document,
+                'type': i.type
+            }
+        static_folder = 'assets/'
+        doc_path = 'Documents/' + old_data['type']
+        upload_dir = static_folder + doc_path
+
+        if os.path.exists('Local'):
+            print("Local-here")
+        else:
+            upload_dir = 'AURA_MK2/' + upload_dir
+            print("cloud")
+            pass
+        print("-------------",upload_dir)
+        files = os.listdir(upload_dir)
+        files = [file for file in files if os.path.isfile(os.path.join(upload_dir, file))]
+        reg_pattern = old_data['holder'] + '_' + old_data['refnum']
+        for file in files:
+            if file.find(reg_pattern) != -1:
+                os.remove(upload_dir+'/'+file)
+
+        docma.objects.filter(id=id).delete()
+
+        context = {'result' : 'True'}
+    except:
+        context = {'result': 'False'}
     return JsonResponse(context, safe=False)
 
 
 def get_data_by_id(request, id):
     print(f"get data by id for id {id}")
     q1 = docma.objects.filter(id=id)
-
     data = {
         'id': q1[0].id,
         'name': q1[0].holder,
@@ -205,31 +238,6 @@ def get_data_by_id(request, id):
 
     return JsonResponse(data, safe=False)
 
-
-def get_files_from_dir():
-    static_folder = 'assets/'
-    doc_path = 'Documents/' + type
-    upload_dir = static_folder + doc_path
-
-    if os.path.exists('Local'):
-        print("Local")
-    else:
-        upload_dir = 'AURA_MK2/' + upload_dir
-        print("cloud")
-        pass
-
-    files = os.listdir(upload_dir)
-    files = [file for file in files if os.path.isfile(os.path.join(upload_dir, file))]
-
-    viewer = {}
-    for i in q1:
-        path = []
-        print(i.holder, i.refnumber, i.end_date)
-        reg_pattern = i.holder + '_' + i.refnumber
-        print("id", i.id)
-        for file in files:
-            if file.find(reg_pattern) != -1:
-                path.append([doc_path + '/' + file, file.split('.')[-1]])
 
 
 def add_edit_document(requests):
@@ -295,3 +303,7 @@ def add_edit_document(requests):
             os.rename(upload_dir+'/'+current_filename, new_doc_path+'/'+new_filename)
 
     return JsonResponse({'data': 'ok'}, safe=False)
+
+
+
+
