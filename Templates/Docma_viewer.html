@@ -5,6 +5,8 @@
    <meta  charset="UTF-8" name="viewport" content=" initial-scale= 0.6">
     <title>Welcome Home!</title>
     <link rel="stylesheet" href="{% static 'dem/docma_viewer_styles.css' %}">
+     <link rel="stylesheet" href="{% static 'dem/popup.css' %}">
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 
 </head>
 
@@ -25,8 +27,53 @@
            <label>Holder: {{ name }}</label>
            <label>Refnum:{{ details.refnum }}</label>
            <label>Valid upto:{{ details.valid }}</label>
-            <a href = '/admin/DOCMA/docma/{{ details.doc_id }}/change/'> Edit </a>
-
+            <button onclick = "edit_doc('{{details.doc_id}}')">EDIT</button>
+            <button onclick = "delete_doc('{{name}}','{{details.doc_id}}')">delete</button>
+        </div>
+        <div class = 'popup-overlay' id = 'popup-overlay'>
+            <div class = "popup-container">
+                <div class = 'popup-head'>
+                    <H4>Manage Documents</H4>
+                    <input type = 'text' id = 'edit-id'>
+                    <button onclick="close_popup()">X</button>
+                </div>
+                <div class = 'popup-content'>
+                    <div class = 'popup-content-sub'>
+                        <div class = 'popup-content-field'>
+                             <label>Holder Name *</label>
+                             <input type = 'text' id = 'edit-name'>
+                        </div>
+                       <div class = 'popup-content-field'>
+                             <label>Doc Type *</label>
+                             <input type = 'text' id = 'edit-type'>
+                        </div>
+                        <div class = 'popup-content-field'>
+                             <label>Ref number *</label>
+                             <input type = 'text' id = 'edit-ref'>
+                        </div>
+                        <div class = 'popup-content-field'>
+                              <label>Value/Price</label>
+                             <input type = 'text' id = 'edit-value'>
+                        </div>
+                    </div>
+                    <div class = 'popup-content-sub'>
+                        <div class = 'popup-content-field'>
+                             <label>start date</label>
+                             <input type = 'date' id = 'edit-sdate'>
+                        </div>
+                        <div class = 'popup-content-field'>
+                             <label>end date</label>
+                             <input type = 'date' id = 'edit-edate'>
+                        </div>
+                        <div class = 'popup-content-field'>
+                              <label>Remarks</label>
+                             <input type = 'text' id = 'edit-remarks'>
+                        </div><div class = 'popup-content-field'>
+                        <button type = 'button' onclick="save_edit_doc()">Save</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
         <div class="doc-card">
             {% for path in details.file_path %}
@@ -45,3 +92,112 @@
 
 </body>
 </html>
+
+<script>
+
+    var protocol = window.location.protocol;
+    var hostname = window.location.hostname;
+    var port = window.location.port;
+    if (port == ''){
+    var domain = protocol + '//' + hostname+'/'
+    }
+    else{
+    var domain = protocol + '//' + hostname+':'+port+'/';
+    }
+
+
+
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+      }
+    }
+  }
+  return cookieValue;
+}
+
+
+    function delete_doc(name , id) {
+    console.log(name , id);
+    displayPrompts(prompts, 0);
+    }
+
+    function close_popup(){
+    console.log("close popup");
+    document.getElementById('popup-overlay').style.display = 'None';
+    }
+
+
+    function edit_doc(id){
+    document.getElementById('popup-overlay').style.display = 'flex';
+
+        fetch(domain+'doc_manager/get_data_by_id/'+id+'/')
+                                .then(response => response.json())
+                                .then(data => {
+                                console.log(data.id);
+                                document.getElementById("edit-id").value  = data.id;
+                                document.getElementById("edit-name").value  = data.name;
+                                document.getElementById("edit-type").value  = data.type;
+                                document.getElementById("edit-ref").value  = data.ref;
+                                document.getElementById("edit-sdate").value  = data.sdate;
+                                document.getElementById("edit-edate").value  = data.edate;
+                                document.getElementById("edit-value").value  = data.value;
+                                document.getElementById("edit-remarks").value  = data.remarks;
+                                });
+    }
+
+
+    function save_edit_doc(){
+     const csrftoken = getCookie('csrftoken');
+
+    var edit_id = document.getElementById("edit-id").value;
+    var edit_name = document.getElementById("edit-name").value;
+    var edit_type = document.getElementById("edit-type").value;
+    var edit_ref = document.getElementById("edit-ref").value;
+    var edit_sdate = document.getElementById("edit-sdate").value;
+    var edit_edate = document.getElementById("edit-edate").value;
+    var edit_value = document.getElementById("edit-value").value;
+    var edit_remarks = document.getElementById("edit-remarks").value;
+
+    const new_doc_json = {
+
+        "id":edit_id ,
+        "name":edit_name ,
+        "type":edit_type ,
+        "ref" : edit_ref,
+        "sdate":edit_sdate,
+        "edate":edit_edate,
+        "value":edit_value,
+        "remarks":edit_remarks
+    };
+    console.log(new_doc_json);
+
+
+        if (edit_type === '' || edit_name === '' || edit_ref === '' ) {
+           alert('Info Insufficient');
+        }else{
+
+            fetch(domain+'doc_manager/save_edit_document/', {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                 'X-CSRFToken': csrftoken
+              },
+              body: JSON.stringify(new_doc_json)
+            })
+        }
+        document.getElementById('popup-overlay').style.display = 'None';
+        location.reload(true);
+
+    }
+
+
+
+
+</script>

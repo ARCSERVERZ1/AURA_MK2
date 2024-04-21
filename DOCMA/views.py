@@ -3,6 +3,7 @@ import os
 from datetime import datetime
 from .models import *
 from django.http import JsonResponse
+import json, os
 from django.contrib.auth.models import User, auth
 
 
@@ -13,12 +14,20 @@ def doc_viewer(request, type):
     static_folder = 'assets/'
     doc_path = 'Documents/' + type
     upload_dir = static_folder + doc_path
-    if os.path.exists('AURA_MK2'):
-        print("cloud")
-        upload_dir = 'AURA_MK2/' + upload_dir
+    # if os.path.exists('AURA_MK2'):
+    #     print("cloud")
+    #     upload_dir = 'AURA_MK2/' + upload_dir
+    # else:
+    #     print("local")
+    #     pass
+
+    if os.path.exists('Local'):
+        print("Local")
     else:
-        print("local")
+        upload_dir = 'AURA_MK2/' + upload_dir
+        print("cloud")
         pass
+
     files = os.listdir(upload_dir)
     files = [file for file in files if os.path.isfile(os.path.join(upload_dir, file))]
 
@@ -32,7 +41,7 @@ def doc_viewer(request, type):
             if file.find(reg_pattern) != -1:
                 path.append([doc_path + '/' + file, file.split('.')[-1]])
 
-        viewer[i.holder] = {
+        viewer[str(i.holder)+str(i.id)] = {
             'doc_id': i.id,
             'refnum': i.refnumber,
             'valid': i.end_date,
@@ -46,18 +55,6 @@ def doc_viewer(request, type):
         'data': viewer
 
     }
-    # context = {
-    #     'data' : {
-    #     'Avinash': {
-    #         'refnum': 'EWGPB8035L',
-    #         'valid': datetime.now().date(),
-    #         'file_path': ['Avinash_EWGPB8035L_1_jpg.jpg', 'Avinash_EWGPB8035L_2_jpg.jpg']},
-    #     'Sanjay': {
-    #         'refnum': '12345',
-    #         'valid': datetime.now().date(),
-    #         'file_path': ['Sanjay_12345_1_png.png']}
-    #     }
-    # }
 
     return render(request, "Docma_viewer.html", context)
 
@@ -114,11 +111,11 @@ def doc_manager_save(request):
         print(docName, docType, refNum, sDate, sDate, eDate, remarks, value)
         counter = 0
 
-        if os.path.exists('AURA_MK2'):
-            print("cloud")
-            upload_dir = 'AURA_MK2/' + upload_dir
+        if os.path.exists('Local'):
+            print("Local")
         else:
-            print("local")
+            upload_dir = 'AURA_MK2/' + upload_dir
+            print("cloud")
             pass
 
         for file in request.FILES.getlist('file'):
@@ -164,25 +161,137 @@ def test(request):
     return render(request, "test.html")
 
 
-def add_doc_type(request , new_doc_type):
-
+def add_doc_type(request, new_doc_type):
     print(doc_type)
     document_type = doc_type.objects.values_list('type', flat=True)
     print("--------------", document_type)
     if new_doc_type not in document_type:
         print("-----insode---------", document_type)
         new = doc_type(
-            type = new_doc_type
+            type=new_doc_type
         )
         new.save()
         context = {
-          'result'  : 'data added:  '+str(new_doc_type)
+            'result': 'data added:  ' + str(new_doc_type)
         }
     else:
         context = {
-            'result': 'duplicate data:  '+str(new_doc_type)
+            'result': 'duplicate data:  ' + str(new_doc_type)
         }
-
 
     print("addd doc")
     return JsonResponse(context, safe=False)
+
+
+def delete_doc(requests, id):
+    docma.objects.filter(id=id).delete()
+    return JsonResponse(context, safe=False)
+
+
+def get_data_by_id(request, id):
+    print(f"get data by id for id {id}")
+    q1 = docma.objects.filter(id=id)
+
+    data = {
+        'id': q1[0].id,
+        'name': q1[0].holder,
+        'type': q1[0].type,
+        'ref': q1[0].refnumber,
+        'sdate': q1[0].date,
+        'edate': q1[0].end_date,
+        'value': q1[0].value,
+        'remarks': q1[0].remarks
+    }
+
+    return JsonResponse(data, safe=False)
+
+
+def get_files_from_dir():
+    static_folder = 'assets/'
+    doc_path = 'Documents/' + type
+    upload_dir = static_folder + doc_path
+
+    if os.path.exists('Local'):
+        print("Local")
+    else:
+        upload_dir = 'AURA_MK2/' + upload_dir
+        print("cloud")
+        pass
+
+    files = os.listdir(upload_dir)
+    files = [file for file in files if os.path.isfile(os.path.join(upload_dir, file))]
+
+    viewer = {}
+    for i in q1:
+        path = []
+        print(i.holder, i.refnumber, i.end_date)
+        reg_pattern = i.holder + '_' + i.refnumber
+        print("id", i.id)
+        for file in files:
+            if file.find(reg_pattern) != -1:
+                path.append([doc_path + '/' + file, file.split('.')[-1]])
+
+
+def add_edit_document(requests):
+    new_data = json.loads(requests.body)
+    print(new_data)
+
+    q1 = docma.objects.filter(id=new_data['id'])
+    old_data = {}
+    for i in q1:
+        old_data = {
+            'doc_id': i.id,
+            'holder':i.holder,
+            'refnum': i.refnumber,
+            'valid': i.end_date,
+            'file_path': i.document,
+            'type':i.type
+        }
+    static_folder = 'assets/'
+    doc_path = 'Documents/' + old_data['type']
+    upload_dir = static_folder + doc_path
+    new_doc_path = static_folder+'Documents/' + new_data['type']
+
+
+    if os.path.exists('Local'):
+        print("Local-here")
+    else:
+        upload_dir = 'AURA_MK2/' + upload_dir
+        new_doc_path = 'AURA_MK2/'+new_doc_path
+        print("cloud")
+        pass
+    print(upload_dir)
+
+
+
+    #save in db
+    data = docma.objects.filter(id=new_data['id'])
+
+    data.update(
+        holder= new_data['name'],
+        refnumber=new_data['ref'],
+        document=upload_dir + '/' +  new_data['name'] + new_data['ref'],
+        end_date=new_data['edate'],
+        date=new_data['sdate'],
+        value=new_data['value'],
+        type=new_data['type'],
+        time_stamp=datetime.now(),
+        remarks=new_data['remarks'],
+        updated_by=requests.user.username
+    )
+
+    print("data updated for docma")
+
+    files = os.listdir(upload_dir)
+    files = [file for file in files if os.path.isfile(os.path.join(upload_dir, file))]
+    reg_pattern = old_data['holder'] + '_' + old_data['refnum']
+    for file in files:
+        if file.find(reg_pattern) != -1:
+            current_filename = file
+            print("cuurent file name :",current_filename)
+            split_name = current_filename.split('_')
+            new_filename = new_data['name']+'_'+new_data['ref']+'_'+split_name[2]+'_'+split_name[3]
+            if not os.path.exists(new_doc_path):os.mkdir(new_doc_path)
+            os.rename(upload_dir+'/'+current_filename, new_doc_path+'/'+new_filename)
+
+    return JsonResponse({'data': 'ok'}, safe=False)

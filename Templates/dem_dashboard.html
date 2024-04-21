@@ -118,6 +118,7 @@
             <button type="button" onclick="submit_get_cat_trans()">Submit</button>
         </form>
             <button onclick="groupUpdate('arg')">Group Category Edit</button>
+            <button onclick="openlink()">Group Category Edit</button>
             <div id = 'multiple-edit' class = 'multiple-edit'>
                 <div class = 'popup-small'>
                     <div class = 'popup-small-head'>
@@ -557,5 +558,8 @@
     } else {
         // User clicked Cancel
     }
+    }
+       function openlink() {
+        window.open('/admin/DEM/category/', '_blank');
     }
 </script>

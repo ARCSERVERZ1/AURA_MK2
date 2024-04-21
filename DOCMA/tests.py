@@ -2,8 +2,23 @@ from django.test import TestCase
 
 # Create your tests here.
 
-str = "xyz.csv"
-if str.endswith(".pdf"):
-    print("The string ends with '.pdf'")
-else:
-    print("The string does not end with '.pdf'")
+import os
+
+
+parent_dir = os.path.dirname(os.getcwd())
+os.chdir(parent_dir)
+
+
+new_doc_path = "assets/Documents/kis"
+
+
+
+
+
+
+if not os.path.exists(new_doc_path):os.mkdir(new_doc_path)
+
+
+
+
+
