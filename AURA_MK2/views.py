@@ -5,6 +5,21 @@ from django.contrib import messages
 from DEM import views as dem_views
 import os
 
+def diagnostics():
+    print(os.getcwd())
+    folder_path = os.path.dirname(os.getcwd())
+    folder_name = os.path.basename(folder_path)
+    folder_size = sum(os.path.getsize(os.path.join(folder_path, file)) for file in os.listdir(folder_path) if
+                      os.path.isfile(os.path.join(folder_path, file)))
+    creation_time = os.path.getctime(folder_path)
+    modification_time = os.path.getmtime(folder_path)
+
+    # Print folder properties
+    print("Folder Name:", folder_name)
+    print("Folder Size (in bytes):", folder_size/ (1024 ** 2))
+    print("Creation Time:", creation_time)
+    print("Modification Time:", modification_time)
+
 
 def login(request):
 
@@ -34,4 +49,9 @@ def login(request):
     return render(request, 'Login.html')
 
 def home_page(request):
+    diagnostics()
     return render(request, "home.html")
+
+
+
+
