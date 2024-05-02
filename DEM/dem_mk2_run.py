@@ -181,15 +181,15 @@ class GetSpendings:
                 "amount": transaction[2],
                 "sender_bank": transaction[4],
                 "receiver_bank": transaction[3],
-                "message": transaction[5] if transaction[5] not in [' ', ''] else 'No Message',
-                "category": transaction[6],
+                "message": transaction[6] if transaction[6] not in [' ', ''] else 'No Message',
+                "category": transaction[5],
                 "sub_category": transaction[6] if transaction[6] not in [' ', ''] else 'NC',
                 "group": '-',
                 "payment_method": transaction[7],
                 "data_ts": str(self.ist_time)
                 # "xtra"
             }
-            url = f'https://serveraura.pythonanywhere.com/dem/datalogdem/{count}/{transaction[0]}/{str(self.pass_date)}'
+            url = f'http://127.0.0.1:8000//dem/datalogdem/{count}/{transaction[0]}/{str(self.pass_date)}'
 
             if self.post:
                 status = requests.post(url, json=data_template)
@@ -204,4 +204,4 @@ if __name__ == '__main__':
     data = json.loads(open('user_data.json').read())
     print(data['users'])
     for user in data['users']:
-        GetSpendings(user, ['phone_pe', 'axis_credit'], date='' , post = True)
+        GetSpendings(user, ['phone_pe', 'axis_credit'], date='2024-05-01' , post = True)

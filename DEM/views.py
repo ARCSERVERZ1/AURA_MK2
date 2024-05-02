@@ -43,12 +43,15 @@ def dem_dashboard(request):
     # get group data
     month_start_date, today = get_month_dates()
     monthly_table_selecion = 'all-records'
+
     monthly_table = transactions_data.objects.filter(user=current_user, date__range=[month_start_date, today])
+
     group_data = groupdata.objects.filter(user=current_user)
+
     result = transactions_data.objects.filter(
-        user=current_user , date__range=(month_start_date, today),  # Define the date range between 'a' and 'b'
+        user=current_user , date__range=(month_start_date, today),
     ).exclude(
-        category__in=['Investment&Savings', 'DEBT-OUT']# Exclude rows where category is 'investment'
+        category__in=['Investment&Savings', 'DEBT-OUT','Repay']# Exclude rows where category is 'investment'
     ).aggregate(
         total_spent =Sum('amount')  # Aggregate the sum of amounts
     )
