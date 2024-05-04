@@ -59,10 +59,11 @@ def dem_dashboard(request):
     category_data = category.objects.values_list('category',flat = True)
 
     set_budget = budget.objects.filter(user=current_user , date = str(ist_date.strftime("%B %Y"))).values_list('budget', flat=True)
+    try:
+        budget_set = set_budget[0] # index out of range handling
+    except:
+        budget_set = 0
 
-    print(set_budget[0],"<<<<<<<<<<>>>>>>>>>")
-    for i in set_budget:
-        budget_set = i
 
     if request.method == 'POST':
         get_cat_trans = request.POST['get_cat_trans']
@@ -80,8 +81,8 @@ def dem_dashboard(request):
         'monthly_table_selecion': monthly_table_selecion ,
         'total_spent':total_spent,
         'category_data':category_data,
-        'set_budget':set_budget[0],
-        'avail_to_spend':int(set_budget[0])-total_spent
+        'set_budget':budget_set,
+        'avail_to_spend':int(budget_set)-total_spent
     }
 
     return render(request, 'dem_dashboard.html', context)
@@ -296,7 +297,7 @@ def set_budget(request ,set_budget):
 
     data = {
         'response':f"Budget added as {int(set_budget)}",
-      
+
     }
     print("set budget")
     return JsonResponse(data, safe=False)
