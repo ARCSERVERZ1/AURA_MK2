@@ -43,6 +43,7 @@ def dem_dashboard(request):
     # get group data
     month_start_date, today = get_month_dates()
     monthly_table_selecion = 'all-records'
+    ist_date = datetime.now(pytz.timezone('Asia/Kolkata'))
 
     monthly_table = transactions_data.objects.filter(user=current_user, date__range=[month_start_date, today])
 
@@ -56,6 +57,12 @@ def dem_dashboard(request):
         total_spent =Sum('amount')  # Aggregate the sum of amounts
     )
     category_data = category.objects.values_list('category',flat = True)
+
+    set_budget = budget.objects.filter(user=current_user , date = str(ist_date.strftime("%B %Y"))).values_list('budget', flat=True)
+
+    print(set_budget[0],"<<<<<<<<<<>>>>>>>>>")
+    for i in set_budget:
+        budget_set = i
 
     if request.method == 'POST':
         get_cat_trans = request.POST['get_cat_trans']
@@ -72,7 +79,9 @@ def dem_dashboard(request):
         'monthly_table': monthly_table,
         'monthly_table_selecion': monthly_table_selecion ,
         'total_spent':total_spent,
-        'category_data':category_data
+        'category_data':category_data,
+        'set_budget':set_budget[0],
+        'avail_to_spend':int(set_budget[0])-total_spent
     }
 
     return render(request, 'dem_dashboard.html', context)
@@ -259,4 +268,35 @@ def get_data_by_id(request, id):
     }
 
 
+    return JsonResponse(data, safe=False)
+
+
+def set_budget(request ,set_budget):
+
+
+    ist_date = datetime.now(pytz.timezone('Asia/Kolkata'))
+    user = request.user.username
+    date = ist_date.strftime("%B %Y")
+    #
+    #
+    print("----------------date",date)
+
+    budget.objects.filter(user=user, date=date).delete()
+
+    budget_data = budget(
+        user=user ,
+        date = str(date) ,
+        budget= int(set_budget),
+        updated_time_stamp = ist_date.today()
+
+    )
+
+    budget_data.save()
+
+
+    data = {
+        'response':f"Budget added as {int(set_budget)}",
+      
+    }
+    print("set budget")
     return JsonResponse(data, safe=False)

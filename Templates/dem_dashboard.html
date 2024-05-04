@@ -98,7 +98,22 @@
         </div>
     </div>
     <div class = "insights-box">
-        <div class = "data-box"><canvas id="donut" height = "10" width=  "10"></canvas></div>
+        <div class = "data-box">
+            <div class = 'budget_setting'>
+                <div class = budget_setting-sub>
+                    <label>Set Budget:</label>
+                    <input type = 'number' style="width:70px;" value= {{set_budget}} id = 'set_budget' readonly>
+                    <button onclick="set_budget()" id = 'bud_edit'>Edit</button>
+                </div>
+                <div class = budget_setting-sub>
+                   <label id = 'left_spend'>Available to spend : {{avail_to_spend}}</label>
+                </div>
+
+
+            </div>
+            <canvas id="budget_chart" height = "7" width=  "7"></canvas>
+
+        </div>
         <div class = "graph-config">
             <button   id="day-view">Day view</button>
             <button id="cate-view">Category view</button>
@@ -270,6 +285,9 @@
   }
   return cookieValue;
 }
+
+
+
 
     function save_new_transaction(){
 
@@ -473,7 +491,8 @@
     var initialApiUrl = domain+"dem/graph/cate-view";
 
     function admin_page(){
-    window.location.href = domain+'/admin';
+<!--    window.location.href = domain+'/admin';-->
+        window.open(domain+'/admin', '_blank');
     }
 
 
@@ -498,6 +517,58 @@
         }
 
     }
+
+            function set_budget(){
+                console.log("budget change req");
+                 var set_budget = document.getElementById("set_budget");
+                 var bud_edit = document.getElementById("bud_edit");
+
+                 if (set_budget.readOnly) {
+                    set_budget.readOnly = false;
+                    bud_edit.textContent = "Save";
+
+
+
+
+
+                } else {
+                    set_budget.readOnly = true;
+                    bud_edit.textContent = "Edit";
+                     fetch(domain+'/dem/set_budget/'+ document.getElementById("set_budget").value)
+                    .then(response => response.json())
+                    .then(data => {
+                            alert(data.response);
+                    });
+
+                }
+
+
+            }
+
+            var budget = document.getElementById('budget_chart').getContext('2d');
+
+            chart = new Chart(budget, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Budget','Spent'],
+                    datasets: [{
+                        label: 'Data Values',
+                        data: [15000,2800],
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+
+
 
 
     $(document).ready(function(){
@@ -541,7 +612,7 @@
                 data: {
                     labels: labels,
                     datasets: [{
-                        label: 'Data Values',
+                        label: 'Data alues',
                         data: values,
                         backgroundColor: 'rgba(75, 192, 192, 0.2)',
                         borderColor: 'rgba(75, 192, 192, 1)',

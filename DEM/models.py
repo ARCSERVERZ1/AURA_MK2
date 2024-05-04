@@ -44,3 +44,13 @@ class category(models.Model):
 
     def __str__(self):
         return self.category
+
+
+class budget(models.Model):
+    user = models.CharField(max_length=200)
+    date = models.CharField(max_length=200, default='NA')
+    budget = models.IntegerField(null=False)
+    updated_time_stamp = models.DateTimeField()
+
+    def __str__(self):
+        return f"{self.user}-{self.date} - {self.budget} - {self.updated_time_stamp}-"
