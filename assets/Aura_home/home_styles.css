@@ -1,0 +1,32 @@
+body, html {
+  height: 100%;
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background:black;
+}
+
+.Core {
+ position:fixed;
+  top: 20%;
+  left: 37%;
+  width: 500px;
+  height: 500px;
+
+  animation: rotateAnimation 2s linear infinite; /* Adjust duration and animation type as needed */
+  border: 50px solid blue; /* Donut's icing color */
+  border-radius:40%;
+   box-shadow: 0 0 10px 5px #f00;
+  }
+
+@keyframes rotateAnimation {
+from {
+  transform: rotate(0deg);
+}
+to {
+  transform: rotate(360deg);
+}
+}
+
+

@@ -39,7 +39,7 @@ Total_sent, Total_recev, html_c, plain_c, dummy, Temp_Debt = 0, 0, 0, 0, 0, 0
 
 Category = {":": "Bills&Payments", "!": "Entertainment", "@": "Food&Drinks", "*": "Kitchen&Grocery", '#': "Shoppings",
             "Travel": "Travel", 'medical': "Medicals", '[': "Debt", "-": "Skip", "danger": "extra", "play": "Play",
-            "home": "Home", ']': "investment"}
+            "home_styles": "Home", ']': "investment"}
 
 Category_AD = {}
 for i in (df.columns).tolist():

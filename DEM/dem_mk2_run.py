@@ -113,19 +113,20 @@ class GetSpendings:
         result, message = self.conn.search(None, '(FROM {0} ON {1})'.format("alerts@axisbank.com", self.mail_date))
         transaction_msg_list = []
         for num in message[0].split():
+
             _, msg_data = self.conn.fetch(num, "(RFC822)")
             raw_mail = msg_data[0][1]
             msg = email.message_from_bytes(raw_mail)
             subject, encoding = decode_header(msg["Subject"])[0]
             if isinstance(subject, bytes):
                 subject = subject.decode(encoding or "utf-8")
-            # print(subject)
             if subject.find('Transaction alert on Axis Bank Credit Card no') != 1:
                 ref = str(msg).find('</span> <br><br>')
+                print(ref)
                 transaction_msg = str(str(msg)[ref + 82:ref + 82 + 185])
                 transaction_msg = str(transaction_msg.replace("=\n", ''))
                 match = re.search(r'Card no\.\s(\w+).*?INR\s(\d+)\s.*?at\s(.*?)\son', transaction_msg)
-
+                print(transaction_msg)
                 try:
                     if match:
                         receiver = validation(match.group(3), 'text')
@@ -189,8 +190,8 @@ class GetSpendings:
                 "data_ts": str(self.ist_time)
                 # "xtra"
             }
-            url = f'http://127.0.0.1:8000//dem/datalogdem/{count}/{transaction[0]}/{str(self.pass_date)}'
-
+            # url = f'http://127.0.0.1:8000//dem/datalogdem/{count}/{transaction[0]}/{str(self.pass_date)}'
+            url =  f'https://serveraura.pythonanywhere.com/dem/datalogdem/{count}/{transaction[0]}/{str(self.pass_date)}'
             if self.post:
                 status = requests.post(url, json=data_template)
                 print(status.json())
@@ -204,4 +205,4 @@ if __name__ == '__main__':
     data = json.loads(open('user_data.json').read())
     print(data['users'])
     for user in data['users']:
-        GetSpendings(user, ['phone_pe', 'axis_credit'], date='2024-05-01' , post = True)
+        GetSpendings(user, ['phone_pe', 'axis_credit'], date='2024-05-04' , post = True)

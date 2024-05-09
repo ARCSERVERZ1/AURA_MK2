@@ -1,0 +1,161 @@
+:root {
+    --arc_color: #FF5F1F;
+
+}
+
+
+body, html {
+  height: 100%;
+  display: flex;
+  flex-direction:column;
+  justify-content: center;
+  align-items: center;
+  background:black;
+}
+
+
+.concentric-circles {
+background:yellow;
+}
+
+.circle {
+  position: absolute;
+  top: 30%;
+  left: 50%;
+  border-radius : 50%;
+}
+
+.circle:nth-child(1) {
+  width: 600px; /* Diameter of outer circle */
+  height: 600px;
+  border: 20px solid black;
+
+}
+
+.circle:nth-child(2) {
+  width: 250px; /* Diameter of outer circle */
+  height: 250px;
+  border: 10px solid var(--arc_color);
+  border-left: 10px solid rgba(0,0,0,0);
+  border-right: 10px solid rgba(0,0,0,0);
+  transform: translate(-50%, -50%);
+  animation: 5s ease 0s infinite normal none running rotateDonut;
+
+}
+@keyframes rotateDonut {
+
+  0% {
+
+    transform: translate(-50%, -50%) rotate(0deg);
+}
+10% {
+
+    transform: translate(-50%, -50%) rotate(90deg);
+}
+20% {
+   ;
+    transform: translate(-50%, -50%) rotate(-90deg);
+}
+40% {
+
+    transform: translate(-50%, -50%) rotate(180deg);
+}
+70% {
+
+    transform: translate(-50%, -50%) rotate(-180deg);
+}
+100% {
+
+    transform: translate(-50%, -50%) rotate(0deg);
+}
+}
+
+
+.circle:nth-child(3) {
+  width: 270px; /* Diameter of outer circle */
+  height: 270px;
+
+  transform: translate(-50%, -50%);
+  box-shadow: 0 0 75px var(--arc_color);
+
+}
+
+@keyframes breath {
+0% {
+    transform: translate(-50%, -50%) scale(1);
+}
+70% {
+    transform: translate(-50%, -50%) scale(0.9);
+}
+100% {
+    transform: translate(-50%, -50%) scale(1);
+}
+
+}
+
+.circle:nth-child(4) {
+  width: 300px; /* Diameter of outer circle */
+  height: 300px;
+  transform: translate(-50%, -50%);
+  box-shadow: 0 0 75px var(--arc_color);
+  animation: breath 3s infinite ease-in-out;
+}
+
+.voice-line{
+ position: absolute;
+  top: 30%;
+  left: 50%;
+  background:red;
+}
+
+.voice-line:nth-child(1) {
+  width: 10px;
+  height: 40px;
+  transform: translate(50%, -50%);
+  animation:updown 2s  ease-in-out;
+  }
+
+
+.voice-line:nth-child(1) {
+  width: 10px;
+  height: 40px;
+  transform: translate(0%, -50%);
+  animation:updown 2s  ease-in-out;
+  }
+
+.voice-bar {
+
+display:flex;
+flex-direction:column;
+align-items:center;
+justify-content:space-around;
+position: absolute;
+top: 65%;
+left: 50%;
+transform: translate(-50%, -50%);
+
+}
+
+.voice-bar input {
+border-radius:20px;
+width:300px;
+height:25px;
+
+}
+
+.app-drawer{
+display:flex;
+align-items:center;
+justify-content:space-around;
+height:50px;
+width:100%;
+margin-bottom:40px;
+}
+
+.app-drawer button{
+height:50px;
+width:70px;
+border-radius:10px;
+
+
+}

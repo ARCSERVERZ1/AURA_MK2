@@ -1,0 +1,72 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Heads up..</title>
+	 <link rel = "stylesheet" href= "{% static 'Aura_home/jarvis.css' %}">
+
+</head>
+
+<body>
+<div class="wing">
+
+    <img class="leftwing" src="{% static 'assets/images/redwing.png' %}" alt=""
+		 width="800px" height="800px">
+	<div class = leftwingtext>
+		WebMar 30, 2017 · Opacity will make <br>everything in the div transparent to 50%,
+
+		RGBA will just fade what he wants. For <br>full control over which<br> elements are transparent and which are …
+
+Reviews: 3<br>
+9
+Using css3: #divid { -moz-border-radius: 15px; <br>-webkit-border-radius: 15px; border-radius:<br> 15px; } You can read more about it here:
+		</div>
+
+
+
+</div>
+<div class = "main" >
+	<div class = "myCircle" >
+
+		<div class = "mainCircle" >
+		<div class = "circle"></div>
+		<div class = "circle1"  id = "S1"></div>
+		<div class = "mainContent">
+
+		<ul class = "bars"  id = 'S2'>
+		<li id = 'B1'></li>
+		<li id = 'B2' ></li>
+		<li id = 'B3' ></li>
+		</ul>
+		</div>
+	</div>
+	</div>
+</div>
+
+
+<div class="fwingf">
+<img  src="{% static 'assets/images/finace_wing.png' %}" alt="" srcset="">
+	<div class="fwingtext">
+		<label class="lbl">total spent</label>
+<h1>Total spends {{data.0.total_amount}}</h1>
+		</div>
+</div>
+
+<script>
+if (10 < 18) {
+document.getElementById("B1").style.animation = "loaderbar 0.6s infinite 0s";
+document.getElementById("B2").style.animation = "loaderbar 0.6s infinite -0.3s";
+document.getElementById("B3").style.animation = "loaderbar 0.6s infinite 0.5s";
+}
+document.getElementById("S1").style.animation = "spinplusoff 5s infinite";
+
+
+</script>
+
+
+</body>
+</html>

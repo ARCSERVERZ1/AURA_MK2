@@ -1,13 +1,43 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Home</title>
+
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Heads up..</title>
+	 <link rel = "stylesheet" href= "{% static 'Aura_home/jarvis.css' %}">
+
 </head>
 <body>
-<h1>I AM THE BEST</h1>
-<a href = '/dem/' >DEM</a>
-<a href = '/doc_manager/' >Doc manager</a>
-<a href = 'https://www.pythonanywhere.com/user/ServerAura/' >Python anywhere</a>
+<div class="concentric-circles">
+     <div class = "voice-line"></div>
+    <div class = "voice-line"></div>
+  <div class="circle"></div>
+  <div class="circle"></div>
+  <div class="circle"></div>
+</div>
+<div class = 'voice-bar'>
+
+    <div class = 'app-drawer'>
+        <button onclick="goto('/dem/')">DEM</button>
+        <button onclick="goto('/doc_manager/')">Docma</button>
+        <button onclick="goto('https://www.pythonanywhere.com/user/ServerAura/')">python anywhere</button>
+    </div>
+     <input type = text >
+</div>
+
+
 </body>
 </html>
+
+<script>
+
+    function goto(path){
+
+     window.location.href = path;
+
+    }
+
+</script>
