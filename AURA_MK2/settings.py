@@ -40,7 +40,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'DEM',
     'rest_framework',
-    'DOCMA'
+    'DOCMA',
+    'MEDTRAC'
 ]
 
 MIDDLEWARE = [

@@ -21,6 +21,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('dem/' , include('DEM.urls')),
     path('doc_manager/' , include('DOCMA.urls')),
+    path('medtrac/' , include('MEDTRAC.urls')),
     path('' , v.login ),
     path('home/' , v.home_page ),
 
