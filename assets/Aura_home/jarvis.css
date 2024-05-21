@@ -111,17 +111,24 @@ background:yellow;
 .voice-line:nth-child(1) {
   width: 10px;
   height: 40px;
-  transform: translate(50%, -50%);
-  animation:updown 2s  ease-in-out;
-  }
-
-
-.voice-line:nth-child(1) {
-  width: 10px;
-  height: 40px;
   transform: translate(0%, -50%);
   animation:updown 2s  ease-in-out;
   }
+
+
+.voice-line:nth-child(2) {
+  width: 10px;
+  height: 40px;
+  transform: translate(-200%, -50%);
+  animation:updown 2s  ease-in-out;
+  }
+
+.voice-line:nth-child(3) {
+width: 10px;
+height: 40px;
+transform: translate(200%, -50%);
+animation:updown 2s  ease-in-out;
+}
 
 .voice-bar {
 

@@ -12,8 +12,12 @@
 </head>
 <body>
 <div class="concentric-circles">
-     <div class = "voice-line"></div>
-    <div class = "voice-line"></div>
+     <div class = "">
+         <div class = "voice-line"></div>
+         <div class = "voice-line"></div>
+         <div class = "voice-line"></div>
+     </div>
+
   <div class="circle"></div>
   <div class="circle"></div>
   <div class="circle"></div>
@@ -25,7 +29,8 @@
         <button onclick="goto('/doc_manager/')">Docma</button>
         <button onclick="goto('https://www.pythonanywhere.com/user/ServerAura/')">python anywhere</button>
     </div>
-     <input type = text >
+     <input type = text id = 'convert_text' >
+    <button id = 'speakA'>start</button>
 </div>
 
 
@@ -34,10 +39,91 @@
 
 <script>
 
+    function changeBackgroundColor(colour) {
+    var rootStyle = document.documentElement.style;
+    rootStyle.setProperty('--arc_color', colour);
+
+}
+
+
     function goto(path){
-
      window.location.href = path;
-
     }
+
+convert_text.value = "  ask something!!";
+
+speakA.addEventListener('click',function(){
+var speech = true;
+var finalword;
+
+changeBackgroundColor('blue');
+
+window.SpeechRecognition = window.webkitSpeechRecognition;
+ const recognition = new SpeechRecognition();
+recognition.interimResults = true; ;
+recognition.addEventListener('result', e=>{
+const transcript = Array.from(e.results)
+.map(result =>result[0])
+.map(result => result.transcript)
+convert_text.value =transcript;
+})
+
+
+recognition.onresult = function(event) {
+  for (let i = event.resultIndex; i < event.results.length; i++) {
+    if (event.results[i].isFinal) {
+      const transcription = event.results[i][0].transcript;
+     // console.log('Final transcription: ' + transcription);
+      finalword = transcription;
+      //stopRecognition();
+    }
+  }
+  // start or reset the timer when a new result is received
+  //clearTimeout(timer);
+  //timer = setTimeout(stopRecognition, maxSpeechTime);
+
+};
+
+recognition.onerror = function(event) {
+  console.error(event.error);
+ // stopRecognition();
+};
+
+recognition.onend = function() {
+  console.log('Speech recognition has ended.');
+  convert_text.value = finalword;
+  get_output(finalword);
+  changeBackgroundColor('pink');
+
+};
+if(speech = true){
+recognition.start();
+}
+})
+
+
+function get_output(req){
+
+var aigic_url = "https://algic.pythonanywhere.com/gemeni/";
+
+var jsonData ={
+ "ask": req
+};
+
+console.log(jsonData);
+
+fetch(aigic_url , {
+    method:'POST',
+    headers:{ 'Content-Type': 'application/json'},
+    body: JSON.stringify(jsonData)
+})
+.then(response => response.json())
+.then(data => {
+         alert(data.response);
+});
+
+
+
+}
 
 </script>

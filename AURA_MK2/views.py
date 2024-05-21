@@ -49,6 +49,7 @@ def login(request):
     return render(request, 'Login.html')
 
 def home_page(request):
+
     diagnostics()
     return render(request, "home.html")
 
