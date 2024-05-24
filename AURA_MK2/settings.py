@@ -41,7 +41,8 @@ INSTALLED_APPS = [
     'DEM',
     'rest_framework',
     'DOCMA',
-    'MEDTRAC'
+    'MEDTRAC',
+    # 'corsheaders'
 ]
 
 MIDDLEWARE = [
@@ -52,7 +53,14 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    # 'corsheaders.middleware.CorsMiddleware'
 ]
+
+# CORS_ALLOWED_ORIGINS = [
+#        # Add the domain you want to allow requests from
+# ]
+
+
 
 ROOT_URLCONF = 'AURA_MK2.urls'
 

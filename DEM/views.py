@@ -13,6 +13,10 @@ from django.db.models import Sum
 
 
 # Create your views here.
+
+Exclude_category = ['Investment&Savings', 'DEBT-OUT','Repay','IgnoreCount']
+
+
 @api_view(['POST'])
 def datalog_transaction_table(request, count, user, date):
     if request.method == 'POST':
@@ -52,7 +56,7 @@ def dem_dashboard(request):
     result = transactions_data.objects.filter(
         user=current_user , date__range=(month_start_date, today),
     ).exclude(
-        category__in=['Investment&Savings', 'DEBT-OUT','Repay']# Exclude rows where category is 'investment'
+        category__in=Exclude_category# Exclude rows where category is 'investment'
     ).aggregate(
         total_spent =Sum('amount')  # Aggregate the sum of amounts
     )
@@ -70,7 +74,10 @@ def dem_dashboard(request):
         if get_cat_trans != 'all-records':
             monthly_table = transactions_data.objects.filter(user=current_user, date__range=[month_start_date, today],
                                                              category=get_cat_trans)
-            monthly_table_selecion = get_cat_trans
+        else:
+            monthly_table = transactions_data.objects.filter(user=current_user, date__range=[month_start_date, today])
+        monthly_table_selecion = get_cat_trans
+
 
     total_spent = result.get('total_spent', 0)
     print("-------------------------",total_spent)
@@ -113,7 +120,9 @@ def plot_graph(requests, group_type):
         'group-view': 'group'
     }
     print(month_start_date , today)
-    categorywise_data = transactions_data.objects.filter(date__range=[month_start_date, today], user=current_user).values(
+    categorywise_data = transactions_data.objects.filter(date__range=[month_start_date, today], user=current_user).exclude(
+        category__in=Exclude_category
+    ).values(
         group_dict[group_type]).annotate(sum_category=Sum('amount'))
     spend_cat, spend_val = [], []
     for i in categorywise_data:
