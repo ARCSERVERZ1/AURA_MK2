@@ -25,9 +25,9 @@ def login(request):
 
     superusers = User.objects.filter(is_superuser=True)
     for user in superusers:
-        if user != 'Admin':
-            return redirect('/home')
-
+        if user == 'Admin':
+            pass
+            # return redirect('/home')
         print(user.username)
 
     if request.method == 'POST':
