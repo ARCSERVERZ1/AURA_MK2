@@ -5,16 +5,15 @@ from DEM.serializers import transactions_data_Serializer
 from rest_framework.response import Response
 from DEM.models import *
 from django.db.models import Sum
-import pytz , json
+import pytz, json
 from datetime import datetime, timedelta
 from DEM.dem_run import *
 import os
 from django.db.models import Sum
 
-
 # Create your views here.
 
-Exclude_category = ['Investment&Savings', 'DEBT-OUT','Repay','IgnoreCount']
+Exclude_category = ['Investment&Savings', 'DEBT-OUT', 'Repay', 'IgnoreCount']
 
 
 @api_view(['POST'])
@@ -38,8 +37,8 @@ def get_month_dates():
     today = str(today).split(' ')[0]
     startdate = str(today).split('-')
     MonthStartDate = str(startdate[0]) + '-' + str(startdate[1]) + '-01'
-    return MonthStartDate,today
-    # return '2024-02-01' , '2024-02-29'
+    # return MonthStartDate, today
+    return '2024-05-01' , '2024-05-31'
 
 
 def dem_dashboard(request):
@@ -54,20 +53,20 @@ def dem_dashboard(request):
     group_data = groupdata.objects.filter(user=current_user)
 
     result = transactions_data.objects.filter(
-        user=current_user , date__range=(month_start_date, today),
+        user=current_user, date__range=(month_start_date, today),
     ).exclude(
-        category__in=Exclude_category# Exclude rows where category is 'investment'
+        category__in=Exclude_category  # Exclude rows where category is 'investment'
     ).aggregate(
-        total_spent =Sum('amount')  # Aggregate the sum of amounts
+        total_spent=Sum('amount')  # Aggregate the sum of amounts
     )
-    category_data = category.objects.values_list('category',flat = True)
+    category_data = category.objects.values_list('category', flat=True)
 
-    set_budget = budget.objects.filter(user=current_user , date = str(ist_date.strftime("%B %Y"))).values_list('budget', flat=True)
+    set_budget = budget.objects.filter(user=current_user, date=str(ist_date.strftime("%B %Y"))).values_list('budget',
+                                                                                                            flat=True)
     try:
-        budget_set = set_budget[0] # index out of range handling
+        budget_set = set_budget[0]  # index out of range handling
     except:
         budget_set = 0
-
 
     if request.method == 'POST':
         get_cat_trans = request.POST['get_cat_trans']
@@ -78,18 +77,18 @@ def dem_dashboard(request):
             monthly_table = transactions_data.objects.filter(user=current_user, date__range=[month_start_date, today])
         monthly_table_selecion = get_cat_trans
 
-
     total_spent = result.get('total_spent', 0)
-    print("-------------------------",total_spent)
+    if total_spent is None: total_spent = 0
+    print("-------------------------", total_spent, "==", int(budget_set), "---")
 
     context = {
         'group_data': group_data,
         'monthly_table': monthly_table,
-        'monthly_table_selecion': monthly_table_selecion ,
-        'total_spent':total_spent,
-        'category_data':category_data,
-        'set_budget':budget_set,
-        'avail_to_spend':int(budget_set)-total_spent
+        'monthly_table_selecion': monthly_table_selecion,
+        'total_spent': total_spent,
+        'category_data': category_data,
+        'set_budget': budget_set,
+        'avail_to_spend': int(budget_set) - total_spent
     }
 
     return render(request, 'dem_dashboard.html', context)
@@ -119,8 +118,9 @@ def plot_graph(requests, group_type):
         'day-view': 'date',
         'group-view': 'group'
     }
-    print(month_start_date , today)
-    categorywise_data = transactions_data.objects.filter(date__range=[month_start_date, today], user=current_user).exclude(
+    print(month_start_date, today)
+    categorywise_data = transactions_data.objects.filter(date__range=[month_start_date, today],
+                                                         user=current_user).exclude(
         category__in=Exclude_category
     ).values(
         group_dict[group_type]).annotate(sum_category=Sum('amount'))
@@ -194,18 +194,18 @@ def run_datalog(request, sdate, edate):
         return JsonResponse({"hello": e}, safe=False)
 
 
-def delete_log(requests , id):
+def delete_log(requests, id):
     try:
         print(f"delete log requested for id : {id}")
-        transactions_data.objects.filter(id = id , user= requests.user.username).delete()
+        transactions_data.objects.filter(id=id, user=requests.user.username).delete()
         # return dem_dashboard(requests)
         return JsonResponse({'response': 'success'}, safe=False)
     except:
-        return JsonResponse({'response':'failed'} , safe=False)
+        return JsonResponse({'response': 'failed'}, safe=False)
 
 
-def multiple_edit(request , data , ids):
-    print(data , ids)
+def multiple_edit(request, data, ids):
+    print(data, ids)
     id_list_temp = ids.split(',')
     id = []
     for i in id_list_temp:
@@ -217,7 +217,6 @@ def multiple_edit(request , data , ids):
 
 
 def add_new_transaction(request):
-
     json_data = json.loads(request.body)
     ist_date = datetime.now(pytz.timezone('Asia/Kolkata'))
     print(json_data)
@@ -240,7 +239,7 @@ def add_new_transaction(request):
         new_data.save()
 
     elif json_data['action'] == 'edit':
-        data = transactions_data.objects.filter(id = json_data['id'])
+        data = transactions_data.objects.filter(id=json_data['id'])
 
         data.update(
             date=json_data['date'],
@@ -258,54 +257,51 @@ def add_new_transaction(request):
 
     return JsonResponse({'response': 'success'}, safe=False)
 
+
 def get_data_by_id(request, id):
     print(f"get data by id for id {id}")
-    q1 = transactions_data.objects.filter(id = id)
+    q1 = transactions_data.objects.filter(id=id)
 
     print(q1[0].amount)
 
     data = {
-        'id':q1[0].id ,
-        'date' : q1[0].date,
-        'amount' : q1[0].amount,
-        'sender_bank' : q1[0].sender_bank,
-        'receiver_bank' : q1[0].receiver_bank,
-        'message' : q1[0].message,
-        'category' : q1[0].category,
-        'sub_category' : q1[0].sub_category,
-        'group' : q1[0].group,
+        'id': q1[0].id,
+        'date': q1[0].date,
+        'amount': q1[0].amount,
+        'sender_bank': q1[0].sender_bank,
+        'receiver_bank': q1[0].receiver_bank,
+        'message': q1[0].message,
+        'category': q1[0].category,
+        'sub_category': q1[0].sub_category,
+        'group': q1[0].group,
 
     }
-
 
     return JsonResponse(data, safe=False)
 
 
-def set_budget(request ,set_budget):
-
-
+def set_budget(request, set_budget):
     ist_date = datetime.now(pytz.timezone('Asia/Kolkata'))
     user = request.user.username
     date = ist_date.strftime("%B %Y")
     #
     #
-    print("----------------date",date)
+    print("----------------date", date)
 
     budget.objects.filter(user=user, date=date).delete()
 
     budget_data = budget(
-        user=user ,
-        date = str(date) ,
-        budget= int(set_budget),
-        updated_time_stamp = ist_date.today()
+        user=user,
+        date=str(date),
+        budget=int(set_budget),
+        updated_time_stamp=ist_date.today()
 
     )
 
     budget_data.save()
 
-
     data = {
-        'response':f"Budget added as {int(set_budget)}",
+        'response': f"Budget added as {int(set_budget)}",
 
     }
     print("set budget")
