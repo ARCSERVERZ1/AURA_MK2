@@ -2,6 +2,7 @@
     --background:#191D26;
     --main_tile:red;
     --font_cabin:font-family: 'Cabin', sans-serif ;
+    --font_colour:white;
 
 }
 
@@ -23,8 +24,8 @@ display:flex;
 justify-content:center;
 flex-direction:column;
 background: #383839;
-width : 1200px;
-height:50vh;
+width : 680px;
+height:70vh;
 border-radius:10px;
 padding:10px;
 }
@@ -36,22 +37,24 @@ align-items:center;
 justify-content:space-between;
 background-color : #36454F;
 border-radius:10px;
-height:8vh;
+height:4vh;
 padding: 0px 20px;
 padding-left:50px;
-color:white;
+font-size: 30px;
+color:var(--font_colour);
 }
 
 
 .popup-content{
 display:flex;
-flex-direction:row;
-align-items:left;
+align-items: flex-start;
 justify-content:space-around;
 margin-top:5px;
 background-color : #36454F;
 border-radius:10px;
-height:40vh;
+height:70vh;
+font-size: 35px;
+color:var(--font_colour);
 }
 
 .popup-content-sub {
@@ -59,6 +62,7 @@ display:flex;
 flex-direction:column;
 align-items:center;
 justify-content:center;
+margin-top:50px;
 }
 
 .popup-content-field {
@@ -67,7 +71,15 @@ align-items:center;
 justify-content:space-between;
 width :100%;
 margin:10px;
+margin-top:30px;
 transform:scale(1.1);
+}
+
+.popup-content-field input {
+height:30px;
+width:200px;
+font-size: 25px;
+font-weight: bold;
 }
 
 
@@ -94,6 +106,7 @@ width:100px;
 height:4vh;
 border-radius:6px;
 font-size:--var(--font_cabin);
+font-size: 25px;
 font-weight:bold;
 }
 

@@ -37,8 +37,8 @@ def get_month_dates():
     today = str(today).split(' ')[0]
     startdate = str(today).split('-')
     MonthStartDate = str(startdate[0]) + '-' + str(startdate[1]) + '-01'
-    # return MonthStartDate, today
-    return '2024-05-01' , '2024-05-31'
+    return MonthStartDate, today
+    # return '2024-05-01' , '2024-05-31'
 
 
 def dem_dashboard(request):

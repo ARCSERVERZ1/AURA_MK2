@@ -46,7 +46,6 @@ def doc_viewer(request, type):
             'refnum': i.refnumber,
             'valid': i.end_date,
             'file_path': path,
-
         }
 
     print(viewer)

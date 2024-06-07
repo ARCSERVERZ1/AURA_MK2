@@ -16,45 +16,51 @@
          <div class = "popup-container">
              <div class = 'popup-head'>
                  <H4>Add medical record</H4>
-                 <input type = 'text' id = 'edit-id'>
                  <button onclick="close_popup()">X</button>
               </div>
               <div class = 'popup-content'>
                 <div class = 'popup-content-sub'>
+                    <form action = '/medtrac/log_medtrac/' method = 'POST' id="log_medtrac">
+                        {% csrf_token %}
                     <div class = 'popup-content-field'>
                          <label>Participant *</label>
-                         <input type = 'text' id = 'edit-Participant'>
+                         <input type = 'text' id = 'edit-Participant' name = 'Participant' >
                     </div>
                     <div class = 'popup-content-field'>
                          <label>Test Parameter *</label>
-                         <input type = 'text' id = 'edit-Parameter'>
+                         <input type = 'text' id = 'edit-Parameter' name = 'Parameter'>
                     </div>
                     <div class = 'popup-content-field'>
                          <label>Value 1 *</label>
-                         <input type = 'text' id = 'edit-Value1'>
+                         <input type = 'text' id = 'edit-Value1' name = 'Value1'>
                     </div>
                     <div class = 'popup-content-field'>
                           <label>Value 2 *</label>
-                         <input type = 'text' id = 'edit-Value2'>
+                         <input type = 'text' id = 'edit-Value2' name = 'Value2'>
                     </div>
-                </div>
-                <div class = 'popup-content-sub'>
                    <div class = 'popup-content-field'>
                           <label>Value 3 *</label>
-                         <input type = 'text' id = 'edit-Value3'>
+                         <input type = 'text' id = 'edit-Value3' name = 'Value3'>
                     </div>
                     <div class = 'popup-content-field'>
                          <label>Date</label>
-                         <input type = 'date' id = 'edit-date'>
+                         <input type = 'date' id = 'edit-date' name = 'date'>
+                    </div>
+                     <div class = 'popup-content-field'>
+                         <label>Date</label>
+                         <input type = 'text' id = 'edit-recorder' name = 'recorder'>
                     </div>
                     <div class = 'popup-content-field'>
                           <label>Remarks</label>
-                         <input type = 'text' id = 'edit-remarks'>
+                         <input type = 'text' id = 'edit-remarks' name = 'remarks'>
                     </div>
                     <div class = 'popup-content-field'>
-                    <button type = 'button' onclick="save_edit_doc()">Save</button>
+                    <button type = 'button' onclick="save_medtrac_data()">Save</button>
                     </div>
+                   </form>
+
                 </div>
+
             </div>
          </div>
      </div>
@@ -70,6 +76,12 @@
     function add_record(){
     console.log("add record request");
     document.getElementById('popup-overlay').style.display = 'flex';
+    }
+
+
+    function save_medtrac_data(){
+    document.getElementById('log_medtrac').submit()
+
     }
 
 
