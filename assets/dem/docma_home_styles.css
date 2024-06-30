@@ -1,5 +1,5 @@
 .page{
-background-color : #383839;
+background-color : #03161e;
 
 
 
@@ -12,7 +12,6 @@ display:grid;
 }
 .page1{
 background-color : black;
-
 background-size: 1200px 800px;
 }
 .logo{
@@ -102,6 +101,7 @@ padding-left : 8px;
 
 .home a {
 color : white;
+font-size:30px;
 }
 .filter-bar input , select , a {
 border-radius: 6px;
@@ -118,10 +118,11 @@ color:white;
 display:flex;
 background-color: #36454F;
 margin:10px;
-padding: 10px;
+padding: 30px;
 border-radius: 10px;
 justify-content: space-between;
 padding-right:180px;
+margin-top:40px;
 }
 .view-block{
 background-color:grey;
@@ -131,30 +132,33 @@ background-color:blue;
 }
 .doc-details{
 
-background-color:red;}
+background-color:White;}
 
 
 .doc-card{
-margin-top:30px;
-width : 110px;
+margin-top:100px;
+width : 210px;
 height : 130px;
-color:red;
+color:white;
 
 
 }
 
 .di{
-width:200px;
+width:300px;
 opacity:90%;
 }
 .doc-card a{
 
-color:red;
+color:white;
 }
 .typetext{
 position:relative;
-top:-95px;
-left:15px;
+top:-130px;
+left:35px;
+color:white;
+font-size:23px;
+filter: drop-shadow(1px 1px 10px green);
 }
 
 .home-button {

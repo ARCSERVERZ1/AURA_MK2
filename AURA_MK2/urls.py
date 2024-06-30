@@ -24,5 +24,6 @@ urlpatterns = [
     path('medtrac/' , include('MEDTRAC.urls')),
     path('' , v.login ),
     path('home/' , v.home_page ),
+    path('homeautom/' , include('HOMEAUTOM.urls') ),
 
 ]

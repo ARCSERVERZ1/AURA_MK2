@@ -1,0 +1,315 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>automation</title>
+</head>
+<body class="bodya">
+<div class="header">
+    <div class="headpack">
+ <img class="headerimg" src="{% static 'homeautom/nav.png' %}">
+        <div class="options">
+            <ul class="opnames">
+                <a class="menus" href="/home/"> <li class="opnameli">Home</li> </a>
+                <a class="menus" href="/admin/HOMEAUTOM/button_params/">  <li class="opnameli">Add button</li> </a>
+                <a class="menus" href="https://www.virtualsmarthome.xyz/url_routine_trigger/">  <li class="opnameli">Create routine</li> </a>
+
+            </ul>
+        </div>
+    </div>
+    </div>
+{% for group , all in all_data.items %}
+<div class="group">
+    <div class="samediv">
+<IMG CLASS="GROUPBAR" SRC="{% static 'homeautom/hud2.png' %}">
+    <label class="groupl">{{group}}</label>
+        </div>
+</div>
+<div class="buttons">
+    {% for button in all %}
+    {% if button.button_type == 'Toggle'%}
+<div class="bcontainer">
+    <img class="picb"  src="{% static 'homeautom/bfin.png' %}"  >
+    <div class="buttontxt"> {{button.button_name}}</div>
+    <div class="buttompack">
+<!--        <a href="{{button.button_url_on}}" class="lwing">-->
+ <a href="#Foo" onclick="return runMyFunction('{{button.button_url_on}}');" class="lwing">
+            <img class="wings" src= "{% static 'homeautom/lwing.png' %}" >
+            <label class="llable">ON</label>
+        </a>
+<!--         <a href="{{button.button_url_off}}" class="rwing">-->
+        <a href="#Foo" onclick="return runMyFunction('{{button.button_url_off}}');" class="rwing">
+        <img  class="wings" src="{% static 'homeautom/rwing.png' %}">
+                <label class="rlable">OFF</label>
+            </img>
+        </a>
+    </div>
+</div>
+    {%endif%}
+     {% if button.button_type == 'Pushbutton'%}
+<!--<div class="bcontainerpush">-->
+<!--    <a href="{{button.button_url_on}}">-->
+<!--    <img class="picbp"  src="{% static 'homeautom/bsingle.png' %}"  >-->
+<!--    <div class="buttontxtpush"> {{button.button_name}}</div>-->
+<!--        </a>-->
+<!--</div>-->
+    <div class="bcontainerpush">
+<!--    <a href="{{button.button_url_on}}" onclick="launchurn()">-->
+    <a class="atagpb" href="#Foo" onclick="return runMyFunction('{{button.button_url_on}}');">
+    <img class="picbp"  src="{% static 'homeautom/bsingle.png' %}"  >
+    <div class="buttontxtpush"> {{button.button_name}}</div>
+        </a>
+</div>
+    {% endif %}
+<!--        {% if button.button_type == 'Toggle'%}-->
+<!--<div class="bcontainer">-->
+<!--    <img class="B1"  src="{% static 'homeautom/mainbutton.png' %}"  >-->
+<!--    <div class="buttontxt"> {{button.button_name}}</div>-->
+
+<!--</div>-->
+<!--    {%endif%}//-->
+
+
+    {% endfor %}
+</div>
+
+
+</div>
+
+{% endfor %}
+
+
+
+</body>
+</html>
+<script>
+
+function runMyFunction(url){
+  fetch( url, {})
+  .then(response => {
+   console.log(response);
+  })
+  .catch(error => {
+    // If there's an error, handle it here
+  })
+  return true;
+}
+</script>
+<style>
+@keyframes brightness {
+  from {
+  filter: brightness(0.25);
+
+   }
+
+  to{
+   filter: brightness(1);
+
+    }
+}
+@keyframes color {
+  from {filter: drop-shadow(1px 1px 10px black);
+   }
+  to{ filter: drop-shadow(1px 1px 10px white);
+    }
+}
+@keyframes pbcolor {
+  from {filter: drop-shadow(1px 1px 10px black);
+   }
+  to{ filter: drop-shadow(1px 1px 10px blue);
+    }
+}
+.rwing:hover
+{
+<!-- background-image: url({% static 'homeautom/menu.png' %});-->
+
+  animation-name: brightness;
+  animation-duration: 1s;
+  animation-name: color;
+  animation-duration: 1s;
+}
+
+.lwing:hover{
+  animation-name: brightness;
+  animation-duration: 0.5s;
+  animation-name: color;
+  animation-duration: 0.5s;
+
+}
+.atagpb:hover{
+  animation-name: brightness;
+  animation-duration: 0.5s;
+  animation-name: pbcolor;
+  animation-duration: 0.5s;
+}
+.atagpb{
+text-decoration:none;
+}
+
+.wings{
+transform:scale(1.1);
+}
+.opnameli{
+margin-right:100px;
+margin-left: 30px;
+<!--filter: drop-shadow(1px 1px 10px black);-->
+}
+.opnames{
+margin-left:100px;
+width:1300px;
+height:150px;
+display:flex;
+
+}
+.options{
+position:relative;
+top:-220px;
+width:1300px;
+font-size:56px;
+color:skyblue;
+height:250px;
+
+}
+.headerimg{
+padding:30px;
+width:1300px;
+<!--filter: drop-shadow(1px 1px 10px blue);-->
+}
+.header{
+width:100%;
+height:300px;
+}
+.menus{
+color:skyblue;
+
+text-decoration:none;
+}
+.group{
+width:300px;
+margin-top:25px;
+height:120px;
+}
+.samediv{
+position:relative;
+top:-30px;
+}
+.groupl{
+font-size: 60px;
+color : skyblue;
+position:relative;
+left:100px;
+top:-120px;
+}
+.GROUPBAR{
+filter: drop-shadow(1px 1px 10px black);
+width:900px;
+}
+.bodya{
+    background-image: url({% static 'homeautom/bg2.png' %});
+    background-repeat: no-repeat;
+      background-attachment: fixed;
+  background-size: cover;
+}
+
+.picb{
+
+filter: drop-shadow(1px 1px 10px black);
+}
+.buttons{
+margin:25px;
+display:grid;
+grid-template-columns: repeat(3, 1fr);
+
+
+}
+.bcontainer{
+
+margin-left:120px;
+margin-top:100px;
+width:300px;
+height:300px;
+transform:scale(1.2);
+}
+.buttompack{
+margin:30px;
+width:300px;
+height:300px;
+}
+.lwing{
+position :relative;
+left:125px;
+top:-160px;
+ text-decoration: none;
+ color:white;
+
+}
+.rwing{
+text-decoration: none;
+position :relative;
+left:-40px;
+top:-260px;
+color:white;
+}
+.rlable{
+font-size:20px;
+position :relative;
+left:-100px;
+top:-25px;
+}
+.llable{
+font-size:20px;
+position :relative;
+left:-100px;
+top:-25px;
+}
+.buttontxt{
+display: flex;
+justify-content: center;
+WIDTH:300PX;
+position :relative;
+left:0px;
+top:-85px;
+color:white;
+font-size:45px;
+filter: drop-shadow(1px 1px 5px black);
+
+}
+.bcontainerpush{
+width:300px;
+height:300px;
+margin-left:30px;
+margin-top:90px;
+margin-top:100px;
+margin-left:120px;
+text-decoration:none;
+}
+.buttontxtpush{
+font-size:45px;
+display: flex;
+justify-content: center;
+WIDTH:300PX;
+position :relative;
+left:0px;
+top:-50px;
+color:white;
+
+}
+
+
+.picbp{
+marin-top:40px;
+filter: drop-shadow(1px 1px 10px black);
+ user-select: none;
+ user-drag: none;
+<!-- -webkit-user-drag: none;-->
+
+<!-- -moz-user-select: none;-->
+<!-- -webkit-user-select: none;-->
+<!-- -ms-user-select: none;-->
+<!--pointer-events: none;-->
+}
+body a {
+<!--background-color:red;-->
+}
+</style>
