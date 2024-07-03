@@ -13,5 +13,6 @@ urlpatterns = [
         path('get_data_by_id/<str:id>/' , v.get_data_by_id ),
         path('delete_data_by_id/<str:id>/' , v.delete_data_by_id ),
         path('save_edit_document/' , v.add_edit_document ),
-        path('doc_viewer/<str:type>/' , v.doc_viewer )
+        path('doc_viewer/<str:type>/' , v.doc_viewer ),
+        path('rag_data' , v.rag_for_docma ),
 ]

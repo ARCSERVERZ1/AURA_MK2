@@ -305,4 +305,12 @@ def add_edit_document(requests):
 
 
 
+def rag_for_docma(requests):
+    print("-----------------------------------------------")
+    q1 =  docma.objects.all()
+    data = list(docma.objects.values())
+    for i in q1:
+        print(i.refnumber)
+    return JsonResponse(data, safe=False)
+
 

@@ -148,10 +148,14 @@ fetch(aigic_url , {
         document.getElementById('loader').classList.toggle('processing');
         document.getElementById('res_time').textContent = 'Res.time:'+data.response_time+'sec';
           if ('speechSynthesis' in window) {
-                var utterance = new SpeechSynthesisUtterance(data.response);
+                 var response = data.response;
+                 var cleanedResponse = response.replace(/\*/g, '');
+                 console.log(cleanedResponse)
+                 var utterance = new SpeechSynthesisUtterance(cleanedResponse);
+
                 window.speechSynthesis.speak(utterance);
                 alert(data.response);
-                console.log(data.response);
+
             } else {
                 alert("Sorry, your browser does not support speech synthesis.");
             }
