@@ -3,6 +3,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.models import User, auth
 from django.contrib import messages
 from DEM import views as dem_views
+from DOCMA import views as docma_views
 import os
 
 def diagnostics():
@@ -54,7 +55,14 @@ def login(request):
 def home_page(request):
 
     diagnostics()
-    return render(request, "home.html")
+    menu_bar = docma_views.home_menu_req()
+    context = {
+        'menu_bar' : menu_bar
+
+    }
+    # for i in menu_bar:
+    #     print(i.app_name)
+    return render(request, "home.html" , context)
 
 
 

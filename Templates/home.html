@@ -27,9 +27,10 @@
 <div class = 'voice-bar'>
 
     <div class = 'app-drawer'>
-        <button onclick="goto('/dem/')">DEM</button>
-        <button onclick="goto('/doc_manager/')">Docma</button>
-        <button onclick="goto('https://www.pythonanywhere.com/user/ServerAura/')">python anywhere</button>
+        <!--<button onclick="goto('/dem/')">DEM</button>-->
+        {% for i in menu_bar%}
+         <button onclick="goto('{{i.app_link}}')"  ><img CLASS='MENU-IMG' src="{% static i.app_icon %}" width="60px" > {{i.app_name}}</button>
+  {% endfor %}
     </div>
      <input type = text id = 'convert_text' >
     <div class = 'prompt-button'>

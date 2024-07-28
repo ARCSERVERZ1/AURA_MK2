@@ -96,7 +96,6 @@ background-color : #36454F;
 border-radius: 10px;
 justify-content :left;
 padding-left : 8px;
-
 }
 
 .home a {
@@ -171,3 +170,74 @@ background-color : blue;
 border-radius: 7px;
 color:white;
 }
+
+@media (orientation: portrait) {
+.cards-holder{
+/*margin:25px;*/
+display:grid;
+grid-template-columns: repeat(2, 1fr);
+}
+
+.di{
+width:250px;
+opacity:90%;
+}
+.nav-bar{
+width:500px;
+position:fixed;
+top:-30px;
+display:flex;
+border-radius:5px;
+height:60px;
+justify-content: space-between;
+z-index: 1;
+/* From https://css.glass */
+
+background: rgba(0, 187, 255, 0.34);
+border-radius: 16px;
+box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+backdrop-filter: blur(14.7px);
+-webkit-backdrop-filter: blur(14.7px);
+border: 1px solid rgba(0, 187, 255, 0.93);
+font-size:10px;
+}
+
+.home-button {
+display:flex;
+align-items:center;
+justify-content:center;
+height : 10px;
+border-radius: 20px;
+color:white;
+/* From https://css.glass */
+background: rgba(0, 114, 255, 0.2);
+border-radius: 10px;
+box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+backdrop-filter: blur(5px);
+-webkit-backdrop-filter: blur(5px);
+border: 1px solid rgba(0, 114, 255, 0.3);
+}
+.home{
+display:flex;
+border-radius: 10px;
+justify-content :left;
+padding: 8px;
+/* From https://css.glass */
+background: rgba(74, 69, 5, 0.81);
+border-radius: 16px;
+box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+backdrop-filter: blur(5px);
+-webkit-backdrop-filter: blur(5px);
+border: 1px solid rgba(74, 69, 5, 0.3);
+font-size:6px;
+
+
+}
+.home a {
+color : white;
+font-size:20px;
+}
+}\
+
+
+

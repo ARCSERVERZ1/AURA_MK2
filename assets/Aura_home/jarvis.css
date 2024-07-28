@@ -182,19 +182,45 @@ height:25px;
 }
 
 .app-drawer{
-display:flex;
+/*display:flex;
 align-items:center;
 justify-content:space-around;
 height:50px;
 width:100%;
+margin-bottom:40px;*/
+
+margin-top:200px;
+display:flex;
+align-items:center;
+justify-content:space-around;
+height:70px;
+width:300px;
+padding:10px;
 margin-bottom:40px;
+display:flex;
+overflow-x:auto;
+
+
+}
+.app-drawer button : HOVER{
+/*height:50px;
+width:70px;
+border-radius:10px;*/
+transform:scale(1.1);
 }
 
 .app-drawer button{
-height:50px;
+/*height:50px;
 width:70px;
-border-radius:10px;
+border-radius:10px;*/
+color:skyblue;
+ background-color: Transparent;
+  background-repeat:no-repeat;
+  border: none;
 
+}
+.app-drawer::-webkit-scrollbar{
+width:0;
 }
 
 .prompt-button {

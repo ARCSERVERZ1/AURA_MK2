@@ -313,4 +313,8 @@ def rag_for_docma(requests):
         print(i.refnumber)
     return JsonResponse(data, safe=False)
 
+def home_menu_req():
+    # document_type = doc_type.objects.values_list('type', flat=True)
+    menu_but = home_menu.objects.all()
+    return menu_but
 
