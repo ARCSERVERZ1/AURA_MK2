@@ -78,9 +78,7 @@ convert_text.value = "  ask something!!";
 speakA.addEventListener('click',function(){
 var speech = true;
 var finalword;
-
 changeBackgroundColor('blue');
-
 window.SpeechRecognition = window.webkitSpeechRecognition;
  const recognition = new SpeechRecognition();
 recognition.interimResults = true; ;
@@ -90,7 +88,6 @@ const transcript = Array.from(e.results)
 .map(result => result.transcript)
 convert_text.value =transcript;
 })
-
 
 recognition.onresult = function(event) {
   for (let i = event.resultIndex; i < event.results.length; i++) {
@@ -153,9 +150,10 @@ fetch(aigic_url , {
                  var cleanedResponse = response.replace(/\*/g, '');
                  console.log(cleanedResponse)
                  var utterance = new SpeechSynthesisUtterance(cleanedResponse);
-
                 window.speechSynthesis.speak(utterance);
                 alert(data.response);
+                start_listening();
+
 
             } else {
                 alert("Sorry, your browser does not support speech synthesis.");

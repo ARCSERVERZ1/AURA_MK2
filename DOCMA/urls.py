@@ -2,7 +2,7 @@
 from django.contrib import admin
 from django.urls import path , include
 from DOCMA import views as v
-
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 urlpatterns = [
         path('' , v.doc_manger_home ),
@@ -15,4 +15,6 @@ urlpatterns = [
         path('save_edit_document/' , v.add_edit_document ),
         path('doc_viewer/<str:type>/' , v.doc_viewer ),
         path('rag_data' , v.rag_for_docma ),
+        path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+        path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 ]

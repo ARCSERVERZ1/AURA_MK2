@@ -1,6 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import JsonResponse
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view , permission_classes
+from rest_framework import permissions
 from DEM.serializers import transactions_data_Serializer
 from rest_framework.response import Response
 from DEM.models import *
@@ -306,3 +307,14 @@ def set_budget(request, set_budget):
     }
     print("set budget")
     return JsonResponse(data, safe=False)
+
+@api_view(['POST'])
+@permission_classes([permissions.IsAuthenticated])
+def rag_data(requests):
+    res_data = requests.data
+    try:
+        in_json = list(transactions_data.objects.filter(date=res_data['date']).values())
+        return JsonResponse(in_json , safe=False)
+    except Exception as E:
+        print(E)
+        return JsonResponse({'exception': str(E)} , safe=False)

@@ -61,6 +61,14 @@ MIDDLEWARE = [
 #        # Add the domain you want to allow requests from
 # ]
 
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES' :[
+        'rest_framework_simplejwt.authentication.JWTAuthentication'
+    ]
+
+
+
+}
 
 
 ROOT_URLCONF = 'AURA_MK2.urls'
