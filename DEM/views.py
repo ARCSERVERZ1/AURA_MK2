@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import JsonResponse
-from rest_framework.decorators import api_view , permission_classes
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework import permissions
 from DEM.serializers import transactions_data_Serializer
 from rest_framework.response import Response
@@ -15,6 +15,7 @@ from django.db.models import Sum
 # Create your views here.
 
 Exclude_category = ['Investment&Savings', 'DEBT-OUT', 'Repay', 'IgnoreCount']
+month = 'current_month'
 
 
 @api_view(['POST'])
@@ -33,13 +34,19 @@ def datalog_transaction_table(request, count, user, date):
 
 
 def get_month_dates():
+    global month
+    set_month = month
+    print(month, "------------------------")
     ist_date = datetime.now(pytz.timezone('Asia/Kolkata'))
-    today = ist_date.today()
-    today = str(today).split(' ')[0]
-    startdate = str(today).split('-')
-    MonthStartDate = str(startdate[0]) + '-' + str(startdate[1]) + '-01'
-    return MonthStartDate, today
-    # return '2024-05-01' , '2024-05-31'
+    if set_month == 'current_month':
+        today = ist_date.today()
+        today = str(today).split(' ')[0]
+        startdate = str(today).split('-')
+        MonthStartDate = str(startdate[0]) + '-' + str(startdate[1]) + '-01'
+        return MonthStartDate, today
+    else:
+        print("else")
+        return '2024-07-01', '2024-07-31'
 
 
 def dem_dashboard(request):
@@ -91,7 +98,6 @@ def dem_dashboard(request):
         'set_budget': budget_set,
         'avail_to_spend': int(budget_set) - total_spent
     }
-
     return render(request, 'dem_dashboard.html', context)
 
 
@@ -111,20 +117,20 @@ def non_cat_trans(request):
 
 
 @api_view(['GET'])
-def plot_graph(requests, group_type):
-    current_user = requests.user.username
-    month_start_date, today = get_month_dates()
+def plot_graph(requests, group_type, month_start_date, today, current_user):
+    # current_user = requests.user.username
+    print(month_start_date, today, group_type, current_user)
     group_dict = {
         'cate-view': 'category',
         'day-view': 'date',
         'group-view': 'group'
     }
-    print(month_start_date, today)
     categorywise_data = transactions_data.objects.filter(date__range=[month_start_date, today],
                                                          user=current_user).exclude(
         category__in=Exclude_category
     ).values(
         group_dict[group_type]).annotate(sum_category=Sum('amount'))
+
     spend_cat, spend_val = [], []
     for i in categorywise_data:
         spend_cat.append(i[group_dict[group_type]])
@@ -133,6 +139,7 @@ def plot_graph(requests, group_type):
         'labels': spend_cat,
         'values': spend_val,
     }
+
     return JsonResponse(context, safe=False)
 
 
@@ -303,10 +310,10 @@ def set_budget(request, set_budget):
 
     data = {
         'response': f"Budget added as {int(set_budget)}",
-
     }
     print("set budget")
     return JsonResponse(data, safe=False)
+
 
 @api_view(['POST'])
 @permission_classes([permissions.IsAuthenticated])
@@ -314,7 +321,96 @@ def rag_data(requests):
     res_data = requests.data
     try:
         in_json = list(transactions_data.objects.filter(date=res_data['date']).values())
-        return JsonResponse(in_json , safe=False)
+        return JsonResponse(in_json, safe=False)
     except Exception as E:
         print(E)
-        return JsonResponse({'exception': str(E)} , safe=False)
+        return JsonResponse({'exception': str(E)}, safe=False)
+
+
+def render_dashboard(request, month_start_date, today, get_cat_trans):
+    current_user = request.user.username
+    monthly_table_selecion = 'all-records'
+    ist_date = datetime.now(pytz.timezone('Asia/Kolkata'))
+
+    monthly_table = transactions_data.objects.filter(user=current_user, date__range=[month_start_date, today])
+    group_data = groupdata.objects.filter(user=current_user)
+    result = transactions_data.objects.filter(
+        user=current_user, date__range=(month_start_date, today),
+    ).exclude(
+        category__in=Exclude_category  # Exclude rows where category is 'investment'
+    ).aggregate(
+        total_spent=Sum('amount')  # Aggregate the sum of amounts
+    )
+    category_data = category.objects.values_list('category', flat=True)
+
+    set_budget = budget.objects.filter(user=current_user, date=str(ist_date.strftime("%B %Y"))).values_list('budget',
+                                                                                                            flat=True)
+    try:
+        budget_set = set_budget[0]  # index out of range handling
+    except:
+        budget_set = 0
+
+    # if request.method == 'POST':
+    #     get_cat_trans = request.POST['get_cat_trans']
+    if get_cat_trans != 'all-records':
+        monthly_table = transactions_data.objects.filter(user=current_user, date__range=[month_start_date, today],
+                                                         category=get_cat_trans)
+    else:
+        monthly_table = transactions_data.objects.filter(user=current_user, date__range=[month_start_date, today])
+    monthly_table_selecion = get_cat_trans
+
+    total_spent = result.get('total_spent', 0)
+    if total_spent is None: total_spent = 0
+    print("-------------------------", total_spent, "==", int(budget_set), "---")
+
+    context = {
+        'group_data': group_data,
+        'monthly_table': monthly_table,
+        'monthly_table_selecion': monthly_table_selecion,
+        'total_spent': total_spent,
+        'category_data': category_data,
+        'set_budget': budget_set,
+        'avail_to_spend': int(budget_set) - total_spent,
+        'start_date': month_start_date,
+        'end_date': today
+    }
+    return render(request, 'dem_dashboard.html', context)
+
+
+def date_context():
+    dates = {
+        'start_date': '-',
+        'end_date': '-'
+    }
+    ist_date = datetime.now(pytz.timezone('Asia/Kolkata'))
+
+    if dates['start_date'] == '-':
+        print("current time context for DEM")
+        current_date = str(ist_date.today()).split(' ')[0]
+        dates['start_date'] = current_date.split('-')[0] + '-' + current_date.split('-')[1] + '-01'
+        dates['end_date'] = current_date
+
+    print(dates)
+    return dates
+
+
+def main_dashboard(request, dashboard_type):
+    user = request.user.username
+    dates = date_context()
+    if dashboard_type == 'main_dashboard':
+
+        if request.method == 'POST':
+
+            start_date = request.POST['start_date']
+            end_date = request.POST['end_date']
+            get_cat_trans = request.POST['get_cat_trans']
+            return render_dashboard(request, start_date, end_date, get_cat_trans)
+        else:
+            return render_dashboard(request, dates['start_date'], dates['end_date'])
+
+
+    elif dashboard_type.split('|')[0] == 'graph':
+
+        split_data = dashboard_type.split('|')
+        print(split_data, "----------------")
+        return plot_graph(request, split_data[1], split_data[2], split_data[3], user)

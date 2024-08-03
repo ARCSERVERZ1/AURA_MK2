@@ -6,7 +6,8 @@ from django.urls import path , include
 from DEM import views
 from rest_framework_simplejwt.views import TokenObtainPairView
 urlpatterns = [
-    path('' , views.dem_dashboard),
+    # path('' , views.dem_dashboard),
+    path('<str:dashboard_type>/' , views.main_dashboard),
     path('datalogdem/<int:count>/<str:user>/<str:date>' , views.datalog_transaction_table),
     path('graph/<str:group_type>', views.plot_graph),
     path('submit_groupdata/', views.update_group),

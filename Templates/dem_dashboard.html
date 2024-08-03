@@ -95,9 +95,56 @@
             <button onclick="showPopup()" >start/end group</button>
         </div>
         <button onclick="home()">Home</button>
-            <button>Prev_month</button>
+            <button onclick="show_custom_dates()">Filters</button>
         </div>
     </div>
+           <div class = 'popup-overlay' id = 'popup-overlay'>
+                <div class = "popup-container">
+                    <div class = 'popup-head'>
+                        <H4>Choose custom dates</H4>
+                        <button onclick="close_custom_dates_popup()">X</button>
+                    </div>
+                    <div class = 'popup-content'>
+                        <div class = 'popup-content-sub'>
+                            <form action = '/dem/main_dashboard/' method = 'POST' id="custom_dates">
+                                {% csrf_token %}
+                                <div class = 'popup-content-field'>
+                                     <label>Start date</label>
+                                     <input type = 'date' id = 'start_date' name = 'start_date' value="{{start_date}}" >
+                                </div>
+                                <div class = 'popup-content-field'>
+                                     <label>End date</label>
+                                     <input type = 'date' id = 'end_date' name = 'end_date'  value={{end_date}}>
+                                </div>
+                                <div  class = 'popup-content-field' >
+                                      <select name ="get_cat_trans">
+                                        <option value={{monthly_table_selecion}}>{{monthly_table_selecion}}</option>
+                                         {% for i in category_data %}
+                                        <option value="{{i}}">{{i}}</option>
+                                         {% endfor %}
+                                        <option value="Others">Others</option>
+                                        <option value="all-records">AllRecords</option>
+                                      </select>
+                                </div>
+                                <button type = 'button' onclick="get_custom_dates_data()">Save</button>
+                            </form>
+                        <div class = 'popup-content-sub'>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+     <script>
+    function close_custom_dates_popup() { document.getElementById('popup-overlay').style.display = 'none'; }
+    function show_custom_dates() { document.getElementById('popup-overlay').style.display = 'flex'; }
+    function get_custom_dates_data(){
+    document.getElementById('custom_dates').submit();
+    console.log('custom dates form submitted');
+     }
+     </script>
+
+
+
     <div class = "insights-box">
         <div class = "data-box">
             <div class = 'budget_setting'>
@@ -124,19 +171,19 @@
         </div>
     </div>
      <div class = mainbar>
-            <form method="post" action="/dem/" id = 'get_cat_trans'>
-            {% csrf_token %}
-                <label>Select category :</label>
-            <select name ="get_cat_trans">
-                <option value={{monthly_table_selecion}}>{{monthly_table_selecion}}</option>
-                 {% for i in category_data %}
-                <option value="{{i}}">{{i}}</option>
-                 {% endfor %}
-                <option value="Others">Others</option>
-                <option value="all-records">AllRecords</option>
-            </select>
-            <button type="button" onclick="submit_get_cat_trans()">Submit</button>
-        </form>
+<!--            <form method="post" action="/dem/main_dashboard/" id = 'get_cat_trans'>-->
+<!--            {% csrf_token %}-->
+<!--                <label>Select category :</label>-->
+<!--            <select name ="get_cat_trans">-->
+<!--                <option value={{monthly_table_selecion}}>{{monthly_table_selecion}}</option>-->
+<!--                 {% for i in category_data %}-->
+<!--                <option value="{{i}}">{{i}}</option>-->
+<!--                 {% endfor %}-->
+<!--                <option value="Others">Others</option>-->
+<!--                <option value="all-records">AllRecords</option>-->
+<!--            </select>-->
+<!--            <button type="button" onclick="submit_get_cat_trans()">Submit</button>-->
+<!--        </form>-->
             <button onclick="groupUpdate('arg')">Group Category Edit</button>
             <button onclick="openlink()">Group Category Edit</button>
             <div id = 'multiple-edit' class = 'multiple-edit'>
@@ -250,7 +297,6 @@
                 </tbody>
             </table>
 </div>
-
 <div class = 'popup-edit' id = 'popup-edit'>
     <label>I am the best</label>
 </div>
@@ -490,7 +536,11 @@
     var domain = protocol + '//' + hostname+':'+port+'/';
     }
 
-    var initialApiUrl = domain+"dem/graph/cate-view";
+     var start_date = document.getElementById('start_date').value;
+     var end_date = document.getElementById('end_date').value;
+
+
+    var initialApiUrl = domain+"dem/graph|cate-view"+"|"+start_date+"|"+end_date;
 
     function admin_page(){
 <!--    window.location.href = domain+'/admin';-->
@@ -584,7 +634,7 @@
 
          function buttonClickHandler(event) {
             var buttonId = event.target.id;
-            var apiUrl = domain+'dem/graph/'+buttonId;
+            var apiUrl = domain+'dem/graph|'+buttonId+"|"+start_date+"|"+end_date;   // var apiUrl = domain+'dem/graph/'+buttonId;
             console.log(apiUrl);
              if (myChart) {
                 myChart.destroy();
