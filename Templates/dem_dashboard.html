@@ -165,6 +165,7 @@
         <div class = "graph-config">
             <button   id="day-view">Day view</button>
             <button id="cate-view">Category view</button>
+            <button id="month-view">Month view</button>
         </div>
         <div class = "graph-box">
             <canvas id="barChart"></canvas>
@@ -366,12 +367,13 @@
         "category":edit_category,
         "group":edit_group }
 
-        console.log(new_transaction_json)
-
+        console.log(new_transaction_json);
+        console.log(domain+'dem/crud/add_new_transaction/');
         if (edit_date === '' || edit_amount === '' || edit_from_bank === '' || edit_to_bank === '' || edit_category === '' ) {
             alert('Info Insufficient'); }
+
        else{
-            fetch(domain+'dem/add_new_transaction/', {
+            fetch(domain+'dem/crud/add_new_transaction/', {
               method: "POST",
               headers: {
                 "Content-Type": "application/json",
@@ -383,7 +385,7 @@
 
         }
         document.getElementById('add_transaction_popup').style.display = 'None';
-        location.reload(true);
+<!--        location.reload(true);-->
     }
 
 
@@ -460,7 +462,7 @@
         console.log("edit roe")
         save_type = 'edit'
         document.getElementById('add_transaction_popup').style.display = 'flex';
-        console.log(a)
+        console.log(a);
                 fetch(domain+'dem/get_data_by_id/'+a+'/')
                                 .then(response => response.json())
                                 .then(data => {
@@ -605,7 +607,7 @@
                     labels: ['Budget','Spent'],
                     datasets: [{
                         label: 'Data Values',
-                        data: [15000,2800],
+                        data: [{{set_budget}},{{total_spent}}],
                         backgroundColor: 'rgba(75, 192, 192, 0.2)',
                         borderColor: 'rgba(75, 192, 192, 1)',
                         borderWidth: 1
@@ -628,6 +630,7 @@
 
         document.getElementById("day-view").addEventListener("click", buttonClickHandler);
         document.getElementById("cate-view").addEventListener("click", buttonClickHandler);
+        document.getElementById("month-view").addEventListener("click", buttonClickHandler);
 
 
 

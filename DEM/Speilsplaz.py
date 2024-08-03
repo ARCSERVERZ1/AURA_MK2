@@ -1,16 +1,17 @@
 
-import pytz
-from datetime import datetime, timedelta
-
-
-class dem:
-    def __init__(self):
-        self.d = None
-
-    def main(self):
-        self.d = '101'
 
 
 
 
-print(dem.main.d)
+ab = ['b','b','a','a','a']
+
+
+
+z = {}
+for i , j in enumerate(ab):
+    try:
+        z[j] = z[j]+i
+    except:
+        z[j] = i
+
+print(z)

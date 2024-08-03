@@ -7,7 +7,7 @@ import json, os
 from django.contrib.auth.models import User, auth
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework import permissions
-
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 def doc_viewer(request, type):
@@ -59,7 +59,7 @@ def doc_viewer(request, type):
 
     return render(request, "Docma_viewer.html", context)
 
-
+@login_required()
 def doc_manger_home(request):
     # document_type = doc_type.objects.values_list('type', flat=True)
     document_type = docma.objects.values_list('type', flat=True).distinct()
@@ -81,7 +81,7 @@ def add_document(request):
 
     return render(request, "doc_manager.html", context)
 
-
+@login_required()
 def doc_manager(request):
     document_holders = doc_holder.objects.values_list('Holder', flat=True)
     document_type = doc_type.objects.values_list('type', flat=True)

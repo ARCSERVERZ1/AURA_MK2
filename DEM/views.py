@@ -11,11 +11,26 @@ from datetime import datetime, timedelta
 from DEM.dem_run import *
 import os
 from django.db.models import Sum
+from django.contrib.auth.decorators import login_required
+from django.db.models.functions import TruncMonth
 
 # Create your views here.
 
 Exclude_category = ['Investment&Savings', 'DEBT-OUT', 'Repay', 'IgnoreCount']
 month = 'current_month'
+
+
+def check_login(request):
+    def decorator(func):
+        def wrapper_function(*args, **kwargs):
+            user = request.user.username
+            print(user, "||||")
+            result = func(*args, **kwargs)
+            return result
+
+        return wrapper_function
+
+    return decorator
 
 
 @api_view(['POST'])
@@ -123,22 +138,50 @@ def plot_graph(requests, group_type, month_start_date, today, current_user):
     group_dict = {
         'cate-view': 'category',
         'day-view': 'date',
-        'group-view': 'group'
-    }
-    categorywise_data = transactions_data.objects.filter(date__range=[month_start_date, today],
-                                                         user=current_user).exclude(
-        category__in=Exclude_category
-    ).values(
-        group_dict[group_type]).annotate(sum_category=Sum('amount'))
+        'month-view': 'date',
+        'group-view': 'group',
 
-    spend_cat, spend_val = [], []
-    for i in categorywise_data:
-        spend_cat.append(i[group_dict[group_type]])
-        spend_val.append(i['sum_category'])
-    context = {
-        'labels': spend_cat,
-        'values': spend_val,
     }
+
+    if group_type == 'month-view':
+        categorywise_data = transactions_data.objects.filter(date__range=[month_start_date, today],
+                                                             user=current_user).exclude(
+            category__in=Exclude_category
+        ).values(
+            group_dict[group_type]).annotate(sum_category=Sum('amount'))
+        month_data = {}
+        for record in categorywise_data:
+
+            month = str(record[group_dict[group_type]]).split('-')
+
+            try:
+                month_data[month[0]+'-'+month[1]] = month_data[month[0]+'-'+month[1]]+int(record['sum_category'])
+            except Exception as E:
+                print(E)
+                month_data[month[0] + '-' + month[1]] =  int(record['sum_category'])
+
+        context = {
+            'labels':  [key for key in month_data.keys()],
+            'values': [value for value in month_data.values()]
+        }
+
+
+
+    else:
+        categorywise_data = transactions_data.objects.filter(date__range=[month_start_date, today],
+                                                             user=current_user).exclude(
+            category__in=Exclude_category
+        ).values(
+            group_dict[group_type]).annotate(sum_category=Sum('amount'))
+
+        spend_cat, spend_val = [], []
+        for i in categorywise_data:
+            spend_cat.append(i[group_dict[group_type]])
+            spend_val.append(i['sum_category'])
+        context = {
+            'labels': spend_cat,
+            'values': spend_val,
+        }
 
     return JsonResponse(context, safe=False)
 
@@ -224,10 +267,13 @@ def multiple_edit(request, data, ids):
     return JsonResponse({'response': 'success'}, safe=False)
 
 
+
 def add_new_transaction(request):
+    print("-------------------------------------------------------------------------------------")
     json_data = json.loads(request.body)
     ist_date = datetime.now(pytz.timezone('Asia/Kolkata'))
     print(json_data)
+    print("-------------------------------------------------------------------------------------")
     new_data = transactions_data(
         user=request.user.username,
         date=json_data['date'],
@@ -242,13 +288,15 @@ def add_new_transaction(request):
         payment_method='Manual_Entry',
         data_ts=ist_date.today(),
     )
+
+
+    print(new_data)
     if json_data['action'] == 'new':
         print("new request to save")
         new_data.save()
 
     elif json_data['action'] == 'edit':
         data = transactions_data.objects.filter(id=json_data['id'])
-
         data.update(
             date=json_data['date'],
             transaction_type='Sent',
@@ -262,7 +310,7 @@ def add_new_transaction(request):
             payment_method='Edited',
         )
         print("edit request")
-
+    print("-------------------------------------------------------------------------------------")
     return JsonResponse({'response': 'success'}, safe=False)
 
 
@@ -327,6 +375,7 @@ def rag_data(requests):
         return JsonResponse({'exception': str(E)}, safe=False)
 
 
+@login_required()
 def render_dashboard(request, month_start_date, today, get_cat_trans):
     current_user = request.user.username
     monthly_table_selecion = 'all-records'
@@ -377,26 +426,8 @@ def render_dashboard(request, month_start_date, today, get_cat_trans):
     return render(request, 'dem_dashboard.html', context)
 
 
-def date_context():
-    dates = {
-        'start_date': '-',
-        'end_date': '-'
-    }
-    ist_date = datetime.now(pytz.timezone('Asia/Kolkata'))
-
-    if dates['start_date'] == '-':
-        print("current time context for DEM")
-        current_date = str(ist_date.today()).split(' ')[0]
-        dates['start_date'] = current_date.split('-')[0] + '-' + current_date.split('-')[1] + '-01'
-        dates['end_date'] = current_date
-
-    print(dates)
-    return dates
-
-
 def main_dashboard(request, dashboard_type):
     user = request.user.username
-    dates = date_context()
     if dashboard_type == 'main_dashboard':
 
         if request.method == 'POST':
@@ -406,11 +437,12 @@ def main_dashboard(request, dashboard_type):
             get_cat_trans = request.POST['get_cat_trans']
             return render_dashboard(request, start_date, end_date, get_cat_trans)
         else:
-            return render_dashboard(request, dates['start_date'], dates['end_date'],'all-records')
-
-
+            ist_date = datetime.now(pytz.timezone('Asia/Kolkata'))
+            current_date = str(ist_date.today()).split(' ')[0]
+            start_date = current_date.split('-')[0] + '-' + current_date.split('-')[1] + '-01'
+            end_date = current_date
+            return render_dashboard(request, start_date, end_date, 'all-records')
     elif dashboard_type.split('|')[0] == 'graph':
-
         split_data = dashboard_type.split('|')
         print(split_data, "----------------")
         return plot_graph(request, split_data[1], split_data[2], split_data[3], user)

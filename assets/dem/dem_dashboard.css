@@ -374,7 +374,7 @@ border-radius:10px;
 
 
 .popup-overlay {
-display:flex;
+display:None;
 position:fixed;
 align-items:center;
 justify-content:center;

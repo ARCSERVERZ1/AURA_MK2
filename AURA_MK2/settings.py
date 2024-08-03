@@ -46,6 +46,8 @@ INSTALLED_APPS = [
     # 'corsheaders'
 ]
 
+LOGIN_URL = '/'
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
