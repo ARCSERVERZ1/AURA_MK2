@@ -406,7 +406,7 @@ def main_dashboard(request, dashboard_type):
             get_cat_trans = request.POST['get_cat_trans']
             return render_dashboard(request, start_date, end_date, get_cat_trans)
         else:
-            return render_dashboard(request, dates['start_date'], dates['end_date'])
+            return render_dashboard(request, dates['start_date'], dates['end_date'],'all-records')
 
 
     elif dashboard_type.split('|')[0] == 'graph':
