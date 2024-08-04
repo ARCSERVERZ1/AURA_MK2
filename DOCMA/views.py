@@ -8,8 +8,23 @@ from django.contrib.auth.models import User, auth
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework import permissions
 from django.contrib.auth.decorators import login_required
+import string, random
+
 
 # Create your views here.
+
+
+def encrypt_value(value):
+    x = 0
+    rand = str(random.randint(1000000, 9999999))
+    rand = [i for i in rand]
+    for index, digit in enumerate(rand):
+        if index in [2, 5, 8]:
+            rand.insert(index, str(value)[x])
+            x = x + 1
+    return ''.join([i for i in rand])
+
+
 def doc_viewer(request, type):
     q1 = docma.objects.filter(type=type)
 
@@ -59,6 +74,7 @@ def doc_viewer(request, type):
 
     return render(request, "Docma_viewer.html", context)
 
+
 @login_required()
 def doc_manger_home(request):
     # document_type = doc_type.objects.values_list('type', flat=True)
@@ -80,6 +96,7 @@ def add_document(request):
     }
 
     return render(request, "doc_manager.html", context)
+
 
 @login_required()
 def doc_manager(request):
@@ -127,13 +144,18 @@ def doc_manager_save(request):
             with open(os.path.join(upload_dir, name), 'wb+') as destination:
                 for chunk in file.chunks():
                     destination.write(chunk)
+        enc_value = ''
+        if docType == 'Bank_Cards':
+            enc_value = encrypt_value(value)
+        else:
+            enc_value = value
 
         data = docma(holder=docName,
                      refnumber=refNum,
                      document=upload_dir + '/' + docName + refNum + str(counter),
                      end_date=eDate,
                      date=sDate,
-                     value=value,
+                     value=enc_value,
                      type=docType,
                      time_stamp=datetime.now(),
                      remarks=remarks,
@@ -272,13 +294,19 @@ def add_edit_document(requests):
     # save in db
     data = docma.objects.filter(id=new_data['id'])
 
+    enc_value = ''
+    if new_data['type'] == 'Bank_Cards':
+        enc_value = encrypt_value(new_data['value'])
+    else:
+        enc_value = new_data['value']
+
     data.update(
         holder=new_data['name'],
         refnumber=new_data['ref'],
         document=upload_dir + '/' + new_data['name'] + new_data['ref'],
         end_date=new_data['edate'],
         date=new_data['sdate'],
-        value=new_data['value'],
+        value=enc_value,
         type=new_data['type'],
         time_stamp=datetime.now(),
         remarks=new_data['remarks'],

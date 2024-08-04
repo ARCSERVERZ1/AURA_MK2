@@ -111,12 +111,14 @@
                                 <div class = 'popup-content-field'>
                                      <label>Start date</label>
                                      <input type = 'date' id = 'start_date' name = 'start_date' value="{{start_date}}" >
+
                                 </div>
                                 <div class = 'popup-content-field'>
                                      <label>End date</label>
                                      <input type = 'date' id = 'end_date' name = 'end_date'  value={{end_date}}>
                                 </div>
                                 <div  class = 'popup-content-field' >
+                                      <label>Category </label>
                                       <select name ="get_cat_trans">
                                         <option value={{monthly_table_selecion}}>{{monthly_table_selecion}}</option>
                                          {% for i in category_data %}
@@ -126,7 +128,7 @@
                                         <option value="all-records">AllRecords</option>
                                       </select>
                                 </div>
-                                <button type = 'button' onclick="get_custom_dates_data()">Save</button>
+                                <button  type = 'button' onclick="get_custom_dates_data()">Apply Filter</button>
                             </form>
                         <div class = 'popup-content-sub'>
                     </div>
@@ -385,7 +387,7 @@
 
         }
         document.getElementById('add_transaction_popup').style.display = 'None';
-<!--        location.reload(true);-->
+        location.reload(true);
     }
 
 
@@ -608,7 +610,7 @@
                     datasets: [{
                         label: 'Data Values',
                         data: [{{set_budget}},{{total_spent}}],
-                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        backgroundColor: ['rgba(75, 192, 192, 0.2)','rgba(75, 192, 192, 1)'],
                         borderColor: 'rgba(75, 192, 192, 1)',
                         borderWidth: 1
                     }]
