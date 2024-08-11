@@ -8,7 +8,7 @@ from DEM.models import *
 from django.db.models import Sum
 import pytz, json
 from datetime import datetime, timedelta
-from DEM.dem_run import *
+# from DEM.dem_run import *
 import os
 from django.db.models import Sum
 from django.contrib.auth.decorators import login_required
@@ -155,13 +155,14 @@ def plot_graph(requests, group_type, month_start_date, today, current_user):
             month = str(record[group_dict[group_type]]).split('-')
 
             try:
-                month_data[month[0]+'-'+month[1]] = month_data[month[0]+'-'+month[1]]+int(record['sum_category'])
+                month_data[month[0] + '-' + month[1]] = month_data[month[0] + '-' + month[1]] + int(
+                    record['sum_category'])
             except Exception as E:
                 print(E)
-                month_data[month[0] + '-' + month[1]] =  int(record['sum_category'])
+                month_data[month[0] + '-' + month[1]] = int(record['sum_category'])
 
         context = {
-            'labels':  [key for key in month_data.keys()],
+            'labels': [key for key in month_data.keys()],
             'values': [value for value in month_data.values()]
         }
 
@@ -267,7 +268,6 @@ def multiple_edit(request, data, ids):
     return JsonResponse({'response': 'success'}, safe=False)
 
 
-
 def add_new_transaction(request):
     print("-------------------------------------------------------------------------------------")
     json_data = json.loads(request.body)
@@ -288,7 +288,6 @@ def add_new_transaction(request):
         payment_method='Manual_Entry',
         data_ts=ist_date.today(),
     )
-
 
     print(new_data)
     if json_data['action'] == 'new':
@@ -446,3 +445,15 @@ def main_dashboard(request, dashboard_type):
         split_data = dashboard_type.split('|')
         print(split_data, "----------------")
         return plot_graph(request, split_data[1], split_data[2], split_data[3], user)
+
+@api_view(['POST'])
+@permission_classes([permissions.IsAuthenticated])
+def get_labeled_data(requests):
+    request_data = requests.data
+    user = request_data['user']
+    start_date = request_data['start_date']
+    end_date = request_data['end_date']
+    labeled_data = list(transactions_data.objects.filter(user=user, date__range=[start_date, end_date]).exclude(
+        category='Others').values('receiver_bank', 'category'))
+
+    return JsonResponse(labeled_data, safe=False)

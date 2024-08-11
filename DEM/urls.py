@@ -18,6 +18,7 @@ urlpatterns = [
     path('non_cat/', views.non_cat_trans),
     path('set_budget/<str:set_budget>/', views.set_budget),
     path('get_data_by_id/<str:id>/', views.get_data_by_id),
-    path('rag_data', views.rag_data),
-    path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('api/get_labeled_data/', views.get_labeled_data),
+    path('api/rag_data/', views.rag_data),
+    path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
 ]
