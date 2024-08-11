@@ -2,14 +2,15 @@ import os, json, re
 import time as t
 import imaplib, email
 from datetime import datetime
-import pytz , requests
+import pytz, requests
 from email.header import decode_header
 
 
 def validation(text, type):
     if type == 'int':
-        if text.isdigit():
-            return [int(text), 0]
+        int_conv = text.split('.')[0]
+        if int_conv.isdigit():
+            return [int(int_conv), 0]
         else:
             return [0, 0]
     else:
@@ -20,7 +21,8 @@ def validation(text, type):
 
 
 class GetSpendings:
-    def __init__(self, user, platforms=(), date="", url='https://serveraura.pythonanywhere.com/dem/datalogdem/', post = True):
+    def __init__(self, user, platforms=(), date="", url='https://serveraura.pythonanywhere.com/dem/datalogdem/',
+                 post=True):
         self.all_transactions = []
         self.user = user
         self.pass_date = date
@@ -38,7 +40,8 @@ class GetSpendings:
             self.mail_date = x.strftime('%d-%b-%Y')
             self.pass_date = str(str(x).split(' ')[0])
 
-        print( f"------------### Data log request for {self.user} for date {self.mail_date} ###---------------")
+        print(
+            f"------------### Data log request for {self.user} for date {self.mail_date} ###-----------{self.ist_time}----")
         try:
             self.user_data = json.loads(open('user_data.json').read())
             try:
@@ -61,6 +64,7 @@ class GetSpendings:
 
         if 'phone_pe' in self.platforms: self.run_phone_pe_log()
         if 'axis_credit' in self.platforms: self.run_axis_credit_log()
+        if 'hdfc_debit' in self.platforms: self.run_hdfc_debit_log()
 
         for transaction in self.all_transactions:
             self.get_categorised(transaction)
@@ -82,65 +86,82 @@ class GetSpendings:
                     mail_string = email_message['text/html'].replace("=", "").replace("  ", "").replace("\xa0",
                                                                                                         "").replace(
                         "\r", "").replace("\n", "").replace("\t", "")
+                    pattern = r'<[^>]*>'
+                    remove_html = re.sub(pattern, '', mail_string)
+                    cleaned_text = re.sub(r'\s+', ' ', remove_html).replace('E282B9', 'Rs').replace('&#8377;',
+                                                                                                    'Rs').strip()
 
-                    receiver = mail_string[mail_string.find('<!-- User name / Amount -->') + 550: mail_string.find(
-                        '<!-- End of User name / Amount -->') - 250].replace('/', '').replace('<', '').strip()
+                    patter_paid_to = 'Paid to (.*?) Rs (\d+).*?from : (.*?)Bank.*? Message :(.*?)Hi'
+                    patter_payment = 'Payment For (\S+) Rs(\d+).*?XX(.*?)'
 
-                    amount = mail_string[mail_string.find('&#8377;') + 8: mail_string.find(
-                        '<!-- End of User name / Amount -->') - 31].replace('/', '').replace('<', '').strip()
-
-                    sender = mail_string[mail_string.find('<!-- Bank Account -->') + 395: mail_string.find(
-                        '<!-- End of Bank Account -->') - 15].replace('/', '').replace('<', '').strip()
-                    message = mail_string[mail_string.find('<!-- Message -->') + 550: mail_string.find(
-                        '<!-- End of Message -->') - 32].replace('/', '').replace('<', '').strip()
-
-                    receiver = validation(receiver, 'text')
-                    sender = validation(sender, 'text')
-                    message = validation(message, 'text')
-                    amount = validation(amount, 'int')
-
-                    anamoaly = receiver[1] + sender[1] + message[1] + amount[1] if receiver[1] + sender[1] + message[
-                        1] + amount[1] > 0 else 0
-
-                    if amount[0] == 0 and anamoaly > 1:
-                        pass
+                    final_match = re.search(patter_paid_to, cleaned_text)
+                    if final_match is None:
+                        final_match = re.search(patter_payment, cleaned_text)
+                        if final_match is None:
+                            print(cleaned_text)
                     else:
+                        transaction_data = final_match.groups()
                         self.all_transactions.append(
-                            [self.user ,'sent', amount[0], receiver[0], sender[0], message[0], 'phone_pe', anamoaly])
+                            [self.user, 'sent', transaction_data[1], transaction_data[0], transaction_data[2],
+                             transaction_data[3], 'phone_pe', 'anamoaly'])
 
     def run_axis_credit_log(self):
 
         result, message = self.conn.search(None, '(FROM {0} ON {1})'.format("alerts@axisbank.com", self.mail_date))
         transaction_msg_list = []
         for num in message[0].split():
-
             _, msg_data = self.conn.fetch(num, "(RFC822)")
             raw_mail = msg_data[0][1]
             msg = email.message_from_bytes(raw_mail)
             subject, encoding = decode_header(msg["Subject"])[0]
             if isinstance(subject, bytes):
                 subject = subject.decode(encoding or "utf-8")
-            if subject.find('Transaction alert on Axis Bank Credit Card no') != 1:
-                ref = str(msg).find('</span> <br><br>')
-                print(ref)
-                transaction_msg = str(str(msg)[ref + 82:ref + 82 + 185])
-                transaction_msg = str(transaction_msg.replace("=\n", ''))
-                match = re.search(r'Card no\.\s(\w+).*?INR\s(\d+)\s.*?at\s(.*?)\son', transaction_msg)
-                print(transaction_msg)
-                try:
-                    if match:
-                        receiver = validation(match.group(3), 'text')
-                        sender = validation(match.group(1), 'text')
-                        amount = validation(match.group(2), 'int')
-                except:
-                    receiver = ['E', 1]
-                    sender = ['E', 1]
-                    amount = [0, 1]
+                if subject.find('Transaction alert on Axis Bank Credit Card no') != 1:
+                    ref = str(msg).find('Dear')
+                    transaction_msg = str(str(msg)[ref:ref + 329])
+                    transaction_msg = str(str(transaction_msg).replace("=\n", ''))
 
-                anamoaly = receiver[1] + sender[1] + amount[1] if receiver[1] + sender[1] + amount[1] > 0 else 0
+                    pattern = r'card no. (\w+)[^INR]+INR (\d+) at (\w+)'
+                    match = re.search(pattern, str(transaction_msg))
 
-                self.all_transactions.append(
-                    [self.user , 'sent', amount[0], receiver[0], sender[0], '', 'axis_credit', anamoaly])
+                    if match is None:
+                        pattern = 'declined due to (.*?)\.'
+                        match = re.search(pattern, str(transaction_msg))
+                        if match is not None:
+                            print(str(transaction_msg))
+                        else:
+                            print(f'Card decline reason : {match.groups()}')
+                    else:
+                        transaction_data = match.groups()
+                        self.all_transactions.append(
+                            [self.user, 'sent', transaction_data[1], transaction_data[2], transaction_data[0], '',
+                             'axis_credit', 'x01'])
+
+    def run_hdfc_debit_log(self):
+
+        result, message = self.conn.search(None, '(FROM {0} ON {1})'.format("alerts@hdfcbank.net", self.mail_date))
+        transaction_msg_list = []
+        for num in message[0].split():
+            _, msg_data = self.conn.fetch(num, "(RFC822)")
+            raw_mail = msg_data[0][1]
+            msg = email.message_from_bytes(raw_mail)
+            subject, encoding = decode_header(msg["Subject"])[0]
+            if isinstance(subject, bytes):
+                subject = subject.decode(encoding or "utf-8")
+            if subject.find('You have done a UPI txn. Check details!') != -1:
+                ref = str(msg).find('Dear')
+                transaction_msg = str(str(msg)[ref:ref + 329])
+                transaction_msg = str(str(transaction_msg).replace("=\n", ''))
+                pattern = r'Rs.(.*?)\..*?debited from account (.*?) to VPA (.*?) on'
+                match = re.search(pattern, str(transaction_msg))
+
+                if match is None:
+                    print(str(transaction_msg))
+                else:
+                    transaction_data = match.groups()
+                    self.all_transactions.append(
+                        [self.user, 'sent', transaction_data[0], transaction_data[2], transaction_data[1], '',
+                         'hdfc_debit', 'x01'])
 
     def get_categorised(self, transaction):
         try:
@@ -167,7 +188,7 @@ class GetSpendings:
             for keyword in AUTO_CAT['auto_category'][category]:
                 match = re.search(r'\b' + re.escape(keyword.lower()) + r'\b', key_sentence, flags=re.IGNORECASE)
                 if match:
-                    transaction.insert(6, category)
+                    transaction.insert(5, category)
                     break_all = True
                     break
 
@@ -190,8 +211,8 @@ class GetSpendings:
                 "data_ts": str(self.ist_time)
                 # "xtra"
             }
-            # url = f'http://127.0.0.1:8000//dem/datalogdem/{count}/{transaction[0]}/{str(self.pass_date)}'
-            url =  f'https://serveraura.pythonanywhere.com/dem/datalogdem/{count}/{transaction[0]}/{str(self.pass_date)}'
+            url = f'https://serveraura.pythonanywhere.com/dem/datalogdem/{count}/{transaction[0]}/{str(self.pass_date)}'
+
             if self.post:
                 status = requests.post(url, json=data_template)
                 print(status.json())
@@ -201,8 +222,13 @@ class GetSpendings:
 
 
 if __name__ == '__main__':
-
     data = json.loads(open('user_data.json').read())
     print(data['users'])
     for user in data['users']:
-        GetSpendings(user, ['phone_pe', 'axis_credit'], date='2024-05-04' , post = True)
+        if user == 'sanjay':
+            payments = ['axis_credit', 'hdfc_debit']
+            for date in range(1,10):
+                GetSpendings(user, payments, date='2024-08-0'+str(date), post=True)
+        else:
+            payments = ['phone_pe', 'axis_credit']
+       #GetSpendings(user, payments, date='2024-08-09', post=False)
