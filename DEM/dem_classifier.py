@@ -1,0 +1,77 @@
+import os.path
+
+import requests
+from datetime import datetime
+import json
+
+
+class label_data:
+    def __init__(self, user , date , days):
+        self.user = user
+        self.url = ' https://serveraura.pythonanywhere.com/dem/api/get_labeled_data/'
+        self.token_url = ' https://serveraura.pythonanywhere.com/dem/api/token/'
+        self.token = ''
+        self.end_date = date,
+        self.days = days
+        self.save_label_data()
+
+    def get_auth(self):
+        token_data = {
+            "username": 'sanjay',
+            "password": "IamIronman"
+        }
+        req = requests.post(url=self.token_url, data=token_data)
+        token = req.json()['access']
+
+        auth = {
+            'Authorization': 'Bearer ' + token
+        }
+
+        return auth
+
+    def get_label_data(self):
+        json_data = {
+            "user": self.user,
+            "start_date": '2024-07-01',
+            "end_date": str(datetime.now().date())
+        }
+
+        req = requests.post(url=self.url, data=json_data, headers=self.get_auth())
+        labels = {}
+        for record in req.json():
+            try:
+                globals()[record['category']].append(record['receiver_bank'])
+            except:
+                globals()[record['category']] = []
+                globals()[record['category']].append(record['receiver_bank'])
+            labels[record['category']] = labels[record['category']] =  globals()[record['category']]
+
+        for key , values in labels.items():labels[key] = list(set(values))
+        return labels
+
+    def save_label_data(self):
+
+        file_name = self.user+'_dem_classifier.json'
+        if not os.path.exists(file_name):
+            with open(file_name, 'w') as file:
+                json.dump(self.get_label_data(), file, indent=4)
+        else:
+            local_labeled_data = json.loads(open(file_name).read())
+            new_labeled_data = self.get_label_data()
+
+            for key in new_labeled_data:
+                try:
+                    local_labeled_data[key] = local_labeled_data[key] + new_labeled_data[key]
+                except:
+                    local_labeled_data[key] = new_labeled_data[key]
+
+            for key, values in local_labeled_data.items(): local_labeled_data[key] = list(set(values))
+
+            with open(file_name, 'w') as file:
+                json.dump(local_labeled_data, file, indent=4)
+
+
+if __name__ == '__main__':
+    users = ['sanjay','avinash']
+    for user in users:
+        label_data(user , '2024-08-11',30)

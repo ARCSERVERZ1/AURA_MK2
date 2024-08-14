@@ -4,6 +4,7 @@ import imaplib, email
 from datetime import datetime
 import pytz, requests
 from email.header import decode_header
+import dem_classifier
 
 
 def validation(text, type):
@@ -21,12 +22,13 @@ def validation(text, type):
 
 
 class GetSpendings:
-    def __init__(self, user, platforms=(), date="", url='https://serveraura.pythonanywhere.com/dem/datalogdem/',
+    def __init__(self, user, user_data, date="", url='https://serveraura.pythonanywhere.com/dem/datalogdem/',
                  post=True):
         self.all_transactions = []
         self.user = user
         self.pass_date = date
-        self.platforms = platforms
+        self.user_data = user_data
+        self.platforms = self.user_data['payment_method']
         self.url = url
         self.imap_url = 'imap.gmail.com'
         self.ist_time = datetime.now(pytz.timezone('Asia/Kolkata'))
@@ -40,25 +42,17 @@ class GetSpendings:
             self.mail_date = x.strftime('%d-%b-%Y')
             self.pass_date = str(str(x).split(' ')[0])
 
+        # dem_classifier.label_data(self.user ,self.pass_date ,30 )
+
         print(
             f"------------### Data log request for {self.user} for date {self.mail_date} ###-----------{self.ist_time}----")
-        try:
-            self.user_data = json.loads(open('user_data.json').read())
-            try:
-                if self.user in self.user_data["users"]:
-                    self.conn = imaplib.IMAP4_SSL('imap.gmail.com')
-                    email_id = self.user_data['details'][self.user][0]
-                    password = self.user_data['details'][self.user][1]
-                    self.conn.login(email_id, password)
-                    self.conn.select('Inbox')
-                    self.get_all_transaction()
-                else:
-                    print(f'User name {self.user} not found ')
-            except Exception as e:
-                print("Error")
-                print(e)
-        except:
-            print(f"Json Error in directory {os.getcwd()}")
+
+        self.conn = imaplib.IMAP4_SSL('imap.gmail.com')
+        email_id = self.user_data['mail_id']
+        password = self.user_data['password']
+        self.conn.login(email_id, password)
+        self.conn.select('Inbox')
+        self.get_all_transaction()
 
     def get_all_transaction(self):
 
@@ -67,7 +61,7 @@ class GetSpendings:
         if 'hdfc_debit' in self.platforms: self.run_hdfc_debit_log()
 
         for transaction in self.all_transactions:
-            self.get_categorised(transaction)
+            self.categorise_by_labeled_data(transaction)
         self.datalog()
 
     def run_phone_pe_log(self):
@@ -164,6 +158,8 @@ class GetSpendings:
                          'hdfc_debit', 'x01'])
 
     def get_categorised(self, transaction):
+        print(transaction)
+        pass
         try:
             AUTO_CAT = json.loads(open('auto_categorisation.json').read())
         except:
@@ -191,6 +187,23 @@ class GetSpendings:
                     transaction.insert(5, category)
                     break_all = True
                     break
+
+    def categorise_by_labeled_data(self,transaction):
+        file_name = self.user+'_dem_classifier.json'
+        if os.path.exists(file_name):
+            label_data = json.loads(open(file_name).read())
+
+            for category , category_data in label_data.items():
+                for label in category_data:
+                    if label == transaction[3]:
+                        print(transaction[3] , "::" , category)
+                        transaction.insert(5, category)
+                        return
+                    elif label == 'others':
+                        transaction.insert(5, 'others')
+                        return
+        else:
+            transaction.insert(5 , 'others')
 
     def datalog(self):
         count = 0
@@ -222,13 +235,6 @@ class GetSpendings:
 
 
 if __name__ == '__main__':
-    data = json.loads(open('user_data.json').read())
-    print(data['users'])
-    for user in data['users']:
-        if user == 'sanjay':
-            payments = ['axis_credit', 'hdfc_debit']
-            for date in range(1,10):
-                GetSpendings(user, payments, date='2024-08-0'+str(date), post=True)
-        else:
-            payments = ['phone_pe', 'axis_credit']
-       #GetSpendings(user, payments, date='2024-08-09', post=False)
+    user_data = json.loads(open('user_data.json').read())
+    for user in user_data:
+        GetSpendings(user, user_data[user], date='2024-08-13', post=True)

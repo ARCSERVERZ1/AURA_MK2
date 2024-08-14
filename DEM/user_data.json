@@ -1,9 +1,16 @@
 {
-  "users" :[ "sanjay","avinash"],
 
-  "details": {
-    "sanjay": ["baswasanjay19@gmail.com" , "cntc yeac sblf jhdb"],
-    "avinash": ["avinashbaswa.a4@gmail.com", "vnjc iyfw skrm mcic"]
-
-  }
+  "sanjay": {
+    "mail_id": "baswasanjay19@gmail.com" ,
+    "password":"cntc yeac sblf jhdb",
+    "payment_method": ["hdfc_debit", "axis_credit"]
+  },
+    "avinash": {
+      "mail_id": "avinashbaswa.a4@gmail.com",
+      "password": "vnjc iyfw skrm mcic",
+      "payment_method": [
+        "phone_pe",
+        "axis_credit"
+      ]
+    }
 }

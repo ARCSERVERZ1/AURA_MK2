@@ -17,7 +17,8 @@
 <main class = 'big-box'>
 
     <div class = "mainbar">
-        <label>TotalSpent: {{total_spent}}/-</label>
+        <label>Effective spending: {{eff_spent}}/-</label>
+        <label>Total Spending: {{total_spending}}/-</label>
         <div class = "mainbar-toolbox">
             <button onclick="admin_page()">Admin Pages</button>
             <button onclick="runDataLog()">Run Data Log</button>
@@ -120,11 +121,21 @@
                                 <div  class = 'popup-content-field' >
                                       <label>Category </label>
                                       <select name ="get_cat_trans">
-                                        <option value={{monthly_table_selecion}}>{{monthly_table_selecion}}</option>
+                                        <option value={{cat_selection}}>{{cat_selection}}</option>
                                          {% for i in category_data %}
                                         <option value="{{i}}">{{i}}</option>
                                          {% endfor %}
                                         <option value="Others">Others</option>
+                                        <option value="all-records">AllRecords</option>
+                                      </select>
+                                </div>
+                                <div  class = 'popup-content-field' >
+                                      <label>Sub Category </label>
+                                      <select name ="get_sub_cat_trans">
+                                        <option value={{sub_cat_selection}}>{{sub_cat_selection}}</option>
+                                         {% for i in sub_category_data %}
+                                        <option value="{{i}}">{{i}}</option>
+                                         {% endfor %}
                                         <option value="all-records">AllRecords</option>
                                       </select>
                                 </div>
@@ -609,7 +620,7 @@
                     labels: ['Budget','Spent'],
                     datasets: [{
                         label: 'Data Values',
-                        data: [{{set_budget}},{{total_spent}}],
+                        data: [{{set_budget}},{{eff_spent}}],
                         backgroundColor: ['rgba(75, 192, 192, 0.2)','rgba(75, 192, 192, 1)'],
                         borderColor: 'rgba(75, 192, 192, 1)',
                         borderWidth: 1

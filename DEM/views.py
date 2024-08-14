@@ -375,20 +375,15 @@ def rag_data(requests):
 
 
 @login_required()
-def render_dashboard(request, month_start_date, today, get_cat_trans):
+def render_dashboard(request, month_start_date, today, get_cat_trans, get_sub_cat_trans):
     current_user = request.user.username
     monthly_table_selecion = 'all-records'
     ist_date = datetime.now(pytz.timezone('Asia/Kolkata'))
 
-    monthly_table = transactions_data.objects.filter(user=current_user, date__range=[month_start_date, today])
+    monthly_table = transactions_data.objects.filter(user=current_user, date__range=[month_start_date, today]).order_by(
+        'date')
     group_data = groupdata.objects.filter(user=current_user)
-    result = transactions_data.objects.filter(
-        user=current_user, date__range=(month_start_date, today),
-    ).exclude(
-        category__in=Exclude_category  # Exclude rows where category is 'investment'
-    ).aggregate(
-        total_spent=Sum('amount')  # Aggregate the sum of amounts
-    )
+
     category_data = category.objects.values_list('category', flat=True)
 
     set_budget = budget.objects.filter(user=current_user, date=str(ist_date.strftime("%B %Y"))).values_list('budget',
@@ -400,27 +395,59 @@ def render_dashboard(request, month_start_date, today, get_cat_trans):
 
     # if request.method == 'POST':
     #     get_cat_trans = request.POST['get_cat_trans']
-    if get_cat_trans != 'all-records':
+    if get_cat_trans != 'all-records' and get_sub_cat_trans != 'all-records':
         monthly_table = transactions_data.objects.filter(user=current_user, date__range=[month_start_date, today],
-                                                         category=get_cat_trans)
-    else:
-        monthly_table = transactions_data.objects.filter(user=current_user, date__range=[month_start_date, today])
-    monthly_table_selecion = get_cat_trans
+                                                         category=get_cat_trans,
+                                                         sub_category=get_sub_cat_trans).order_by('date')
 
-    total_spent = result.get('total_spent', 0)
-    if total_spent is None: total_spent = 0
-    print("-------------------------", total_spent, "==", int(budget_set), "---")
+        print("Negitive both")
+    elif get_cat_trans != 'all-records' and get_sub_cat_trans == 'all-records':
+        monthly_table = transactions_data.objects.filter(user=current_user, date__range=[month_start_date, today],
+                                                         category=get_cat_trans).order_by('date')
+        print("only sub")
+    elif get_cat_trans == 'all-records' and get_sub_cat_trans != 'all-records':
+        monthly_table = transactions_data.objects.filter(user=current_user, date__range=[month_start_date, today],
+                                                         sub_category=get_sub_cat_trans).order_by('date')
+        print("only tran")
+    else:  # normal condition
+        monthly_table = transactions_data.objects.filter(user=current_user,
+                                                         date__range=[month_start_date, today]).order_by('date')
+        print("else both postive")
+
+    total_spending, eff_spent = 0, 0
+    for obj in monthly_table:
+        print(obj.amount, obj.category)
+        if obj.category not in Exclude_category:
+            eff_spent = eff_spent + obj.amount
+        total_spending = total_spending + obj.amount
+
+    print(total_spending, eff_spent)
+
+    monthly_table_selecion = get_cat_trans
+    sub_cat_trans_selecion = get_sub_cat_trans
+
+    print("-------------------------", eff_spent, "==", int(budget_set), "---")
+
+    sub_category_data = transactions_data.objects.filter(user=current_user,
+                                                         date__range=[month_start_date, today]).values_list(
+        'sub_category', flat=True).distinct()
+
+    print(f'Sub Category {sub_category_data}')
 
     context = {
         'group_data': group_data,
         'monthly_table': monthly_table,
-        'monthly_table_selecion': monthly_table_selecion,
-        'total_spent': total_spent,
+        'cat_selection': get_cat_trans,
+        'eff_spent': eff_spent,
         'category_data': category_data,
         'set_budget': budget_set,
-        'avail_to_spend': int(budget_set) - total_spent,
+        'avail_to_spend': int(budget_set) - eff_spent,
         'start_date': month_start_date,
-        'end_date': today
+        'end_date': today,
+        'sub_category_data': sub_category_data,
+        'sub_cat_selection': get_sub_cat_trans,
+        'total_spending': total_spending,
+
     }
     return render(request, 'dem_dashboard.html', context)
 
@@ -434,17 +461,19 @@ def main_dashboard(request, dashboard_type):
             start_date = request.POST['start_date']
             end_date = request.POST['end_date']
             get_cat_trans = request.POST['get_cat_trans']
-            return render_dashboard(request, start_date, end_date, get_cat_trans)
+            get_sub_cat_trans = request.POST['get_sub_cat_trans']
+            return render_dashboard(request, start_date, end_date, get_cat_trans, get_sub_cat_trans)
         else:
             ist_date = datetime.now(pytz.timezone('Asia/Kolkata'))
             current_date = str(ist_date.today()).split(' ')[0]
             start_date = current_date.split('-')[0] + '-' + current_date.split('-')[1] + '-01'
             end_date = current_date
-            return render_dashboard(request, start_date, end_date, 'all-records')
+            return render_dashboard(request, start_date, end_date, 'all-records', 'all-records')
     elif dashboard_type.split('|')[0] == 'graph':
         split_data = dashboard_type.split('|')
         print(split_data, "----------------")
         return plot_graph(request, split_data[1], split_data[2], split_data[3], user)
+
 
 @api_view(['POST'])
 @permission_classes([permissions.IsAuthenticated])
