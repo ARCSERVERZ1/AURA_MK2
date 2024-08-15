@@ -25,5 +25,6 @@ urlpatterns = [
     path('' , v.login ),
     path('home/' , v.home_page ),
     path('homeautom/' , include('HOMEAUTOM.urls') ),
+    path('storec/' , include('STOREC.urls') ),
 
 ]

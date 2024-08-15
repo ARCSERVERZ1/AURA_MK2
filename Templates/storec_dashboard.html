@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Storec !</title>
+     <link rel = 'stylesheet' href = "{% static 'medtrac/storec_dashboard.css' %}">
+</head>
+<body>
+<div class = 'nav-bar'>
+    <button>Home</button>
+</div>
+
+<div class = 'main-container'>
+    {% for stock , details in analysed_stock_data.items %}
+    <div class = 'card-main'>
+        <div class = 'card-header'>
+            <label>{{stock}}</label>
+        </div>
+        <div class = 'card-body'>
+            <label> Max Sell Point : {{details.sell_call.0}} </label>
+            <label> Max Buy Point : {{details.buy_call.0}}</label>
+            <label> Sell Point : {{details.sell_call.1}}</label>
+            <label> Buy Point : {{details.buy_call.1}}</label>
+            <label>Average Fluctuations {{details.7_Days_AHL.0}}</label>
+            <label>Max Fluctuations {{details.7_Days_AHL.1}}</label>
+            <label>Min Fluctuations {{details.7_Days_AHL.2}}</label>
+
+
+        </div>
+
+    </div>
+
+
+
+
+
+
+
+    {% endfor %}
+</div>
+
+
+</body>
+</html>
