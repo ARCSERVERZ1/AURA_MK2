@@ -7,23 +7,25 @@
 
 body {
 background-color: var(--background);
-
 }
-
 
 .main-container{
 display:flex;
 justify-content:space-around;
 margin-top:20px;
+display:grid;
+grid-template-columns: repeat(3, 1fr);
 }
 
 
 .card-main {
-
 background-color:var(--card-color);
 height:400px;
 width:270px;
 border-radius:15px;
+margin-left:10px;
+margin-bottom:20px;
+
 }
 
 .card-header {
@@ -47,9 +49,7 @@ align-items:left;
 }
 
 .card-body label {
-
 font-weight: bold;
 display:flex;
 margin:7px;
-
 }

@@ -14,26 +14,29 @@ def one_percent_analyser(requests):
     decimal_points = 4
     analysed_stock_data = {}
     for stock in stockList:
-        print(stock.stock_ticker)
+        try:
+            print(stock.stock_ticker)
 
-        analysis_dates = 7
-        end_date = datetime.now().date()
-        delta = timedelta(days=analysis_dates)
-        start_date = end_date - delta
+            analysis_dates = 7
+            end_date = datetime.now().date()
+            delta = timedelta(days=analysis_dates)
+            start_date = end_date - delta
 
-        print(f'start time {start_date} and endtime {end_date} for stock {stock.stock_name}')
-        df = yf.download(stock.stock_ticker, start=start_date, end=end_date)
+            print(f'start time {start_date} and endtime {end_date} for stock {stock.stock_name}')
+            df = yf.download(stock.stock_ticker, start=start_date, end=end_date)
 
-        df['max_diff'] = df['High'] - df['Low']
-        df['max_diff'] = df['High'] - df['Low']
-        avg_stock_price = df['Open'].mean()
-        df['max_diff_percent'] = (df['max_diff'] / avg_stock_price) * 100
-        #
-        analysed_stock_data[stock.stock_name] = {
-            str(analysis_dates)+str("_Days_AHL") : [round(df['max_diff_percent'].mean() , decimal_points) , round(df['max_diff_percent'].max(),decimal_points) , round(df['max_diff_percent'].min(),decimal_points) ],
-            "buy_call": [round(df['Low'].mean()),round(df['Low'].mean()+(df['max_diff'].mean() * 0.2 ),decimal_points  )],
-            "sell_call":[ round(df['High'].mean()) , round(df['High'].mean()-(df['max_diff'].mean() * 0.2 ) ,decimal_points )]
-        }
+            df['max_diff'] = df['High'] - df['Low']
+            df['max_diff'] = df['High'] - df['Low']
+            avg_stock_price = df['Open'].mean()
+            df['max_diff_percent'] = (df['max_diff'] / avg_stock_price) * 100
+            #
+            analysed_stock_data[stock.stock_name] = {
+                str(analysis_dates)+str("_Days_AHL") : [round(df['max_diff_percent'].mean() , decimal_points) , round(df['max_diff_percent'].max(),decimal_points) , round(df['max_diff_percent'].min(),decimal_points) ],
+                "buy_call": [round(df['Low'].mean()),round(df['Low'].mean()+(df['max_diff'].mean() * 0.2 ),decimal_points  )],
+                "sell_call":[ round(df['High'].mean()) , round(df['High'].mean()-(df['max_diff'].mean() * 0.2 ) ,decimal_points )]
+            }
+        except:
+            pass
     context = {
         'analysed_stock_data':analysed_stock_data
     }
