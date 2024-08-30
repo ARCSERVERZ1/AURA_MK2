@@ -343,5 +343,5 @@ def rag_for_docma(requests):
 
 def home_menu_req():
     # document_type = doc_type.objects.values_list('type', flat=True)
-    menu_but = home_menu.objects.all()
+    menu_but = home_menu.objects.all().order_by('app_priority')
     return menu_but
