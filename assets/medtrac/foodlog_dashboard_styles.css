@@ -1,0 +1,145 @@
+:root {
+    --background:#191D26;
+    --main_tile:red;
+    --font_cabin:font-family: 'Cabin', sans-serif ;
+    --font_colour:white;
+
+}
+
+
+.popup-overlay {
+display:flex;
+position:fixed;
+align-items:center;
+justify-content:center;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+background: rgba(0, 0, 0, 0.7);
+}
+
+.popup-container{
+display:flex;
+justify-content:center;
+flex-direction:column;
+background: #383839;
+width : 680px;
+height:550px;
+border-radius:10px;
+padding:10px;
+}
+
+
+.popup-head{
+display:flex;
+align-items:center;
+justify-content:space-between;
+background-color : #36454F;
+border-radius:10px;
+height:4vh;
+padding: 0px 20px;
+padding-left:50px;
+font-size: 30px;
+color:var(--font_colour);
+}
+
+
+.popup-content{
+display:flex;
+align-items: flex-start;
+justify-content:space-around;
+margin-top:5px;
+background-color : #36454F;
+border-radius:10px;
+height:70vh;
+font-size: 35px;
+color:var(--font_colour);
+}
+
+.popup-content-sub {
+display:flex;
+flex-direction:column;
+margin: 50px 50px 50px 50px;
+width:100%;
+}
+
+.popup-content-field {
+display:flex;
+flex-direction:column;
+align-items:left;
+justify-content:center;
+}
+
+
+.popup-content-field input , select {
+
+height:40px;
+width:350px;
+font-size: 35px;
+border-radius:10px;
+margin-bottom:20px;
+background-color: #36454F;
+font-weight:bold;
+color:white;
+
+}
+
+
+body{
+display:flex;
+background-color:var(--background);
+
+}
+
+.nav-bar{
+display:flex;
+align-items:center;
+justify-content:space-around;
+width:100%;
+height:5vh;
+border-radius:10px;
+background:var(--main_tile);
+
+}
+
+.nav-bar button{
+margin:1px;
+width:100px;
+height:4vh;
+border-radius:6px;
+font-size:--var(--font_cabin);
+font-size: 25px;
+font-weight:bold;
+}
+
+.popup-parameters {
+display:flex;
+align-items:center;
+justify-content:space-around;
+
+
+}
+
+.popup-parameters button{
+width:150px;
+height:70px;
+}
+
+.popup-slider{
+display:flex;
+flex-direction:column;
+font-size: 25px;
+}
+
+.popup-slider input{
+margin:20px 20px 40px 20px;
+}
+
+.save {
+
+display:flex;
+justify-content: center;
+margin-top:30px;
+}
+

@@ -1,22 +1,16 @@
 
-import json
-
-label_data = json.loads(open('sanjay_dem_classifier.json').read())
-
-
-extra_data = {
-    "Bills&Payments": [
-       "xxxxxx",
-       'xxxxxx',
-        "yyyy"
-    ],
-    "Food&Drinks": [
-        "PRISM INFOSYS POC",
-        "MDP Coffee House Infosys HYD N"
-    ]
+repo = {
+    1:1,
+    2:2,
+    3:3
 }
 
-for key  in extra_data:label_data[key] = label_data[key]+extra_data[key]
-for key , values in label_data.items():label_data[key] = list(set(values))
+live = { 1:9 , 4:9 , 5:9 }
 
-print(label_data)
+
+for r_alm , r_tm in repo.items():
+    if r_alm in live:
+        live[r_alm] = r_tm
+
+
+print(live)

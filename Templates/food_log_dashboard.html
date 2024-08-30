@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+   <meta  charset="UTF-8" name="viewport" content=" initial-scale= 0.6">
+    <title>Lets record!</title>
+    <link rel="stylesheet" href="{% static 'medtrac/foodlog_dashboard_styles.css' %}">
+
+</head>
+
+<body>
+<div class = 'nav-bar'>
+    <button>Home</button>
+    <button onclick="add_record()">Add Record</button>
+     <div class = 'popup-overlay' id = 'popup-overlay'>
+         <div class = "popup-container">
+             <div class = 'popup-head'>
+                 <H4>Add medical record</H4>
+                 <button onclick="close_popup()">X</button>
+              </div>
+              <div class = 'popup-content'>
+                <div class = 'popup-content-sub'>
+                    <form action = '/medtrac/food_log/' method = 'POST' id="log_medtrac">
+                        {% csrf_token %}
+                        <div class = 'popup-content-field'>
+                            <input type = 'datetime-local' name = 'time'>
+                            <select name = 'food-type'>
+                                <option>Veg-Meal</option>
+                                <option>Egg-Meal</option>
+                                <option>NonVeg-Meal</option>
+                                <option>snack</option>
+                            </select>
+
+                            <input type = 'text'  name = 'food-qty' id = 'food-qty' readonly>
+                            <input type = 'text'  name = 'junk-rating' id = 'junk-rating' readonly>
+                            <input type = 'text'  name = 'satisfaction-level' id = 'satisfaction-level' readonly>
+
+                        </div>
+                        <div class = 'popup-slider'>
+                            <label id = 'slider-label'>select option</label>
+                             <input type="range" id="slider" min="0" max="10" value="0">
+                        </div>
+                     <div class = 'popup-parameters'>
+                         <button type = 'button' onclick="food_log('food-qty')" >Food Qty</button>
+                         <button type = 'button' onclick="food_log('junk-rating')" >Junk Rating</button>
+                         <button type = 'button' onclick="food_log('satisfaction-level')" >Satisfaction level</button>
+                     </div>
+                    <div class = 'save'>
+                    <button type = 'button' onclick="save_medtrac_data()">Save</button>
+                    </div>
+                   </form>
+                </div>
+            </div>
+         </div>
+     </div>
+    </div>
+</body>
+</html>
+
+
+<script>
+     function close_popup() {
+    document.getElementById('popup-overlay').style.display = 'none';
+    }
+    function add_record(){
+    console.log("add record request");
+    document.getElementById('popup-overlay').style.display = 'flex';
+    }
+    function save_medtrac_data(){
+
+        var food_qty = document.getElementById('food-qty').value;
+        var satisfaction_level = document.getElementById('satisfaction-level').value
+        var junk_rating = document.getElementById('junk-rating').value
+
+        if (food_qty === '' || satisfaction_level === '' || junk_rating === '' ) {
+             alert('Info Insufficient'); }
+         else{
+            document.getElementById('log_medtrac').submit();
+            }
+    }
+
+
+    const slider = document.getElementById('slider');
+    const sliderLabel = document.getElementById('slider-label');
+    const food_qty = document.getElementById('food-qty');
+    const satisfaction_level = document.getElementById('satisfaction-level');
+    const junk_rating = document.getElementById('junk-rating');
+    slider.addEventListener('input', updateLabel);
+    var selected_parameter = 'food-qty';
+    sliderLabel.textContent = 'food quantity';
+    function food_log(parameter){
+    sliderLabel.textContent = parameter;
+    selected_parameter = parameter;
+    }
+
+    function updateLabel(){
+        if (selected_parameter === 'food-qty') {
+            food_qty.value = 'food quantity : '+slider.value;
+        }else if (selected_parameter === 'junk-rating') {
+            junk_rating.value = 'junk rating : '+slider.value;
+        }else if (selected_parameter === 'satisfaction-level')  {
+            satisfaction_level.value = 'satisfaction level : '+slider.value;
+        }
+
+    }
+
+
+
+
+
+</script>

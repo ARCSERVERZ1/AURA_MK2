@@ -8,9 +8,9 @@
 </head>
 <body>
 <div class = 'nav-bar'>
-    <button>Home</button>
+    <button onclick="home()">Home</button>
+    <button onclick="add_stock()">Add Stocks</button>
 </div>
-
 <div class = 'main-container'>
     {% for stock , details in analysed_stock_data.items %}
     <div class = 'card-main'>
@@ -31,15 +31,22 @@
 
     </div>
 
-
-
-
-
-
-
     {% endfor %}
 </div>
 
 
 </body>
 </html>
+
+<script>
+
+    function add_stock(){
+        window.open('/admin/STOREC/stock_list/add/', "_blank");
+    }
+
+    function home(){
+    window.location.assign('/home/');
+
+    }
+
+</script>

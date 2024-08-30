@@ -199,11 +199,9 @@ class GetSpendings:
                         print(transaction[3] , "::" , category)
                         transaction.insert(5, category)
                         return
-                    elif label == 'others':
-                        transaction.insert(5, 'others')
-                        return
+            transaction.insert(5 , 'Others')
         else:
-            transaction.insert(5 , 'others')
+            transaction.insert(5 , 'Others')
 
     def datalog(self):
         count = 0
@@ -236,5 +234,6 @@ class GetSpendings:
 
 if __name__ == '__main__':
     user_data = json.loads(open('user_data.json').read())
-    for user in user_data:
-        GetSpendings(user, user_data[user], date='2024-08-13', post=True)
+    for i in range(22,26):
+        for user in user_data:
+            GetSpendings(user, user_data[user], date='2024-08-'+str(i), post=True)
