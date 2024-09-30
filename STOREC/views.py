@@ -42,6 +42,15 @@ def one_percent_analyser(requests):
     }
     return render(requests, 'storec_dashboard.html', context)
 
+def file_uploader(request):
+    print("file_uoloader")
+    for file in request.FILES.getlist('file'):
+        with open('xy.xlxs', 'wb+') as destination:
+            for chunk in file.chunks():
+                destination.write(chunk)
+
+    return one_percent_analyser(request)
+
 
 
 

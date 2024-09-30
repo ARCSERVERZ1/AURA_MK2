@@ -10,6 +10,17 @@
 <div class = 'nav-bar'>
     <button onclick="home()">Home</button>
     <button onclick="add_stock()">Add Stocks</button>
+    <form id="uploadForm" action="/storec/fileupload/" method="post" enctype="multipart/form-data" >
+        {% csrf_token %}
+        <input type="file" accept=".xlsx" multiple name="file" id="fileInput">
+    </form>
+
+    <button onclick="submit_data()">Load data</button>
+
+
+
+
+    <button onclick="add_stock()">upload csv</button>
 </div>
 <div class = 'main-container'>
     {% for stock , details in analysed_stock_data.items %}
@@ -48,5 +59,24 @@
     window.location.assign('/home/');
 
     }
+
+     function submit_data() {
+
+
+         var docs = document.getElementById('fileInput').value;
+
+         if (docs === '' ) {
+             alert('Info Insufficient'); }
+         else{
+            var result = confirm("Confirm??");
+             if (result) {
+                document.getElementById('uploadForm').submit();
+             }
+
+
+        }
+    }
+
+
 
 </script>

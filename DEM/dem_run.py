@@ -234,6 +234,6 @@ class GetSpendings:
 
 if __name__ == '__main__':
     user_data = json.loads(open('user_data.json').read())
-    for i in range(22,26):
+    for i in range(1,4):
         for user in user_data:
-            GetSpendings(user, user_data[user], date='2024-08-'+str(i), post=True)
+            GetSpendings(user, user_data[user], date='2024-09-0'+str(i), post=True)
