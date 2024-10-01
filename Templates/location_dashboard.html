@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+     <link rel="stylesheet" href="{% static 'general_apps/dashboard_styles.css' %}">
+    <title>Get Location</title>
+</head>
+<body>
+
+    <div class = 'nav-bar'>
+    <button>Home</button>
+    <button onclick="add_record()">Add</button>
+     <div class = 'popup-overlay' id = 'popup-overlay'>
+         <div class = "popup-container">
+             <div class = 'popup-head'>
+                 <H4>Add Location</H4>
+                 <button onclick="close_popup()">X</button>
+              </div>
+              <div class = 'popup-content'>
+                <div class = 'popup-content-sub'>
+                    <form action = '/general/save_loc/' method = 'POST' id="log_loc">
+                        {% csrf_token %}
+                    <div class = 'popup-content-field'>
+                         <label>locationName *</label>
+                         <input type = 'text' id = 'locationName' name = 'locationName' >
+                    </div>
+                     <div class = 'popup-content-field'>
+                         <label>Group *</label>
+                         <input type = 'text' id = 'Group' name = 'Group' >
+                    </div>
+                    <div class = 'popup-content-field'>
+                         <label>TempLocation *</label>
+                         <input type = 'checkbox' id = 'TempLocation' name = 'TempLocation'  value="True">
+                    </div>
+                    <div class = 'popup-content-field'>
+                         <label>userPermission</label>
+                         <input type = 'text' id = 'userPermission' name = 'userPermission'>
+                    </div>
+                    <div class = 'popup-content-field'>
+                          <label>Remarks</label>
+                         <input type = 'text' id = 'edit-remarks' name = 'remarks'>
+                    </div>
+                    <div class = 'popup-content-field'>
+                    <button type = 'button' onclick="save_loc_data()">Save</button>
+                    </div>
+                   </form>
+
+                </div>
+
+            </div>
+         </div>
+     </div>
+     <p id="locationDisplay"></p>
+    </div>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>
+
+<script>
+
+    function get_location() {
+return new Promise((resolve, reject) => {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(showPosition, showError);
+
+        function showPosition(position) {
+            const latitude = position.coords.latitude;
+            const longitude = position.coords.longitude;
+            document.getElementById('locationDisplay').innerText = `Latitude: ${latitude}, Longitude: ${longitude}`;
+            resolve([1, latitude, longitude]); // Resolve the promise with the values
+        }
+
+        function showError(error) {
+            let message;
+            switch (error.code) {
+                case error.PERMISSION_DENIED:
+                    message = "User denied the request for Geolocation.";
+                    break;
+                case error.POSITION_UNAVAILABLE:
+                    message = "Location information is unavailable.";
+                    break;
+                case error.TIMEOUT:
+                    message = "The request to get user location timed out.";
+                    break;
+                case error.UNKNOWN_ERROR:
+                    message = "An unknown error occurred.";
+                    break;
+            }
+            document.getElementById('locationDisplay').innerText = message;
+            reject([0, message]); // Reject the promise with the error message
+        }
+    } else {
+        document.getElementById('locationDisplay').innerText = "Geolocation is not supported by this browser.";
+        reject([0, "Geolocation is not supported by this browser."]);
+    }
+});
+}
+
+// Example usage:
+get_location()
+.then(result => {
+    console.log(result); // Will log: [1, latitude, longitude]
+})
+.catch(error => {
+    console.log(error); // Will log error information
+});
+
+function close_popup() {
+document.getElementById('popup-overlay').style.display = 'none';
+}
+function add_record(){
+console.log("add record request");
+document.getElementById('popup-overlay').style.display = 'flex';
+}
+
+function save_loc_data(){
+
+document.getElementById('log_loc').submit()
+
+}
+
+</script>
+

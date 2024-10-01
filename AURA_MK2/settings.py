@@ -43,7 +43,8 @@ INSTALLED_APPS = [
     'DOCMA',
     'MEDTRAC',
     'HOMEAUTOM',
-    'STOREC'
+    'STOREC',
+    'GENERAL_APPS'
     # 'corsheaders'
 ]
 

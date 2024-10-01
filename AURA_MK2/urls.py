@@ -26,5 +26,6 @@ urlpatterns = [
     path('home/' , v.home_page ),
     path('homeautom/' , include('HOMEAUTOM.urls') ),
     path('storec/' , include('STOREC.urls') ),
+    path('general/' , include('GENERAL_APPS.urls') ),
 
 ]
