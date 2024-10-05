@@ -13,7 +13,6 @@ import string, random
 
 # Create your views here.
 
-
 def encrypt_value(value):
     x = 0
     rand = str(random.randint(1000000, 9999999))

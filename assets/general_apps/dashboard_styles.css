@@ -76,16 +76,17 @@ margin-top:30px;
 transform:scale(0.9);
 }
 
-.popup-content-field input {
-height:30px;
-width:200px;
-font-size: 25px;
+.popup-content-field input , select{
+height:23px;
+width:180px;
+font-size: 20px;
 font-weight: bold;
 }
 
 
 body{
 display:flex;
+flex-direction:column;
 background-color:var(--background);
 
 }
@@ -111,3 +112,41 @@ font-size: 20px;
 font-weight:bold;
 }
 
+
+.location-card {
+display:flex;
+flex-direction:column;
+width :250px;
+height:170px;
+background:var(--nav_bar);
+border-radius:10px;
+margin:10px;
+}
+
+.location-view {
+display:grid;
+grid-template-columns: repeat(3, 1fr);
+width:100%;
+justify-content:space-around;
+margin:10px;
+}
+
+.header-card{
+display:flex;
+align-items:center;
+justify-content:space-around;
+height:23px;
+width:180px;
+font-size: 20px;
+font-weight: bold;
+margin:10px;
+}
+
+.content-card{
+display:flex;
+flex-direction:column;
+}
+
+.content-card label {
+margin: 0px 0px 6px 10px;
+}

@@ -11,8 +11,10 @@ class locations_data(models.Model):
     remarks = models.CharField(max_length=255, null = True)
     group = models.CharField(max_length=255, null = True)
     temp_location = models.CharField(max_length=255, default='False')
+    Active = models.CharField(max_length=255, default='True')
     user_permission = models.CharField(max_length=255, default='all')
     time_stamp = models.DateTimeField(default=timezone.now)
+    user = models.CharField(max_length=255, default='')
 
     def __str__(self):
         return f"{self.location_name} | {self.temp_location}"

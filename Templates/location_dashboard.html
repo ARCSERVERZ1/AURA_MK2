@@ -8,69 +8,101 @@
     <title>Get Location</title>
 </head>
 <body>
-
     <div class = 'nav-bar'>
-    <button>Home</button>
-    <button onclick="add_record()">Add</button>
-     <div class = 'popup-overlay' id = 'popup-overlay'>
-         <div class = "popup-container">
-             <div class = 'popup-head'>
-                 <H4>Add Location</H4>
-                 <button onclick="close_popup()">X</button>
-              </div>
-              <div class = 'popup-content'>
-                <div class = 'popup-content-sub'>
-                    <form action = '/general/save_loc/' method = 'POST' id="log_loc">
-                        {% csrf_token %}
-                    <div class = 'popup-content-field'>
-                         <label>locationName *</label>
-                         <input type = 'text' id = 'locationName' name = 'locationName' >
+        <button>Home</button>
+        <button onclick="add_record()">Add</button>
+         <div class = 'popup-overlay' id = 'popup-overlay'>
+             <div class = "popup-container">
+                 <div class = 'popup-head'>
+                     <H4>Add Location</H4>
+                     <button onclick="close_popup()">X</button>
+                  </div>
+                 <div class = 'popup-content'>
+                    <div class = 'popup-content-sub'>
+                        <form action = '/general/save_loc/' method = 'POST' id="log_loc">
+                            {% csrf_token %}
+                         <p id="locationDisplay"></p>
+                         <input type = 'text' id = 'co_ordinates' name = 'co_ordinates' hidden>
+                        <div class = 'popup-content-field'>
+                             <label>locationName *</label>
+                             <input type = 'text' id = 'locationName' name = 'locationName' >
+                        </div>
+                         <div class = 'popup-content-field'>
+                             <label>Group *</label>
+                             <input type = 'text' id = 'group' name = 'group' >
+                         </div>
+                         <div class = 'popup-content-field'>
+                              <label>Remarks</label>
+                             <input type = 'text' id = 'remarks' name = 'remarks'>
+                         </div>
+                         <div class = 'popup-content-field'>
+                             <label>TempLocation *</label>
+                             <select id="tempLocation" name = "tempLocation">
+                                <option value="Yes">Yes</option>
+                                <option value="No">No</option>
+                            </select>
+                         </div>
+                         <div class = 'popup-content-field'>
+                             <label>Active *</label>
+                              <select id="active" name = "active">
+                                <option value="Yes">Yes</option>
+                                <option value="No">No</option>
+                            </select>
+                         </div>
+                         <div class = 'popup-content-field'>
+                             <label>userPermission</label>
+                              <select id="userPermission" name = "userPermission">
+                                <option value="Everyone">Everyone</option>
+                                <option value="Only me">Only me</option>
+                            </select>
+                         </div>
+                         <div class = 'popup-content-field'>
+                         <button type = 'button' onclick="save_loc_data()">Save</button>
+                        </div>
+                       </form>
                     </div>
-                     <div class = 'popup-content-field'>
-                         <label>Group *</label>
-                         <input type = 'text' id = 'Group' name = 'Group' >
-                    </div>
-                    <div class = 'popup-content-field'>
-                         <label>TempLocation *</label>
-                         <input type = 'checkbox' id = 'TempLocation' name = 'TempLocation'  value="True">
-                    </div>
-                    <div class = 'popup-content-field'>
-                         <label>userPermission</label>
-                         <input type = 'text' id = 'userPermission' name = 'userPermission'>
-                    </div>
-                    <div class = 'popup-content-field'>
-                          <label>Remarks</label>
-                         <input type = 'text' id = 'edit-remarks' name = 'remarks'>
-                    </div>
-                    <div class = 'popup-content-field'>
-                    <button type = 'button' onclick="save_loc_data()">Save</button>
-                    </div>
-                   </form>
+                </div>
+             </div>
+         </div>
+    </div>
+
+    <div class = 'location-view'>
+        {% for i in locations %}
+            <div class = location-card>
+                <div class = header-card >
+                <label>{{i.location_name}}</label>
+                 <a href="https://www.google.com/maps?q={{i.latitude}},{{i.longitude}}" target="_blank">
+                      <img src="{% static 'general_apps/location.png' %}"  width="30" height="30">
+                 </a>
+                </div>
+                <div class = 'content-card'>
+                <label>{{i.group}}</label>
+                <label>{{i.remarks}}</label>
+                <label>{{i.latitude}} | {{i.longitude}}</label>
+                <label>{{i.time_stamp}}</label>
+                </div>
 
                 </div>
 
-            </div>
-         </div>
-     </div>
-     <p id="locationDisplay"></p>
+        {% endfor %}
     </div>
-</body>
-</html>
-
-
-
-
-
-
-
-
-
-
-
 
 
 </body>
 </html>
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 <script>
 
@@ -83,6 +115,7 @@ return new Promise((resolve, reject) => {
             const latitude = position.coords.latitude;
             const longitude = position.coords.longitude;
             document.getElementById('locationDisplay').innerText = `Latitude: ${latitude}, Longitude: ${longitude}`;
+            document.getElementById('co_ordinates').value = `${latitude}|${longitude}`;
             resolve([1, latitude, longitude]); // Resolve the promise with the values
         }
 
@@ -130,9 +163,12 @@ document.getElementById('popup-overlay').style.display = 'flex';
 }
 
 function save_loc_data(){
-
+    let coordinates = document.getElementById('co_ordinates').value;
+if (coordinates === '' ) {
+    alert('Info Insufficient/Location permission not given !'); }
+else{
 document.getElementById('log_loc').submit()
-
+}
 }
 
 </script>
