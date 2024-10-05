@@ -3,6 +3,7 @@ from django.http import JsonResponse
 from requests import request
 from .models import *
 from datetime import datetime
+from django.shortcuts import render, get_object_or_404, redirect
 # Create your views here.
 
 
@@ -40,16 +41,8 @@ def save_loc(requests):
         user=requests.user.username
         )
         new_loc_data.save()
-        loc_data = locations_data.objects.all()
 
-        for i in loc_data:
-            print(i)
-
-        context = {
-            "locations": loc_data
-        }
-
-        return render(requests, 'location_dashboard.html', context)
+        return redirect('location_home')
 
 
 

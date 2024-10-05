@@ -19,7 +19,7 @@
                   </div>
                  <div class = 'popup-content'>
                     <div class = 'popup-content-sub'>
-                        <form action = '/general/save_loc/' method = 'POST' id="log_loc">
+                        <form action = '/general/location/save_loc' method = 'POST' id="log_loc">
                             {% csrf_token %}
                          <p id="locationDisplay"></p>
                          <input type = 'text' id = 'co_ordinates' name = 'co_ordinates' hidden>
