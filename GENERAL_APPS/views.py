@@ -30,7 +30,7 @@ def save_loc(requests):
         new_loc_data = locations_data(
         location_name =  requests.POST['locationName'],
         latitude = str(requests.POST['co_ordinates']).split('|')[0] ,
-        longitude = str(requests.POST['co_ordinates']).split('|')[0] ,
+        longitude = str(requests.POST['co_ordinates']).split('|')[1] ,
         remarks = requests.POST['remarks'],
         group = requests.POST['group'],
         temp_location = requests.POST.get('tempLocation'),
@@ -40,7 +40,6 @@ def save_loc(requests):
         user=requests.user.username
         )
         new_loc_data.save()
-
         loc_data = locations_data.objects.all()
 
         for i in loc_data:
