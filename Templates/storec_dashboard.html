@@ -23,26 +23,63 @@
     <button onclick="add_stock()">upload csv</button>
 </div>
 <div class = 'main-container'>
-    {% for stock , details in analysed_stock_data.items %}
-    <div class = 'card-main'>
-        <div class = 'card-header'>
-            <label>{{stock}}</label>
-        </div>
-        <div class = 'card-body'>
-            <label> Max Sell Point : {{details.sell_call.0}} </label>
-            <label> Max Buy Point : {{details.buy_call.0}}</label>
-            <label> Sell Point : {{details.sell_call.1}}</label>
-            <label> Buy Point : {{details.buy_call.1}}</label>
-            <label>Average Fluctuations {{details.7_Days_AHL.0}} %</label>
-            <label>Max Fluctuations {{details.7_Days_AHL.1}} %</label>
-            <label>Min Fluctuations {{details.7_Days_AHL.2}} %</label>
+<!--    {% for stock , details in analysed_stock_data.items %}-->
+<!--    <div class = 'card-main'>-->
+<!--        <div class = 'card-header'>-->
+<!--            <label>{{stock}}</label>-->
+<!--        </div>-->
+<!--        <div class = 'card-body'>-->
+<!--            <label> Max Sell Point : {{details.sell_call.0}} </label>-->
+<!--            <label> Max Buy Point : {{details.buy_call.0}}</label>-->
+<!--            <label> Sell Point : {{details.sell_call.1}}</label>-->
+<!--            <label> Buy Point : {{details.buy_call.1}}</label>-->
+<!--            <label>Average Fluctuations {{details.7_Days_AHL.0}} %</label>-->
+<!--            <label>Max Fluctuations {{details.7_Days_AHL.1}} %</label>-->
+<!--            <label>Min Fluctuations {{details.7_Days_AHL.2}} %</label>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--    {% endfor %}-->
+
+ <div class = "table-box">
+        <table>
+                <thead>
+                    <tr>
+                        <th>Stock name</th>
+                        <th>Max Sell Point</th>
+                        <th>Sell Point </th>
+                        <th>Buy Point</th>
+                        <th>Max Fluctuations</th>
+                        <th>Min Fluctuations</th>
+                        <th>Volume</th>
+                        <th>Edit</th>
+                        <th>Analysis</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                {% for stock , details in analysed_stock_data.items %}
+                    <tr>
+                        <td>{{stock}}</td>
+                        <td>{{details.sell_call.0}}</td>
+                        <td>{{details.buy_call.0}}</td>
+                        <td>{{details.sell_call.1}}</td>
+                        <td>{{details.7_Days_AHL.0}}</td>
+                        <td>{{details.7_Days_AHL.2}}</td>
+                        <td>{{details.volume}}</td>
+                        <td>
+                            <a href="/admin/STOREC/stock_list/{{details.ticker}}/change/">Edit</a>
+                        </td>
+                        <td>#</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
 
 
-        </div>
 
-    </div>
 
-    {% endfor %}
+
+
 </div>
 
 
