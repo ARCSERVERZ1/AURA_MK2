@@ -1,6 +1,6 @@
 from django.db import models
 import os
-
+from django.utils import timezone
 
 # Create your models here.
 
@@ -58,3 +58,22 @@ class home_menu(models.Model):
 
     def __str__(self):
         return f"{self.app_id}-{self.app_name} - {self.app_link} - {self.app_priority}"
+
+
+class docma_firebase(models.Model):
+    id = models.IntegerField(primary_key=True)
+    holder = models.CharField(max_length=200)
+    refnumber = models.CharField(max_length=200)
+    document_path = models.CharField(max_length=200)
+    document_list =  models.CharField(max_length=200)
+    type = models.CharField(max_length=200)
+    value = models.IntegerField(default=0)
+    start_date = models.DateField(timezone.now())
+    end_date = models.DateField(timezone.now())
+    time_stamp = models.DateTimeField()
+    remarks = models.CharField(max_length=200)
+    updated_by = models.CharField(max_length=200)
+    doc_group = models.CharField(max_length=200 , default = 'NA')
+
+    def __str__(self):
+        return str(self.id)+'-'+str(self.type)+'-'+str(self.holder)

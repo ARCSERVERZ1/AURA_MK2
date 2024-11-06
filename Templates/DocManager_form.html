@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Select Multiple Photos</title>
+  <link rel = 'stylesheet' href = "{% static 'dem/doc_manager.css' %}">
+</head>
+
+
+<body>
+
+<div class="nav-bar">
+<div class = "home">
+    <a href = '/home/'>Home /</a>
+    <a href = '/doc_manager/'>Document Category</a>
+</div>
+</div>
+
+<div class = 'main-box'>
+  <div class = 'photo-box'>
+        <button onclick="previousImage()"><-</button>
+    <div>
+    <iframe id="displayedPdf" src="#" height = "300px"  alt="Selected Image"></iframe>
+     <img id="displayedImage" class="di" src="#"  alt="Selected Image" >
+    </div>
+          <button onclick="nextImage()">-></button>
+    </div>
+
+  <div class = 'form-box'>
+
+     <form id="uploadForm" action="/doc_manager/save/" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+<!--       <div class="choose"><input type="file" accept="image/*,.pdf"  multiple id="fileInput" name = "zile"></div>-->
+        <div class="form-inputs">
+        <input type="file" accept="image/*,.pdf" multiple name="file" id="fileInput">
+    </div>
+
+    <div class = 'form-inputs'>
+      <label >Holder name</label>
+      <select name = docName id = 'docName'>
+        {% for i in document_holders %}
+        <option value = "{{i}}" > {{i}}</option>
+        {% endfor %}
+      </select>
+
+<!--      <input type="text" id = 'docName' name = 'docName'>-->
+    </div>
+    <div class = 'form-inputs'>
+      <label >Doc type</label>
+      <select name = docType id = 'docType'>
+        {% for i in document_type %}
+        <option value = "{{i}}" > {{i}}</option>
+        {% endfor %}
+        <option value = "addnew">Add New + </option>
+      </select>
+       <div class = 'create-new-type' id = 'create-new-type'>
+            <div class = 'add_doc_type'>
+                <div class = 'popup-head'>
+                <label>Add Document type</label>
+                <button>X</button>
+
+                </div>
+             <div class = 'main-pop'>
+             <label >Doc Type</label>
+             <input type = text id = doc_type >
+
+            <button type = button onclick="add_doc_type()">add doc type</button>
+                 </div>
+             </div>
+       </div>
+    </div>
+    <div class = 'form-inputs'>
+      <label >Ref number</label>
+      <input type="text" id = 'refNum' name = 'refNum' required>
+    </div>
+    <div class = 'form-inputs'>
+      <label >Value / Price</label>
+      <input type="number" id = 'value' name = 'value' value = 1>
+    </div>
+    <div class = 'form-inputs'>
+      <label >Start Date</label>
+      <input type="date" id = 'sDate' name = 'sDate' value="1900-01-01">
+    </div>
+
+    <div class = 'form-inputs'>
+      <label >Valid upto</label>
+      <input type="date" id = 'eDate' name = 'eDate' value="1900-01-01">
+    </div>
+    <div class = 'form-inputs'>
+      <label >remarks</label>
+      <input type="text"  id = 'remarks' name = 'remarks'>
+    </div>
+    <div class = 'form-inputs'>
+      <button type = button   onclick="submit_data()">submit</button>
+    </div>
+  </form>
+  </div>
+
+
+
+</div>
+
+</body>
+</html>
+
+
+<script>
+
+
+
+
+  let currentImageIndex = 0;
+  const selectedImages = [];
+  const selectedImagestype = [];
+
+    var protocol = window.location.protocol;
+    var hostname = window.location.hostname;
+    var port = window.location.port;
+
+    if (port == ''){
+    var domain = protocol + '//' + hostname+'/'
+    }
+    else{
+    var domain = protocol + '//' + hostname+':'+port+'/';
+    }
+
+
+ function add_doc_type() {
+     var doc_type = document.getElementById('doc_type').value;
+
+      if (doc_type.includes(' ')) {
+        alert("Plz enter without spaces");
+        }else{
+
+     fetch(domain+'doc_manager/add_new_type/'+doc_type)
+                .then(response => response.json())
+                .then(data => {
+                   alert(data.result);
+                   console.log(data.result);
+                   location.reload(true);
+                });
+}
+
+ }
+
+
+
+
+ console.log(document.getElementById('docType').value);
+
+ document.getElementById("docType").addEventListener("change", function() {
+  var selectedOption = this.value;
+   if (selectedOption == 'addnew') {
+   console.log(selectedOption);
+   document.getElementById('create-new-type').style.display = 'flex';
+   }
+});
+document.getElementById('displayedPdf').style.display = 'none';
+document.getElementById('displayedImage').style.display = 'none';
+
+  function submit_data() {
+
+         var remarks = document.getElementById('remarks').value;
+         var docs = document.getElementById('fileInput').value;
+         var value = document.getElementById('value').value;
+         var sDate = document.getElementById('sDate').value;
+         var eDate = document.getElementById('eDate').value;
+         var docType = document.getElementById('docType').value;
+         var docName = document.getElementById('docName').value;
+         var refNum = document.getElementById('refNum').value;
+
+         if (docName === '' || docType === '' || refNum === ''  || remarks === '' || docs === '' ) {
+             alert('Info Insufficient'); }
+         else{
+            var result = confirm("Confirm Data: Name: "+docName+" and Type: "+docType);
+             if (result) {
+                document.getElementById('uploadForm').submit();
+             }
+
+
+        }
+    }
+
+  document.getElementById('fileInput').addEventListener('change', function() {
+    const files = this.files;
+    for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        const fileType = file.type;
+      selectedImages.push(URL.createObjectURL(files[i]));
+      selectedImagestype.push(fileType);
+    }
+    displayImage(0);
+
+  });
+
+  function displayImage(index) {
+    currentImageIndex = index;
+    console.log(index);
+    console.log(selectedImagestype[index]);
+    if (selectedImagestype[index] == 'image/jpeg') {
+     document.getElementById('displayedPdf').style.display = 'none';
+      document.getElementById('displayedImage').style.display = '';
+    document.getElementById('displayedImage').src = selectedImages[index];
+    } else if (selectedImagestype[index] == 'application/pdf')  {
+    console.log("i am");
+    document.getElementById('displayedImage').style.display = 'none';
+     document.getElementById('displayedPdf').style.display = '';
+    document.getElementById('displayedPdf').src = selectedImages[index];
+    }
+
+  }
+
+  function previousImage() {
+    if (currentImageIndex > 0) {
+      displayImage(currentImageIndex - 1);
+    }
+  }
+
+  function nextImage() {
+    if (currentImageIndex < selectedImages.length - 1) {
+      displayImage(currentImageIndex + 1);
+    }
+  }
+</script>
+

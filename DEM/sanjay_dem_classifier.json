@@ -1,85 +1,68 @@
 {
     "Bills&Payments": [
-        "growwnbt.elements@hdfcbank",
         "House Owner",
-        "jio@citibank",
-        "JIOINAPPDIRECT@ybl",
-        "RELIANCE JIO INFOCOMM"
-    ],
-    "Educational&Learning": [
         "dataisgood",
-        "Datta is good"
+        "JIOINAPPDIRECT@ybl"
     ],
     "IgnoreCount": [
         "BASWA VEERABHADRARAO",
-        "GOPALAKRISHNAN NATARAJAN",
-        "9553448646@ybl"
+        "B GANGA AVINASH"
     ],
-    "Food&Drinks": [
-        "Vyapar.170966702387@hdfcbank",
-        "gpay-11176954437@okbizaxis",
-        "RazorpayZomato s",
-        "Q138220980@ybl",
-        "ZOMATO LIMITED",
-        "ZOMATO LIMITED s",
-        "Ms GOKILA K",
-        "ADP FOOD SERVICES",
-        "Zomato Ltd s",
-        "Bbinstan",
-        "SHARAN KESAVA",
-        "Zomato Ltd",
-        "Q216851767@ybl",
-        "VASANTHI G"
-    ],
-    "Bike_spendings": [
-        "M S R S K PETROLEUM AGENCIES",
-        "RAFFID DREAMS FUEL SERVICE",
-        "GSN Fuels"
-    ],
-    "Investment&Savings": [
-        "groww-bse.growwpay@hdfcbank",
-        "UPSTOX SECURITIES PVT LTD USCN",
-        "ICCL-Groww",
-        "IndianClearingCorporation"
-    ],
-    "Kitchen&Groceries": [
-        "play:block\"> SRI SUPREME FRESH",
-        "Lotus store",
-        "Mswipe.1400040124000836@indianbk",
-        "paytm-54192129@ptys",
-        "Q488368959@ybl",
-        "SRI SUPREME FRESH CHICKEN",
-        "Q039065419@ybl"
-    ],
-    "DEBT-OUT": [
-        "Tummalapalli Nageswararao",
-        "MAGAPU MANITEJA",
-        "https://cre"
-    ],
-    "Home-needs/Domestic": [
+    "Domestic Essentials": [
         "VEERAVALAVAN SARAVANAN"
     ],
-    "Travel": [
-        "Mr CHARUMATHI VENGADESAN",
-        "Indian Railways Ticketing",
-        "9080314671paytm",
-        "Mr Ganesan Kanniyappan"
+    "Entertainment": [
+        "VISHNUPRIYA S",
+        "ANNE FEBRONIA",
+        "FARHATH ABDUL JABBAR",
+        "ARHA MEDIA AND BROADCASTING PRIVATE"
     ],
-    "Clothing&shopping": [
-        "Kathiri Venkateswara Rao",
-        "BAVISETTI PURNESWARI PALGUNA S"
+    "Food&Drinks": [
+        "Bbinstant",
+        "S MANIVANNAN",
+        "BAKEYA STORE",
+        "NAVADEEP SANTH JAMPA",
+        "SRI RAMA DHABHA AND RESTAURENT",
+        "Mrs Durgabai",
+        "SRI GAYATHRI ENTERPRISES",
+        "DASI SAICHARAN",
+        "SAMPANGI N",
+        "Mrs KONDIVEERABABU",
+        "DASARI SRI RAMA VEERA VENKATANAGA SAI BHAVANI PRASAD",
+        "VIDHYA R",
+        "SRI KRISHNA GIFT HOUSE",
+        "Kalanikethan Kakinada TY6G",
+        "KHALEEL R",
+        "Madhan Mess",
+        "Golden Super Market",
+        "SAI AMRUTHA MESS"
     ],
-    "Home-needs": [
-        "SRI RAJARAJESWARIC",
-        "R SATHI BAB",
-        "SRINIVAS COCONUT SHOP",
-        "JATTLA VENKATARAMANA",
-        "SRI GAYATHRI ENTERPRISES"
-    ],
-    "Body_care": [
-        "317832202727320@cnrb"
+    "Debt Sent": [
+        "BASAVAANNAPARAJU"
     ],
     "others": [
-        "Others"
+        "TAMILMOZHI M J"
+    ],
+    "Medical": [
+        "Satya Scans And Diagnostics"
+    ],
+    "Hotels&Travel": [
+        "SRINIVASA AUTO SERVICES"
+    ],
+    "Kitchen&Groceries": [
+        "SRI SUPREME FRESH CHICKEN",
+        "Mrs Durgabai"
+    ],
+    "Bike Maintenance": [
+        "GSN Fuels"
+    ],
+    "Clothing&shopping": [
+        "Flipkart"
+    ],
+    "Home-needs/Domestic": [
+        "Mr MUTHARASU M"
+    ],
+    "Investment&Savings": [
+        "growwnbt.elements@hdfcbank"
     ]
 }

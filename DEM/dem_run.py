@@ -1,10 +1,10 @@
 import os, json, re
 import time as t
 import imaplib, email
-from datetime import datetime
+from datetime import datetime, timedelta
 import pytz, requests
 from email.header import decode_header
-import dem_classifier
+import dem_classifier as classifer
 
 
 def validation(text, type):
@@ -52,6 +52,12 @@ class GetSpendings:
         password = self.user_data['password']
         self.conn.login(email_id, password)
         self.conn.select('Inbox')
+
+        try:
+            classifer.label_data(user, self.pass_date, 30)
+        except Exception as e:
+            print(f"{e}")
+
         self.get_all_transaction()
 
     def get_all_transaction(self):
@@ -188,20 +194,20 @@ class GetSpendings:
                     break_all = True
                     break
 
-    def categorise_by_labeled_data(self,transaction):
-        file_name = self.user+'_dem_classifier.json'
+    def categorise_by_labeled_data(self, transaction):
+        file_name = self.user + '_dem_classifier.json'
         if os.path.exists(file_name):
             label_data = json.loads(open(file_name).read())
 
-            for category , category_data in label_data.items():
+            for category, category_data in label_data.items():
                 for label in category_data:
                     if label == transaction[3]:
-                        print(transaction[3] , "::" , category)
+                        print(transaction[3], "::", category)
                         transaction.insert(5, category)
                         return
-            transaction.insert(5 , 'Others')
+            transaction.insert(5, 'Others')
         else:
-            transaction.insert(5 , 'Others')
+            transaction.insert(5, 'Others')
 
     def datalog(self):
         count = 0
@@ -234,6 +240,12 @@ class GetSpendings:
 
 if __name__ == '__main__':
     user_data = json.loads(open('user_data.json').read())
-    for i in range(1,4):
-        for user in user_data:
-            GetSpendings(user, user_data[user], date='2024-09-0'+str(i), post=True)
+
+    for user in user_data:
+        if user == 'sanjay':
+            for i in range(1, 8):
+                GetSpendings(user, user_data[user], date='2024-10-0' + str(i), post=True)
+
+    # for i in range(22,26):
+    #     for user in user_data:
+    #         GetSpendings(user, user_data[user], date='2024-08-'+str(i), post=True)

@@ -3,7 +3,7 @@
   "sanjay": {
     "mail_id": "baswasanjay19@gmail.com" ,
     "password":"cntc yeac sblf jhdb",
-    "payment_method": ["hdfc_debit", "axis_credit"]
+    "payment_method": ["hdfc_debit", "axis_credit","phone_pe"]
   },
     "avinash": {
       "mail_id": "avinashbaswa.a4@gmail.com",

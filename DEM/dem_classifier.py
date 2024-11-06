@@ -1,17 +1,17 @@
 import os.path
 
 import requests
-from datetime import datetime
+from datetime import datetime, timedelta
 import json
 
 
 class label_data:
-    def __init__(self, user , date , days):
+    def __init__(self, user, date, days):
         self.user = user
         self.url = ' https://serveraura.pythonanywhere.com/dem/api/get_labeled_data/'
         self.token_url = ' https://serveraura.pythonanywhere.com/dem/api/token/'
         self.token = ''
-        self.end_date = date,
+        self.end_date = date
         self.days = days
         self.save_label_data()
 
@@ -30,10 +30,16 @@ class label_data:
         return auth
 
     def get_label_data(self):
+
+        start_time = datetime.strptime(self.end_date, "%Y-%m-%d")-timedelta(days=self.days)
+        start_time = str(start_time.strftime("%Y-%m-%d"))
+
+        print(start_time , self.end_date)
+
         json_data = {
             "user": self.user,
-            "start_date": '2024-07-01',
-            "end_date": str(datetime.now().date())
+            "start_date": start_time,
+            "end_date": self.end_date
         }
 
         req = requests.post(url=self.url, data=json_data, headers=self.get_auth())
@@ -44,14 +50,14 @@ class label_data:
             except:
                 globals()[record['category']] = []
                 globals()[record['category']].append(record['receiver_bank'])
-            labels[record['category']] = labels[record['category']] =  globals()[record['category']]
+            labels[record['category']] = labels[record['category']] = globals()[record['category']]
 
-        for key , values in labels.items():labels[key] = list(set(values))
+        for key, values in labels.items(): labels[key] = list(set(values))
         return labels
 
     def save_label_data(self):
 
-        file_name = self.user+'_dem_classifier.json'
+        file_name = self.user + '_dem_classifier.json'
         if not os.path.exists(file_name):
             with open(file_name, 'w') as file:
                 json.dump(self.get_label_data(), file, indent=4)
@@ -72,6 +78,6 @@ class label_data:
 
 
 if __name__ == '__main__':
-    users = ['sanjay','avinash']
+    users = ['sanjay', 'avinash']
     for user in users:
-        label_data(user , '2024-08-11',30)
+        label_data(user, '2024-08-11', 30)

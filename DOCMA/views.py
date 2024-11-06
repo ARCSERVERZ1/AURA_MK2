@@ -9,9 +9,22 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework import permissions
 from django.contrib.auth.decorators import login_required
 import string, random
+import pyrebase
 
+firebaseConfig = {
+    'apiKey': "AIzaSyAMoENs6AiTkSnAhuHuzwpGFkxeaAhGQB4",
+    "authDomain": "aura-bifrost.firebaseapp.com",
+    "databaseURL": "https://aura-bifrost-default-rtdb.firebaseio.com",
+    "projectId": "aura-bifrost",
+    "storageBucket": "aura-bifrost.appspot.com",
+    "messagingSenderId": "774636407803",
+    "appId": "1:774636407803:web:7710f0dec1c433a1b5d95e",
+    "measurementId": "G-F8LXP6ZP1Q"
+}
 
-# Create your views here.
+firebase = pyrebase.initialize_app(firebaseConfig)
+bucket = firebase.storage()
+
 
 def encrypt_value(value):
     x = 0
@@ -94,7 +107,7 @@ def add_document(request):
         'document_type': document_type
     }
 
-    return render(request, "doc_manager.html", context)
+    return render(request, "DocManager_form.html", context)
 
 
 @login_required()
@@ -173,7 +186,8 @@ def doc_manager_save(request):
 def save_uploaded_file(file):
     # Define the directory where you want to save the uploaded files
     upload_dir = 'path/to/save/files/'
-    if not os.path.exists(upload_dir): os.makedirs(upload_dir)
+    if not os.path.exists(upload_dir):
+        os.makedirs(upload_dir)
     with open(os.path.join(upload_dir, file.name), 'wb+') as destination:
         for chunk in file.chunks():
             destination.write(chunk)
@@ -344,3 +358,72 @@ def home_menu_req():
     # document_type = doc_type.objects.values_list('type', flat=True)
     menu_but = home_menu.objects.all().order_by('app_priority')
     return menu_but
+
+
+def doc_manager_save_firebase(request):
+    if request.method == 'POST':
+
+        docName = request.POST['docName']
+        docType = request.POST['docType']
+        refNum = request.POST['refNum']
+        sDate = request.POST['sDate']
+        eDate = request.POST['eDate']
+        remarks = request.POST['remarks']
+        value = request.POST['value']
+
+        upload_dir = 'assets/buffer/'
+        if not os.path.exists('Local'): upload_dir = 'AURA_MK2/' + upload_dir
+        if not os.path.exists(upload_dir): os.makedirs(upload_dir)
+        firebase_storage_path = 'DocManager/' + docType + '/' + refNum + '_' + docName + '/'
+        files_data = ''
+        for file in request.FILES.getlist('file'):
+            with open(upload_dir + str(file), 'wb+') as destination:
+                for chunk in file.chunks():
+                    destination.write(chunk)
+            bucket.child(firebase_storage_path + str(file)).put(upload_dir + str(file))
+            files_data = files_data  + str(file) + '|'
+
+        enc_value = ''
+        if docType == 'Bank_Cards':
+            enc_value = encrypt_value(value)
+        else:
+            enc_value = value
+
+        data = docma_firebase(holder=docName,
+                              refnumber=refNum,
+                              document_path=firebase_storage_path,
+                              document_list = files_data,
+                              end_date=eDate,
+                              start_date=sDate,
+                              value=enc_value,
+                              type=docType,
+                              time_stamp=datetime.now(),
+                              remarks=remarks,
+                              updated_by=request.user.username
+                              )
+
+        data.save()
+    return render(request, "DocManager_form.html")
+
+
+def doc_viewer_firebase(request, type):
+    document_data = docma_firebase.objects.filter(type=type)
+    viewer = {}
+    for document in document_data:
+        path = []
+        print(document.holder, document.refnumber, document.end_date)
+        print(document.document_list)
+        for file in document.document_list.split('|'):
+            if file != '':
+                print(document.document_path+file)
+                path.append(bucket.child(document.document_path+file).get_url(None))
+
+        viewer[str(document.holder) + str(document.id)] = {
+            'doc_id': document.id,
+            'refnum': document.refnumber,
+            'valid': document.end_date,
+            'file_path': path,}
+
+    context = {'data': viewer}
+
+    return render(request, "DocViewer.html", context)

@@ -482,7 +482,8 @@ def get_labeled_data(requests):
     user = request_data['user']
     start_date = request_data['start_date']
     end_date = request_data['end_date']
-    labeled_data = list(transactions_data.objects.filter(user=user, date__range=[start_date, end_date]).exclude(
-        category='Others').values('receiver_bank', 'category'))
+    labeled_data = list(transactions_data.objects.filter(user=user, date__range=[start_date, end_date])
+      .exclude(category__in=['Others', 'others', 'DEBT'])
+    .values('receiver_bank', 'category'))
 
     return JsonResponse(labeled_data, safe=False)
