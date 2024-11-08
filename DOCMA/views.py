@@ -427,3 +427,12 @@ def doc_viewer_firebase(request, type):
     context = {'data': viewer}
 
     return render(request, "DocViewer.html", context)
+
+def migrate(request):
+    data = {}
+    for doc_folder in os.listdir('assets/Documents'):
+        data[doc_folder] = []
+        for doc in os.listdir('assets/Documents/'+doc_folder):
+            data[doc_folder].append(doc)
+
+    return JsonResponse( data , safe = False)

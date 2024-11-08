@@ -2,7 +2,8 @@
 
 import datetime
 from django.db import migrations, models
-from django.utils.timezone import utc
+# from django.utils.timezone import utc
+from datetime import datetime, timezone
 
 
 class Migration(migrations.Migration):
@@ -22,8 +23,8 @@ class Migration(migrations.Migration):
                 ('document_list', models.CharField(max_length=200)),
                 ('type', models.CharField(max_length=200)),
                 ('value', models.IntegerField(default=0)),
-                ('start_date', models.DateField(verbose_name=datetime.datetime(2024, 11, 6, 18, 8, 41, 593351, tzinfo=utc))),
-                ('end_date', models.DateField(verbose_name=datetime.datetime(2024, 11, 6, 18, 8, 41, 593351, tzinfo=utc))),
+                ('start_date', models.DateField(verbose_name=datetime(2024, 11, 6, 18, 8, 41, 593351, tzinfo=timezone.utc))),
+                ('end_date', models.DateField(verbose_name=datetime(2024, 11, 6, 18, 8, 41, 593351, tzinfo=timezone.utc))),
                 ('time_stamp', models.DateTimeField()),
                 ('remarks', models.CharField(max_length=200)),
                 ('updated_by', models.CharField(max_length=200)),
