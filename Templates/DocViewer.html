@@ -33,6 +33,7 @@
            <label>Refnum:{{ details.refnum }}</label>
            <label>Valid upto:{{ details.valid }}</label>
             <button onclick = "edit_doc('{{details.doc_id}}')">EDIT</button>
+            <button onclick = "test()">Test</button>
             <button onclick = "delete_doc('{{name}}','{{details.doc_id}}')">delete</button>
         </div>
         <div class = 'popup-overlay' id = 'popup-overlay'>
@@ -230,7 +231,9 @@
 
     } // final close
 
-
+function test(){
+document.getElementById('loader').style.display = 'flex';
+}
 
 document.getElementById('loader').style.display = 'none';
 </script>

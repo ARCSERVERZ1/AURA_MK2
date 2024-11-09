@@ -226,7 +226,7 @@ def add_doc_type(request, new_doc_type):
 
 def delete_data_by_id(requests, id):
     try:
-        q1 = docma.objects.filter(id=id)
+        q1 = docma_firebase.objects.filter(id=id)
         old_data = {}
         for i in q1:
             old_data = {
@@ -237,23 +237,6 @@ def delete_data_by_id(requests, id):
                 'file_path': i.document,
                 'type': i.type
             }
-        static_folder = 'assets/'
-        doc_path = 'Documents/' + old_data['type']
-        upload_dir = static_folder + doc_path
-
-        if os.path.exists('Local'):
-            print("Local-here")
-        else:
-            upload_dir = 'AURA_MK2/' + upload_dir
-            print("cloud")
-            pass
-        print("-------------", upload_dir)
-        files = os.listdir(upload_dir)
-        files = [file for file in files if os.path.isfile(os.path.join(upload_dir, file))]
-        reg_pattern = old_data['holder'] + '_' + old_data['refnum']
-        for file in files:
-            if file.find(reg_pattern) != -1:
-                os.remove(upload_dir + '/' + file)
 
         docma.objects.filter(id=id).delete()
 
