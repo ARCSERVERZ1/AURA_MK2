@@ -11,6 +11,11 @@
 </head>
 
 <body class="page">
+
+    <div class = 'loader'  id = 'loader'>
+     <img src= "{% static 'Aura_home/loading.gif' %}" alt="Description of image">
+     </div>
+
     <div class="nav-bar">
         <div class = "home">
             <a href = '/home/'>Home</a>
@@ -41,12 +46,21 @@
                     <div class = 'popup-content-sub'>
                         <div class = 'popup-content-field'>
                              <label>Holder Name *</label>
-                             <input type = 'text' id = 'edit-name'>
+
+                             <select name = docName id = 'edit-name'>
+                                {% for i in document_holders %}
+                                <option value = "{{i}}" > {{i}}</option>
+                                {% endfor %}
+                              </select>
                         </div>
                        <div class = 'popup-content-field'>
                              <label>Doc Type *</label>
-                             <input type = 'text' id = 'edit-type'>
-                        </div>
+                             <select name = docType id = 'edit-type'>
+                                {% for i in document_type %}
+                                <option value = "{{i}}" > {{i}}</option>
+                                {% endfor %}
+                              </select>
+                       </div>
                         <div class = 'popup-content-field'>
                              <label>Ref number *</label>
                              <input type = 'text' id = 'edit-ref'>
@@ -138,6 +152,8 @@
     function close_popup() {
     document.getElementById('popup-overlay').style.display = 'none';
     }
+
+
     function edit_doc(id){
     document.getElementById('popup-overlay').style.display = 'flex';
 
@@ -183,25 +199,38 @@
     console.log(new_doc_json);
 
 
-        if (edit_type === '' || edit_name === '' || edit_ref === '' ) {
-           alert('Info Insufficient');
-        }else{
-
-            fetch(domain+'doc_manager/save_edit_document/', {
-              method: "POST",
-              headers: {
+    if (edit_type === '' || edit_name === '' || edit_ref === '' ) {
+       alert('Info Insufficient');
+    }else{
+           document.getElementById('popup-overlay').style.display = 'None';
+           document.getElementById('loader').style.display = 'flex';
+                fetch(domain + 'doc_manager/save_edit_document/', {
+            method: "POST",
+            headers: {
                 "Content-Type": "application/json",
-                 'X-CSRFToken': csrftoken
-              },
-              body: JSON.stringify(new_doc_json)
-            })
-        }
-        document.getElementById('popup-overlay').style.display = 'None';
-        location.reload(true);
+                'X-CSRFToken': csrftoken
+            },
+            body: JSON.stringify(new_doc_json)
+        })
+        .then(data => {
+            if (data.status === 200) {
+                window.location.href = "/doc_manager"
+
+                 // location.reload(true);
+
+            } else {
+                alert("Something is wrong , data might not saved properly");
+            }
+        })
+
+
+
 
     }
 
+    } // final close
 
 
 
+document.getElementById('loader').style.display = 'none';
 </script>
