@@ -430,9 +430,9 @@ def doc_viewer_firebase(request, type):
 
 def migrate(request):
     data = {}
-    for doc_folder in os.listdir('assets/Documents'):
+    for doc_folder in os.listdir('AURA_MK2/assets/Documents'):
         data[doc_folder] = []
-        for doc in os.listdir('assets/Documents/'+doc_folder):
+        for doc in os.listdir('AURA_MK2/assets/Documents/'+doc_folder):
             data[doc_folder].append(doc)
 
     return JsonResponse( data , safe = False)
