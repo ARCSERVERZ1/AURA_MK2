@@ -502,11 +502,11 @@ def add_edit_document_firebase(requests):
         }
 
     # dwnld to buffer
-    cloud_des_path = f'{firebase_folder}{edited_data['type']}/{edited_data['ref'] + '_' + edited_data['name']}/'
+    cloud_des_path = f"{firebase_folder}{edited_data['type']}/{edited_data['ref'] + '_' + edited_data['name']}/"
     print(local_dir)
     for doc in old_data['document_list'].split('|'):
         if doc != '':
-            cloud_source_path = f'{firebase_folder}{old_data['type']}/{old_data['ref_num'] + '_' + old_data['holder']}/{doc}'
+            cloud_source_path = f"{firebase_folder}{old_data['type']}/{old_data['ref_num'] + '_' + old_data['holder']}/{doc}"
             # print(cloud_source_path , "----------")
             print(cloud_source_path +'|'+ local_dir +'|'+doc , "------------")
             # bucket.child('Test/Passport/156_Panisha/loading.gif').download('/', 'hi.gif')
