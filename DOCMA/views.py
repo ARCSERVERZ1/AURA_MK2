@@ -416,8 +416,8 @@ def doc_manager_save_firebase(request):
         data.save()
 
 
-
-    return render(request, "DocManager_form.html")
+    return add_document(request)
+    # return render(request, "DocManager_form.html")
 
 
 def doc_viewer_firebase(request, type):
