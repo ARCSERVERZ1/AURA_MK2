@@ -54,8 +54,16 @@ def login(request):
 
 def home_page(request):
 
-    diagnostics()
+    # diagnostics()
     menu_bar = docma_views.home_menu_req()
+
+    # Get the user's last name
+    # print(request.user.last_name , "--------lst------------")
+    # print(user.username , "--------use------------")
+    # print(user.email , "--------em------------")
+
+
+
     context = {
         'menu_bar' : menu_bar
 

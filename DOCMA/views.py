@@ -92,10 +92,18 @@ def doc_viewer(request, type):
 @login_required()
 def doc_manger_home(request):
     # document_type = doc_type.objects.values_list('type', flat=True)
-    document_type = docma.objects.values_list('type', flat=True).distinct()
-    context = {
-        'doc_type': document_type
-    }
+
+    if str(request.user.last_name).lower() == 'baswa':
+        document_type = docma_firebase.objects.values_list('type', flat=True).distinct()
+        context = {
+            'doc_type': document_type
+        }
+    else:
+        # document_type = docma_firebase.objects.values_list('type', flat=True).distinct()
+        document_type = docma_firebase.objects.filter(updated_by= str(request.user)).values_list('type', flat=True).distinct()
+        context = {
+            'doc_type': document_type
+        }
     print(context)
     return render(request, "docma_home.html", context)
 
