@@ -86,6 +86,7 @@
                              <label >Group</label>
                              <input type = text id = edit_group>
                              </div>
+
                             <button onclick="save_new_transaction()">Save</button>
                         </div>
                     </div>
@@ -138,10 +139,13 @@
                                         <option value="all-records">AllRecords</option>
                                       </select>
                                 </div>
-                                <button  type = 'button' onclick="get_custom_dates_data()">Apply Filter</button>
+                                <div class = 'popup-content-field'>
+                                    <label>  </label>
+                                    <button type="button" onclick="get_custom_dates_data()" style="font-size: 20px; border-radius: 10px; width: 200px; height:40px">Apply Filter</button>
+                                </div>
+
                             </form>
-                        <div class = 'popup-content-sub'>
-                    </div>
+
                 </div>
             </div>
         </div>
@@ -198,7 +202,7 @@
 <!--            <button type="button" onclick="submit_get_cat_trans()">Submit</button>-->
 <!--        </form>-->
             <button onclick="groupUpdate('arg')">Group Category Edit</button>
-            <button onclick="openlink()">Group Category Edit</button>
+            <button onclick="openlink()">Add Category</button>
             <div id = 'multiple-edit' class = 'multiple-edit'>
                 <div class = 'popup-small'>
                     <div class = 'popup-small-head'>
@@ -211,6 +215,14 @@
                             <option value="{{i}}">{{i}}</option>
                              {% endfor %}
                         </select>
+                        <select id ="SubCategory">
+                           <option value="NC">NC</option>
+                             {% for i in sub_category_data %}
+                                <option value="{{i}}">{{i}}</option>
+                             {% endfor %}
+                               </select>
+
+                        <input type="text" id="message"  value="No Message">
 <!--                        <input type = 'text' id = 'grp-cat'>-->
                         <button onclick= "groupUpdate('save')" >Apply Changes</button>
                     </div>
@@ -378,7 +390,8 @@
         "message":edit_message,
         "sub":edit_sub,
         "category":edit_category,
-        "group":edit_group }
+        "group":edit_group
+        }
 
         console.log(new_transaction_json);
         console.log(domain+'dem/crud/add_new_transaction/');
@@ -431,10 +444,23 @@
             else {
                 const select = document.getElementById('Category');
                 const selectedOption = select.options[select.selectedIndex];
-                const selectedValue = selectedOption.value;
-                console.log(selectedValue);
+                 const selectedValue = selectedOption.value;
 
-                fetch(domain+'dem/multiple_edit/'+selectedValue+'/'+checkedIds+'/')
+                const subCategory = document.getElementById('SubCategory');
+                const subCategoryOption = subCategory.options[subCategory.selectedIndex];
+                const subCategoryValue = subCategoryOption.value;
+
+                const msg = document.getElementById('message');
+                const msgValue = msg.value;
+
+
+                console.log(selectedValue);
+                console.log(subCategoryValue);
+                console.log(msgValue);
+
+                change = selectedValue+"~"+subCategoryValue+"~"+msgValue
+
+                fetch(domain+'dem/multiple_edit/'+change+'/'+checkedIds+'/')
                 .then(response => response.json())
                 .then(data => {
                    alert('Data updated for given dates');
@@ -490,6 +516,7 @@
                                 document.getElementById("edit_category").value  = data.category;
                                 document.getElementById("edit_sub").value  = data.sub_category;
                                 document.getElementById("edit_group").value  = data.group;
+
                                 });
 
     }

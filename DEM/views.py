@@ -258,12 +258,13 @@ def delete_log(requests, id):
 
 def multiple_edit(request, data, ids):
     print(data, ids)
+    splited_data = data.split('~')
     id_list_temp = ids.split(',')
     id = []
     for i in id_list_temp:
         id.append(i.split('-')[1])
 
-    data = transactions_data.objects.filter(id__in=id).update(category=data)
+    data = transactions_data.objects.filter(id__in=id).update(category=splited_data[0] , sub_category = splited_data[1] , message = splited_data[2])
 
     return JsonResponse({'response': 'success'}, safe=False)
 
@@ -305,8 +306,7 @@ def add_new_transaction(request):
             message=json_data['message'],
             category=json_data['category'],
             sub_category=json_data['sub'],
-            group=json_data['group'],
-            payment_method='Edited',
+            group=json_data['group']
         )
         print("edit request")
     print("-------------------------------------------------------------------------------------")
@@ -329,6 +329,7 @@ def get_data_by_id(request, id):
         'category': q1[0].category,
         'sub_category': q1[0].sub_category,
         'group': q1[0].group,
+        'payment_method': q1[0].payment_method,
 
     }
 
