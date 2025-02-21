@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>DEM Dashboard</title>
+    <title>DEM-Dashboard</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
      <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -224,13 +224,14 @@
                         <th>#</th>
                         <th>Date</th>
                         <th>Amount</th>
+                        <th>Edit</th>
                         <th>Sender Bank</th>
                         <th>Receiver Bank</th>
                         <th>Message</th>
                         <th>Category</th>
                         <th>Sub-Category</th>
                         <th>Group</th>
-                        <th>i</th>
+                        <th>Payment</th>
                         <th class="actions">Actions</th>
                     </tr>
                 </thead>
@@ -240,6 +241,7 @@
                         <td>  <input type="checkbox" id = "ME-{{i.id}}"></td>
                         <td>{{i.date}}</td>
                         <td>{{i.amount}}</td>
+                        <td> <button onclick="editRow({{i.id}})">Edit</button></td>
                         <td>{{i.sender_bank}}</td>
                         <td>{{i.receiver_bank}}</td>
                         <td>{{i.message}}</td>
@@ -248,8 +250,7 @@
                         <td>{{i.group}}</td>
                         <td>{{i.payment_method}}</td>
 
-                        <td class="actions">
-                            <button onclick="editRow({{i.id}})">Edit</button>
+                        <td class="delete">
                             <button onclick="deleteRow({{i.id}})">Delete</button>
                         </td>
                     </tr>
@@ -688,9 +689,16 @@
                 },
                 options: {
                     scales: {
-                        y: {
-                            beginAtZero: true
-                        }
+                     x: {
+                        ticks: {
+                            color: '#e6f7ff'
+                        }},
+                    y: {
+                        ticks: {
+                    color: '#e6f7ff'  // Change color of y-axis labels
+                },
+                        beginAtZero: true
+                    }
                     }
                 }
             });

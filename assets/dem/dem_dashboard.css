@@ -9,6 +9,7 @@
     --border_effect:#531516;
     --text_colour:#1B222C;
     --font_cabin:font-family: 'Cabin', sans-serif;
+    --label_color: #e6f7ff;
 }
 
 body {
@@ -183,12 +184,17 @@ table {
 
 th, td {
     border: 1px solid #dddddd;
+
     text-align: left;
     padding: 8px;
 }
 
 th {
     background-color: #f2f2f2;
+}
+
+td {
+ color: var(--label_color);
 }
 
 .popup-header{
