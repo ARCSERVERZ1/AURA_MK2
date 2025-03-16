@@ -14,7 +14,12 @@
          <div class = 'popup-overlay' id = 'popup-overlay'>
              <div class = "popup-container">
                  <div class = 'popup-head'>
-                     <H4>Add Location</H4>
+                     <div class = 'popup-mainheading'>
+                         <label id = 'Transaction'  ></label>
+
+                          <H4>&nbsp; Location</H4>
+                     </div>
+
                      <button onclick="close_popup()">X</button>
                   </div>
                  <div class = 'popup-content'>
@@ -23,6 +28,8 @@
                             {% csrf_token %}
                          <p id="locationDisplay"></p>
                          <input type = 'text' id = 'co_ordinates' name = 'co_ordinates' hidden>
+                         <input type = 'text' id = 'Transaction_inp' name = 'Transaction' hidden>
+                         <input type = 'text' id = 'id' name = 'id' hidden>
                         <div class = 'popup-content-field'>
                              <label>locationName *</label>
                              <input type = 'text' id = 'locationName' name = 'locationName' >
@@ -84,16 +91,19 @@
                  <a href="https://www.google.com/maps?q={{i.latitude}},{{i.longitude}}" target="_blank">
                       <img src="{% static 'general_apps/location.png' %}"  width="30" height="30">
                  </a>
+
                 </div>
                 <div class = 'content-card'>
                 <label>{{i.group}}</label>
                 <label>{{i.remarks}}</label>
                 <label>{{i.latitude}} | {{i.longitude}}</label>
                 <label>{{i.time_stamp}}</label>
+                    <div class = 'card-footer'>
+                         <button type = Button onclick="delete_loc({{i.id }} ,'{{i.location_name}}')" >Delete</button>
+                        <button type = Button onclick="edit_loc({{i.id}})" >Edit</button>
+                    </div>
                 </div>
-
                 </div>
-
         {% endfor %}
     </div>
 
@@ -116,8 +126,101 @@
 
 <script>
 
+    let Transaction = "New";
+
+    function getCsrfToken() {
+            let csrfToken = null;
+            const cookies = document.cookie.split(';');
+            cookies.forEach(cookie => {
+                if (cookie.trim().startsWith('csrftoken=')) {
+                    csrfToken = cookie.trim().substring('csrftoken='.length);
+                }
+            });
+            return csrfToken;
+        }
+
+    function bind_form_data(data){
+        console.log(data.location_name);
+
+        document.getElementById('locationName').value = data.location_name ;
+        document.getElementById('group').value = data.group ;
+        document.getElementById('remarks').value = data.remarks ;
+        document.getElementById('tempLocation').value = data.temp_location ;
+        document.getElementById('active').value = data.Active ;
+        document.getElementById('userPermission').value = data.user_permission ;
+        document.getElementById('id').value = data.id ;
+    }
+
+    function edit_loc(id){
+    console.log(id);
+    Transaction = "Update";
+    console.log("NewTransaction :"+Transaction);
+    document.getElementById('Transaction').textContent = Transaction;
+    document.getElementById('Transaction_inp').value = Transaction;
+    document.getElementById('popup-overlay').style.display = 'flex';
+    fetchData(id)
+    }
+
+     async function fetchData(id) {
+            const csrfToken = getCsrfToken();
+
+            const response = await fetch('/general/location/get_data_by_id/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrfToken, // Include CSRF token
+                    'Authorization': 'Bearer your-authentication-token' // Optional, if using token-based auth
+                },
+                body: JSON.stringify({
+                    'id': id
+                })
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                console.log(data); // Handle your data here
+                bind_form_data(data)
+
+            } else {
+                console.error('Error:', response.statusText);
+            }
+        }
+
+     async function delete_loc(id,loc) {
+
+        var result = confirm("Are you sure you want to delete this location: "+loc );
+        if (result) {
+
+            const csrfToken = getCsrfToken();
+
+            const response = await fetch('/general/location/delete_by_id/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrfToken, // Include CSRF token
+                    'Authorization': 'Bearer your-authentication-token' // Optional, if using token-based auth
+                },
+                body: JSON.stringify({
+                    'id': id
+                })
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                console.log(data); // Handle your data here
+
+
+            } else {
+                console.error('Error:', response.statusText);
+            }
+        }
+
+}
+
+
+
     function get_location() {
-return new Promise((resolve, reject) => {
+        return new Promise((resolve, reject) => {
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(showPosition, showError);
 
@@ -168,13 +271,17 @@ function close_popup() {
 document.getElementById('popup-overlay').style.display = 'none';
 }
 function add_record(){
-console.log("add record request");
 document.getElementById('popup-overlay').style.display = 'flex';
+Transaction = "New";
+console.log("NewTransaction :"+Transaction);
+document.getElementById('Transaction').textContent = Transaction;
+document.getElementById('Transaction_inp').value = Transaction;
 }
 
 function save_loc_data(){
     let coordinates = document.getElementById('co_ordinates').value;
-if (coordinates === '' ) {
+    let trans = document.getElementById('Transaction_inp').value;
+if (coordinates === '' && trans === 'New' ) {
     alert('Info Insufficient/Location permission not given !'); }
 else{
 document.getElementById('log_loc').submit()

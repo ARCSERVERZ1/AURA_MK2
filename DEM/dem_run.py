@@ -244,7 +244,7 @@ if __name__ == '__main__':
     for user in user_data:
         if user == 'sanjay':
             for i in range(1, 8):
-                GetSpendings(user, user_data[user], date='2024-10-0' + str(i), post=True)
+                GetSpendings(user, user_data[user], date='2024-10-0' + str(i), post=False)
 
     # for i in range(22,26):
     #     for user in user_data:
