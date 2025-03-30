@@ -199,7 +199,7 @@ padding:10px;
 margin-bottom:40px;
 display:flex;
 overflow-x:auto;
-
+overflow-y: hidden
 
 }
 .app-drawer button : HOVER{
@@ -219,9 +219,49 @@ color:skyblue;
   border: none;
 
 }
-.app-drawer::-webkit-scrollbar{
+/* Mobile Devices */
+@media only screen and (max-width: 768px) {
+ .app-drawer::-webkit-scrollbar{
 width:0;
 }
+}
+
+/* Laptop and Tablets */
+@media only screen and (min-width: 769px) and (max-width: 2400px) {
+
+.app-drawer::-webkit-scrollbar {
+  background-color: #404040; /* Dark gray color for the thumb */
+  border-radius: 5px; /* Rounded edges for the thumb */
+    height:1vh;
+}
+
+.app-drawer::-webkit-scrollbar-thumb {
+  background-color:#888
+; /* Dark gray color for the thumb */
+  border-radius: 100vh; /* Rounded edges for the thumb */
+
+}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 .prompt-button {
 display:flex;

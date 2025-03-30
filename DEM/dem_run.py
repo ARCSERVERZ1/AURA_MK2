@@ -65,10 +65,41 @@ class GetSpendings:
         if 'phone_pe' in self.platforms: self.run_phone_pe_log()
         if 'axis_credit' in self.platforms: self.run_axis_credit_log()
         if 'hdfc_debit' in self.platforms: self.run_hdfc_debit_log()
+        if 'hdfc_credit' in self.platforms: self.run_hdfc_credit_log()
 
         for transaction in self.all_transactions:
             self.categorise_by_labeled_data(transaction)
         self.datalog()
+
+    def run_hdfc_credit_log(self):
+        result, message = self.conn.search(None, '(FROM {0} ON {1})'.format("alerts@hdfcbank.net", self.mail_date))
+        transaction_msg_list = []
+        for num in message[0].split():
+            _, msg_data = self.conn.fetch(num, "(RFC822)")
+            raw_mail = msg_data[0][1]
+            msg = email.message_from_bytes(raw_mail)
+            subject, encoding = decode_header(msg["Subject"])[0]
+            if isinstance(subject, bytes):
+                subject = subject.decode(encoding or "utf-8")
+
+            if subject.find('Update on your HDFC Bank Credit Card') != -1:
+
+                msg = str(msg)
+                message = msg[msg.find('Dear'): msg.find('Regards')]
+                pattern = 'ending (.*?) for Rs (.*?) at (.*?) on'
+
+                match = re.search(pattern, message)
+
+                if match is None:
+                    print(str(msg))
+                else:
+                    send_from = match.groups(1)[0]
+                    amount = match.groups(1)[1].split('.')[0]
+                    send_to = match.groups(1)[2]
+
+                    self.all_transactions.append(
+                        [self.user, 'sent', amount, send_to, send_from, '',
+                         'hdfc_credit', 'x01'])
 
     def run_phone_pe_log(self):
 
@@ -130,7 +161,7 @@ class GetSpendings:
                         if match is not None:
                             print(str(transaction_msg))
                         else:
-                            print(f'Card decline reason : {match.groups()}')
+                            print(f'Card decline reason unknown')
                     else:
                         transaction_data = match.groups()
                         self.all_transactions.append(
@@ -241,11 +272,15 @@ class GetSpendings:
 if __name__ == '__main__':
     user_data = json.loads(open('user_data.json').read())
 
-    for user in user_data:
-        if user == 'sanjay':
-            for i in range(1, 8):
-                GetSpendings(user, user_data[user], date='2024-10-0' + str(i), post=False)
+    # for user in user_data:
+    #         for i in range(9, 18):
+    #             if len(str(i)) == 1:
+    #                 date = '0' + str(i)
+    #             else:
+    #                 date = i
+    #             GetSpendings(user, user_data[user], date='2025-01-' + str(i), post=True)
 
-    # for i in range(22,26):
-    #     for user in user_data:
-    #         GetSpendings(user, user_data[user], date='2024-08-'+str(i), post=True)
+    for user in user_data:
+        for i in range(1,21):
+                # print()
+                GetSpendings(user, user_data[user], date= f'2025-03-{i:02d}' , post=True)

@@ -87,7 +87,7 @@
         {% for i in locations %}
             <div class = location-card>
                 <div class = header-card >
-                <label>{{i.location_name}}</label>
+                <label class = 'header' >{{i.location_name}}</label>
                  <a href="https://www.google.com/maps?q={{i.latitude}},{{i.longitude}}" target="_blank">
                       <img src="{% static 'general_apps/location.png' %}"  width="30" height="30">
                  </a>
@@ -97,7 +97,7 @@
                 <label>{{i.group}}</label>
                 <label>{{i.remarks}}</label>
                 <label>{{i.latitude}} | {{i.longitude}}</label>
-                <label>{{i.time_stamp}}</label>
+
                     <div class = 'card-footer'>
                          <button type = Button onclick="delete_loc({{i.id }} ,'{{i.location_name}}')" >Delete</button>
                         <button type = Button onclick="edit_loc({{i.id}})" >Edit</button>
@@ -110,6 +110,12 @@
 
 </body>
 </html>
+
+<STYLE>
+  .HEADER  {
+  COLOR : RED;
+  }
+</STYLE>
 
 
 

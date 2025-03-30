@@ -53,7 +53,7 @@ class label_data:
             labels[record['category']] = labels[record['category']] = globals()[record['category']]
 
         for key, values in labels.items(): labels[key] = list(set(values))
-        return labels
+        return {}
 
     def save_label_data(self):
 

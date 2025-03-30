@@ -2,15 +2,17 @@
 
   "sanjay": {
     "mail_id": "baswasanjay19@gmail.com" ,
-    "password":"cntc yeac sblf jhdb",
-    "payment_method": ["hdfc_debit", "axis_credit","phone_pe"]
+    "password":"nsbu itvf lrjj iekl",
+    "payment_method": ["hdfc_debit", "axis_credit","hdfc_credit"]
   },
     "avinash": {
       "mail_id": "avinashbaswa.a4@gmail.com",
       "password": "vnjc iyfw skrm mcic",
       "payment_method": [
         "phone_pe",
-        "axis_credit"
+        "axis_credit",
+        "hdfc_credit"
+
       ]
     }
 }
