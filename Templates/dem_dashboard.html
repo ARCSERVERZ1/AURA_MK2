@@ -86,6 +86,10 @@
                              <label >Group</label>
                              <input type = text id = edit_group>
                              </div>
+                            <div class = 'add_transaction-row'>
+                             <label >Use this record for Auto Categorisation</label>
+                             <input type = checkbox id = edit_auto_cat style="transform: scale(1.5);">
+                             </div>
 
                             <button onclick="save_new_transaction()">Save</button>
                         </div>
@@ -378,6 +382,9 @@
         var edit_category = document.getElementById('edit_category').value;
         var edit_group = document.getElementById('edit_group').value;
         var edit_id = document.getElementById('edit_id').value;
+        var edit_auto_cat = document.getElementById('edit_auto_cat');
+
+         const edit_auto_cat_value = edit_auto_cat.checked ? '1' : '0' ;
 
         const new_transaction_json = {
 
@@ -390,7 +397,9 @@
         "message":edit_message,
         "sub":edit_sub,
         "category":edit_category,
-        "group":edit_group
+        "group":edit_group,
+        "auto_cat":edit_auto_cat_value,
+
         }
 
         console.log(new_transaction_json);

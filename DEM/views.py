@@ -285,6 +285,7 @@ def add_new_transaction(request):
         message=json_data['message'],
         category=json_data['category'],
         sub_category=json_data['sub'],
+        xtra=json_data['auto_cat'],
         group=json_data['group'],
         payment_method='Manual_Entry',
         data_ts=ist_date.today(),
@@ -306,6 +307,7 @@ def add_new_transaction(request):
             message=json_data['message'],
             category=json_data['category'],
             sub_category=json_data['sub'],
+            xtra = json_data['auto_cat'],
             group=json_data['group']
         )
         print("edit request")
@@ -483,7 +485,7 @@ def get_labeled_data(requests):
     user = request_data['user']
     start_date = request_data['start_date']
     end_date = request_data['end_date']
-    labeled_data = list(transactions_data.objects.filter(user=user, date__range=[start_date, end_date])
+    labeled_data = list(transactions_data.objects.filter(user=user, date__range=[start_date, end_date] , xtra = "1")
       .exclude(category__in=['Others', 'others', 'DEBT'])
     .values('receiver_bank', 'category'))
 
