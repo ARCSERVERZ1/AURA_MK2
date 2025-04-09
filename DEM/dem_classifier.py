@@ -8,11 +8,12 @@ import json
 class label_data:
     def __init__(self, user, date, days):
         self.user = user
-        self.url = 'http://192.168.0.111:9001/dem/api/get_labeled_data/'
-        self.token_url = 'http://192.168.0.111:9001/dem/api/token/'
+        self.url = 'https://serveraura.pythonanywhere.com//dem/api/get_labeled_data/'
+        self.token_url = 'https://serveraura.pythonanywhere.com//dem/api/token/'
         self.token = ''
-        self.end_date = date
+        self.end_date = str(date)
         self.days = days
+        print(f'{user} - labelling from {days} to date {date}')
         self.save_label_data()
 
     def get_auth(self):
@@ -38,8 +39,8 @@ class label_data:
 
         json_data = {
             "user": self.user,
-            "start_date": "2025-01-01",
-            "end_date": "2025-02-20"
+            "start_date": start_time,
+            "end_date": self.end_date
             # "start_date": start_time,
             # "end_date": self.end_date
         }
@@ -56,7 +57,7 @@ class label_data:
             labels[record['category']] = labels[record['category']] = globals()[record['category']]
 
         for key, values in labels.items(): labels[key] = list(set(values))
-        return {}
+        return labels
 
     def save_label_data(self):
 
@@ -83,4 +84,4 @@ class label_data:
 if __name__ == '__main__':
     users = ['sanjay', 'avinash']
     for user in users:
-        label_data(user, '2024-08-11', 150)
+        label_data(user, datetime.now().date(), 30)
