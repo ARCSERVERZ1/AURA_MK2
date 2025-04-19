@@ -342,11 +342,9 @@ def add_edit_document(requests):
 @api_view(['POST'])
 @permission_classes([permissions.IsAuthenticated])
 def rag_for_docma(requests):
-    print("-----------------------------------------------")
+    print("---------Rag data  for Docma --------------------------------------")
     q1 = docma.objects.all()
-    data = list(docma.objects.values())
-    for i in q1:
-        print(i.refnumber)
+    data = list(docma_firebase.objects.values())
     return JsonResponse(data, safe=False)
 
 
