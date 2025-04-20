@@ -370,7 +370,7 @@ def set_budget(request, set_budget):
 def rag_data(requests):
     res_data = requests.data
     try:
-        in_json = list(transactions_data.objects.filter(date=res_data['date']).values())
+        in_json = list(transactions_data.objects.filter(date__range=[res_data['start_date'], res_data['end_date']]).values())
         return JsonResponse(in_json, safe=False)
     except Exception as E:
         print(E)
