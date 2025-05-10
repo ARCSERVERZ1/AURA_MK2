@@ -27,142 +27,143 @@
 <div class = 'voice-bar'>
 
     <div class = 'app-drawer'>
-        <!--<button onclick="goto('/dem/')">DEM</button>-->
         {% for i in menu_bar%}
          <button onclick="goto('{{i.app_link}}')"  ><img CLASS='MENU-IMG' src="{% static i.app_icon %}" width="60px" > {{i.app_name}}</button>
-  {% endfor %}
+         {% endfor %}
     </div>
-     <input type = text id = 'convert_text' >
-    <div class = 'prompt-button'>
-        <label></label>
-       <button id = 'speakA'>Ask</button>
-         <label id =  'res_time'></label>
 
+     <select class="search_medium" name="search_med" id="id_search_med">
+  <option value="volvo">Aura</option>
+  <option value="saab">Gemini</option>
+  <option value="mercedes">ChatGPT</option>
+  <option value="audi">Google</option>
+</select>
+      <textarea id="expandableText" rows="1" placeholder="Type here and press Enter..." class="promptbar" oninput="checkText()" ></textarea>
+
+    </textarea>
+
+    <div class = 'prompt-button'  >
+        <label></label>
+       <button class = 'mic' id = 'speakA' >
+       📢
+       </button>
+         <label id =  'res_time'></label>
+        <div class="send">
+<!--            <a href="#">-->
+<!--   <img src="{% static 'Aura_home/send.png' %}" height="40px" width= "40px">-->
+<!--    </a>-->
+        </div>
     </div>
 
 </div>
-
-
 </body>
 </html>
+<style>
+.mic{
+    width:43px;
+    height:43px;
+    border-radius:20px;
+    position:relative;
+    left:195px;
+    top:-28px;
 
+
+}
+
+.search_medium{
+padding:3px;
+background-color:black;
+color: white;
+border-top-left-radius:7px;
+border-top-right-radius:7px;
+opacity:0.6;
+position:relative;
+    left:119px;
+
+}
+   /* .send{
+    padding:2px;
+    color:white;
+    position:relative;
+    left:45px;
+    top:-25px;
+    width:50px;
+    height:50px;
+    drop-shadow (1px 2px 10px red);
+  border-radius:20px;
+  scale:.8;
+
+    }
+    .send img{
+
+    }
+    */
+</style>
 <script>
-
-
-
-
-
-
-
-
-
-
-
-
-
+var is_rec = true;
+    const promptDiv = document.querySelector('.promptbar');
+function checkText() {
+    const button = document.getElementById('speakA');
+    if (promptDiv.value.length > 0) {
+  button.textContent = '➤';
+  is_rec = false;
+  console.log(promptDiv.value);
+} else {
+  button.textContent = '📢';
+  console.log(promptDiv.value);
+  is_rec = true;
+}
+  }
     function changeBackgroundColor(colour) {
     var rootStyle = document.documentElement.style;
     rootStyle.setProperty('--arc_color', colour);
     document.getElementById('loader').classList.toggle('loading_animation');
-
-
 }
-
-
-    function goto(path){
-     window.location.href = path;
-    }
-
-convert_text.value = "  ask something!!";
-
-speakA.addEventListener('click',function(){
-var speech = true;
-var finalword;
-changeBackgroundColor('blue');
-window.SpeechRecognition = window.webkitSpeechRecognition;
- const recognition = new SpeechRecognition();
-recognition.interimResults = true; ;
-recognition.addEventListener('result', e=>{
-const transcript = Array.from(e.results)
-.map(result =>result[0])
-.map(result => result.transcript)
-convert_text.value =transcript;
-})
-
-recognition.onresult = function(event) {
-  for (let i = event.resultIndex; i < event.results.length; i++) {
-    if (event.results[i].isFinal) {
-      const transcription = event.results[i][0].transcript;
-     // console.log('Final transcription: ' + transcription);
-      finalword = transcription;
-      //stopRecognition();
-    }
-  }
-  // start or reset the timer when a new result is received
-  //clearTimeout(timer);
-  //timer = setTimeout(stopRecognition, maxSpeechTime);
-
-};
-
-recognition.onerror = function(event) {
-  console.error(event.error);
- // stopRecognition();
-};
-
-recognition.onend = function() {
-  console.log('Speech recognition has ended.');
-  convert_text.value = finalword;
-  get_output(finalword);
-  changeBackgroundColor('#FF5F1F');
-
-};
-if(speech = true){
-recognition.start();
-}
-})
-
-
-function get_output(req){
-
-<!--var aigic_url = "http://192.168.1.102:8000/gemeni/";-->
-var aigic_url = "https://algic.pythonanywhere.com/gemeni/";
-
-document.getElementById('loader').classList.toggle('processing');
-
-
-var jsonData ={
- "ask": req
-};
-
-console.log(jsonData);
-
-fetch(aigic_url , {
-    method:'POST',
-    headers:{ 'Content-Type': 'application/json'},
-    body: JSON.stringify(jsonData)
-})
-.then(response => response.json())
-.then(data => {
-        document.getElementById('loader').classList.toggle('processing');
-        document.getElementById('res_time').textContent = 'Res.time:'+data.response_time+'sec';
-          if ('speechSynthesis' in window) {
-                 var response = data.response;
-                 var cleanedResponse = response.replace(/\*/g, '');
-                 console.log(cleanedResponse)
-                 var utterance = new SpeechSynthesisUtterance(cleanedResponse);
-                window.speechSynthesis.speak(utterance);
-                alert(data.response);
-                start_listening();
-
-
-            } else {
-                alert("Sorry, your browser does not support speech synthesis.");
-            }
-
+const textbox = document.getElementById("expandableText");
+textbox.addEventListener("keyup" , e => {
+textbox.style.height = "auto";
+let scheight = e.target.scrollHeight;
+textbox.style.height = `${scheight}px`;
 });
 
+speakA.addEventListener('click',function(){
 
-
+if (is_rec){
+console.log('start');
+      recognition.start();
+      console.log('end');
 }
+else{
+console.log('non recording');
+}
+})
+//////////rec////////
+  window.SpeechRecognition = window.webkitSpeechRecognition || window.SpeechRecognition;
+      const recognition = new SpeechRecognition();
+      recognition.interimResults = true;
+recognition.addEventListener('result', (e) => {
+        const transcript = Array.from(e.results)
+          .map(result => result[0])
+          .map(result => result.transcript)
+          .join('');
+          promptDiv.value = transcript
+        console.log(transcript);
+      });
+   recognition.addEventListener('end', () => {
+        console.log('Speech recognition ended.');
+      });
+
+      recognition.addEventListener('error', (e) => {
+        console.error('Speech recognition error:', e.error);
+      });
+
+      recognition.addEventListener('result', (event) => {
+        for (let i = event.resultIndex; i < event.results.length; ++i) {
+          if (event.results[i].isFinal) {
+            const finalTranscript = event.results[i][0].transcript;
+            console.log("Final transcription:", finalTranscript);
+          }
+        }
+      });
 
 </script>

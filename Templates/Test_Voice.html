@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Speech Recognition Example</title>
+</head>
+<body>
+  <button onclick="startListening()">Say Something</button>
+  <p id="output">Your speech will appear here.</p>
+
+  <script>
+    function startListening() {
+      // Check if the browser supports the Web Speech API
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      if (!SpeechRecognition) {
+        alert("Sorry, your browser does not support speech recognition.");
+        return;
+      }
+
+      const recognition = new SpeechRecognition();
+      recognition.lang = 'en-US';
+      recognition.interimResults = false;
+      recognition.maxAlternatives = 1;
+
+      recognition.start();
+
+      recognition.onresult = function(event) {
+        const transcript = event.results[0][0].transcript;
+        document.getElementById("output").textContent = "You said: " + transcript;
+      };
+
+      recognition.onerror = function(event) {
+        document.getElementById("output").textContent = "Error: " + event.error;
+      };
+    }
+  </script>
+</body>
+</html>

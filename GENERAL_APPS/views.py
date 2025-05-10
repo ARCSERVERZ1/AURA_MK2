@@ -70,3 +70,7 @@ def delete_by_id(requests):
     return JsonResponse({"status":"true"}, safe=False)
 
     # return JsonResponse({"Res": requests.POST.get('TempLocation')} , safe=False)
+
+
+def test_run(requests):
+    return render( requests ,'Test_Voice.html')
