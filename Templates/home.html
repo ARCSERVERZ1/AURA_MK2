@@ -120,11 +120,17 @@ function checkText() {
     document.getElementById('loader').classList.toggle('loading_animation');
 }
 const textbox = document.getElementById("expandableText");
+
 textbox.addEventListener("keyup" , e => {
 textbox.style.height = "auto";
 let scheight = e.target.scrollHeight;
 textbox.style.height = `${scheight}px`;
 });
+
+ function autoExpandTextbox() {
+      textbox.style.height = "auto";
+      textbox.style.height = `${textbox.scrollHeight}px`;
+    }
 
 speakA.addEventListener('click',function(){
 
@@ -172,7 +178,9 @@ console.log('non recording');
             interimTranscript += transcript;
           }
           promptDiv.value = finalTranscript + interimTranscript;
+           autoExpandTextbox();
         }
+
 
         // promptDiv.value = finalTranscript + interimTranscript;
       };
