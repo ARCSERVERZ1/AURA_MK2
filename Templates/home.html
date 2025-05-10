@@ -129,8 +129,9 @@ textbox.style.height = `${scheight}px`;
 speakA.addEventListener('click',function(){
 
 if (is_rec){
+changeBackgroundColor('blue');
 console.log('start');
-      recognition.start();
+      startListening();
       console.log('end');
 }
 else{
@@ -138,32 +139,30 @@ console.log('non recording');
 }
 })
 //////////rec////////
-  window.SpeechRecognition = window.webkitSpeechRecognition || window.SpeechRecognition;
+   function startListening() {
+      // Check if the browser supports the Web Speech API
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      if (!SpeechRecognition) {
+        alert("Sorry, your browser does not support speech recognition.");
+        return;
+      }
+
       const recognition = new SpeechRecognition();
-      recognition.interimResults = true;
-recognition.addEventListener('result', (e) => {
-        const transcript = Array.from(e.results)
-          .map(result => result[0])
-          .map(result => result.transcript)
-          .join('');
-          promptDiv.value = transcript
-        console.log(transcript);
-      });
-   recognition.addEventListener('end', () => {
-        console.log('Speech recognition ended.');
-      });
+      recognition.lang = 'en-US';
+      recognition.interimResults = false;
+      recognition.maxAlternatives = 1;
 
-      recognition.addEventListener('error', (e) => {
-        console.error('Speech recognition error:', e.error);
-      });
+      recognition.start();
 
-      recognition.addEventListener('result', (event) => {
-        for (let i = event.resultIndex; i < event.results.length; ++i) {
-          if (event.results[i].isFinal) {
-            const finalTranscript = event.results[i][0].transcript;
-            console.log("Final transcription:", finalTranscript);
-          }
-        }
-      });
+      recognition.onresult = function(event) {
+        const transcript = event.results[0][0].transcript;
+        document.getElementById("output").textContent = "You said: " + transcript;
+      };
+
+      recognition.onerror = function(event) {
+        document.getElementById("output").textContent = "Error: " + event.error;
+      };
+    }
+    ///////////////////////////////////////
 
 </script>

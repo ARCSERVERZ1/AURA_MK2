@@ -1,35 +1,65 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Speech Recognition Example</title>
+  <title>1.0Speech Recognition</title>
 </head>
 <body>
-  <button onclick="startListening()">Say Something</button>
-  <p id="output">Your speech will appear here.</p>
+  <button onclick="startListening()">Start Speaking</button>
+  <p id="output">Your speech will appear here...</p>
 
   <script>
     function startListening() {
-      // Check if the browser supports the Web Speech API
       const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
       if (!SpeechRecognition) {
-        alert("Sorry, your browser does not support speech recognition.");
+        alert("Your browser does not support speech recognition.");
         return;
       }
 
       const recognition = new SpeechRecognition();
       recognition.lang = 'en-US';
-      recognition.interimResults = false;
-      recognition.maxAlternatives = 1;
+      recognition.interimResults = true; // ✅ Enables live updating
+      recognition.continuous = false; // Set to true for ongoing recognition
+
+      document.getElementById("output").textContent = "Listening...";
+
+      let finalTranscript = '';
 
       recognition.start();
 
-      recognition.onresult = function(event) {
-        const transcript = event.results[0][0].transcript;
-        document.getElementById("output").textContent = "You said: " + transcript;
+      recognition.onstart = () => {
+        console.log("Speech recognition started.");
       };
 
-      recognition.onerror = function(event) {
+      recognition.onresult = (event) => {
+        let interimTranscript = '';
+        for (let i = event.resultIndex; i < event.results.length; ++i) {
+          const transcript = event.results[i][0].transcript;
+          if (event.results[i].isFinal) {
+            finalTranscript += transcript + ' ';
+          } else {
+            interimTranscript += transcript;
+          }
+        }
+        document.getElementById("output").textContent = finalTranscript + interimTranscript;
+      };
+
+      recognition.onspeechend = () => {
+        console.log("Speech ended.");
+        recognition.stop();
+      };
+
+      recognition.onerror = (event) => {
+        console.error("Speech recognition error:", event.error);
         document.getElementById("output").textContent = "Error: " + event.error;
+      };
+
+      recognition.onnomatch = () => {
+        console.log("No matching speech.");
+        document.getElementById("output").textContent = "Didn't recognize what you said.";
+      };
+
+      recognition.onaudiostart = () => {
+        console.log("Audio capturing started.");
       };
     }
   </script>

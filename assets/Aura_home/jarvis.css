@@ -52,7 +52,7 @@ animation: 2s ease 0s infinite normal none running processing;
 
 
 .loading_animation {
- animation: 2s ease 0s infinite normal none running rotateDonut;
+ animation: 10s ease 0s infinite normal none running rotateDonut;
 }
 
 @keyframes rotateDonut {
