@@ -5,6 +5,7 @@ from django.contrib import messages
 from DEM import views as dem_views
 from DOCMA import views as docma_views
 import os
+from rest_framework.decorators import api_view, permission_classes
 
 def diagnostics():
     print(os.getcwd())
@@ -71,6 +72,8 @@ def home_page(request):
     # for i in menu_bar:
     #     print(i.app_name)
     return render(request, "home.html" , context)
+
+
 
 
 

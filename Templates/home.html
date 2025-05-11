@@ -33,10 +33,10 @@
     </div>
 
      <select class="search_medium" name="search_med" id="id_search_med">
-  <option value="volvo">Aura</option>
-  <option value="saab">Gemini</option>
-  <option value="mercedes">ChatGPT</option>
-  <option value="audi">Google</option>
+  <option value="Aura">Aura</option>
+  <option value="Rag">Rag</option>
+  <option value="Gemini">Gemini</option>
+
 </select>
       <textarea id="expandableText" rows="1" placeholder="Type here and press Enter..." class="promptbar" oninput="checkText()" ></textarea>
 
@@ -44,7 +44,7 @@
 
     <div class = 'prompt-button'  >
         <label></label>
-       <button class = 'mic' id = 'speakA' >
+       <button class = 'mic' id = 'speakA' ONCLICK="query()" >
        📢
        </button>
          <label id =  'res_time'></label>
@@ -133,7 +133,6 @@ textbox.style.height = `${scheight}px`;
     }
 
 speakA.addEventListener('click',function(){
-
 if (is_rec){
 changeBackgroundColor('blue');
 console.log('start');
@@ -168,7 +167,6 @@ console.log('non recording');
       };
 
       recognition.onresult = (event) => {
-
         let interimTranscript = '';
         for (let i = event.resultIndex; i < event.results.length; ++i) {
           const transcript = event.results[i][0].transcript;
@@ -180,9 +178,6 @@ console.log('non recording');
           promptDiv.value = finalTranscript + interimTranscript;
            autoExpandTextbox();
         }
-
-
-        // promptDiv.value = finalTranscript + interimTranscript;
       };
 
       recognition.onspeechend = () => {
@@ -204,6 +199,30 @@ console.log('non recording');
         console.log("Audio capturing started.");
       };
     }
-    ///////////////////////////////////////
+    ///////////////////ajax////////////////////
+function query( ) {
 
+    fetch("/general/home_query/", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+      query: document.getElementById('expandableText').value ,
+      model : document.getElementById('id_search_med').value
+      })
+    })
+    .then(response => response.json())
+    .then(data => {
+      console.log("Response from Python:", data.response);
+    })
+    .catch(error => {
+      console.error("Error:", error);
+    });
+  }
+
+  ///////////////////////////////////////////////////////
+      function goto(path){
+     window.location.href = path;
+    }
 </script>

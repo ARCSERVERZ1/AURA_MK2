@@ -5,7 +5,7 @@ from .models import *
 from datetime import datetime
 from django.shortcuts import render, get_object_or_404, redirect
 import json
-
+from rest_framework.decorators import api_view, permission_classes
 
 # Create your views here.
 
@@ -74,3 +74,11 @@ def delete_by_id(requests):
 
 def test_run(requests):
     return render( requests ,'Test_Voice.html')
+
+
+@api_view(['POST'])
+def home_query(request):
+    print(request.data)
+    val = { 'response':request.data}
+    print('final')
+    return JsonResponse(val, safe=False)

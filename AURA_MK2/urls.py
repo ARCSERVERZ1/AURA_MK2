@@ -28,4 +28,5 @@ urlpatterns = [
     path('storec/' , include('STOREC.urls') ),
     path('general/' , include('GENERAL_APPS.urls') ),
 
+
 ]
